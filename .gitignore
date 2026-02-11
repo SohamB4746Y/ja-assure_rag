@@ -1,0 +1,19 @@
+# Virtual Environment
+venv/
+.env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS files
+.DS_Store
+
+# FAISS index files (generated)
+index/index.faiss
+index/metadata.pkl
+
+# HuggingFace cache (optional)
+.cache/

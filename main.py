@@ -36,18 +36,20 @@ def run_phase_2_1():
 
 
 # -------------------------------
-# Phase 2.2 — Text Construction
+# Phase 2.2 — Text + Structured Storage
 # -------------------------------
 def run_phase_2_2(section_chunks):
     text_chunks = []
 
     for chunk in section_chunks:
         text = build_section_text(chunk)
+
         if text:
             text_chunks.append({
                 "quote_id": chunk["quote_id"],
                 "section": chunk["section"],
                 "text": text,
+                "fields": chunk["data"],        # structured raw fields preserved
                 "metadata": chunk["metadata"]
             })
 
@@ -66,6 +68,7 @@ def run_phase_2_3(text_chunks):
             "quote_id": chunk["quote_id"],
             "section": chunk["section"],
             "text": chunk["text"],
+            "fields": chunk["fields"],
             **chunk["metadata"]
         }
         for chunk in text_chunks
@@ -95,25 +98,53 @@ def extract_quote_id(query: str):
 
 
 # -------------------------------
-# Retrieval Function (Quote-aware)
+# Structured Retrieval (FIXED FOR LIST TYPES)
+# -------------------------------
+def structured_lookup(query: str):
+    with open(METADATA_PATH, "rb") as f:
+        metadata = pickle.load(f)
+
+    query_lower = query.lower()
+    quote_id = extract_quote_id(query)
+
+    for chunk in metadata:
+
+        # If query contains quote_id, filter strictly
+        if quote_id and chunk["quote_id"] != quote_id:
+            continue
+
+        fields = chunk.get("fields", {})
+
+        # Skip list-type sections (like claim history arrays)
+        if not isinstance(fields, dict):
+            continue
+
+        for field_name, value in fields.items():
+            normalized_field = (
+                field_name.lower()
+                .replace("_label", "")
+                .replace("_", " ")
+            )
+
+            if normalized_field in query_lower:
+                return {
+                    "quote_id": chunk["quote_id"],
+                    "field": normalized_field,
+                    "value": value
+                }
+
+    return None
+
+
+# -------------------------------
+# Retrieval (Semantic Fallback)
 # -------------------------------
 def retrieve_chunks(query: str, top_k=5):
     with open(METADATA_PATH, "rb") as f:
         metadata = pickle.load(f)
 
     quote_id_in_query = extract_quote_id(query)
-    query_lower = query.lower()
 
-    #  Structured Field Shortcut
-    if quote_id_in_query:
-        if "business name" in query_lower:
-            return [
-                chunk for chunk in metadata
-                if chunk["quote_id"] == quote_id_in_query
-                and chunk["section"] == "business_profile"
-            ]
-
-    #  Otherwise fallback to semantic search
     index = faiss.read_index(INDEX_PATH)
     embedder = Embedder()
     query_vector = embedder.embed_texts([query])[0]
@@ -124,6 +155,7 @@ def retrieve_chunks(query: str, top_k=5):
     )
 
     results = []
+
     for idx in indices[0]:
         if idx != -1:
             chunk = metadata[idx]
@@ -138,7 +170,7 @@ def retrieve_chunks(query: str, top_k=5):
 
 
 # -------------------------------
-# Analytical Query Logic (Cross-record)
+# Analytical Query Logic (FIXED)
 # -------------------------------
 def analytical_query(query: str):
     with open(METADATA_PATH, "rb") as f:
@@ -146,20 +178,24 @@ def analytical_query(query: str):
 
     query_lower = query.lower()
 
-    # Example analytical case:
     if "how many" in query_lower and "cctv maintenance" in query_lower:
-        matching = [
-            chunk for chunk in metadata
-            if chunk["section"] == "cctv"
-            and "Cctv Maintenance Contract Label: 001" in chunk["text"]
-        ]
+        proposals = set()
 
-        unique_quotes = sorted(set(chunk["quote_id"] for chunk in matching))
+        for chunk in metadata:
+            if "cctv" in chunk["section"].lower():
+                fields = chunk.get("fields", {})
+
+                if not isinstance(fields, dict):
+                    continue
+
+                for field_name, value in fields.items():
+                    if "maintenance" in field_name.lower():
+                        if str(value) == "001":
+                            proposals.add(chunk["quote_id"])
 
         return {
-            "type": "count",
-            "count": len(unique_quotes),
-            "quotes": unique_quotes
+            "count": len(proposals),
+            "quotes": sorted(list(proposals))
         }
 
     return None
@@ -169,9 +205,8 @@ def analytical_query(query: str):
 # MAIN — Interactive System
 # -------------------------------
 def main():
-    print("\n=== JA Assure | Interactive RAG + Analytics System ===\n")
+    print("\n=== JA Assure | Structured + RAG System ===\n")
 
-    # Build index once
     section_chunks = run_phase_2_1()
     text_chunks = run_phase_2_2(section_chunks)
     run_phase_2_3(text_chunks)
@@ -187,16 +222,25 @@ def main():
             print("Exiting system.")
             break
 
-        # -------- Analytical Mode First --------
+        # 1. Analytical Mode
         analysis = analytical_query(query)
-
         if analysis:
             print("\n=== ANALYTICAL RESULT ===\n")
             print(f"Count: {analysis['count']}")
             print("Proposals:", analysis["quotes"])
             continue
 
-        # -------- Normal RAG Mode --------
+        # 2. Structured Deterministic Lookup
+        structured = structured_lookup(query)
+        if structured:
+            print("\n=== ANSWER ===\n")
+            print(
+                f"{structured['field'].title()} "
+                f"for {structured['quote_id']} is {structured['value']}"
+            )
+            continue
+
+        # 3. Semantic RAG Fallback
         retrieved = retrieve_chunks(query)
 
         if not retrieved:

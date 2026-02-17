@@ -49,7 +49,7 @@ def run_phase_2_2(section_chunks):
                 "quote_id": chunk["quote_id"],
                 "section": chunk["section"],
                 "text": text,
-                "fields": chunk["data"],        # structured raw fields preserved
+                "fields": chunk["data"],       
                 "metadata": chunk["metadata"]
             })
 
@@ -98,7 +98,7 @@ def extract_quote_id(query: str):
 
 
 # -------------------------------
-# Structured Retrieval (FIXED FOR LIST TYPES)
+# Structured Retrieval 
 # -------------------------------
 def structured_lookup(query: str):
     with open(METADATA_PATH, "rb") as f:
@@ -137,7 +137,7 @@ def structured_lookup(query: str):
 
 
 # -------------------------------
-# Retrieval (Semantic Fallback)
+# Retrieval 
 # -------------------------------
 def retrieve_chunks(query: str, top_k=5):
     with open(METADATA_PATH, "rb") as f:
@@ -170,7 +170,7 @@ def retrieve_chunks(query: str, top_k=5):
 
 
 # -------------------------------
-# Analytical Query Logic (FIXED)
+# Analytical Query Logic
 # -------------------------------
 def analytical_query(query: str):
     with open(METADATA_PATH, "rb") as f:

@@ -1,0 +1,22 @@
+[
+    {
+        "question": "What is the business name of MYJADEQT001?",
+        "expected_answer": "Ja Assure IN"
+    },
+    {
+        "question": "What is the mobile number of MYJADEQT001?",
+        "expected_answer": "861897856"
+    },
+    {
+        "question": "How many proposals have CCTV maintenance contracts?",
+        "expected_answer": "8"
+    },
+    {
+        "question": "What is the correspondence email for MYJADEQT001?",
+        "expected_answer": "ni@ja-assure.com"
+    },
+    {
+        "question": "What is the risk location of MYJADEQT001?",
+        "expected_answer": "Johor Bahru"
+    }
+]

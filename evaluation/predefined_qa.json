@@ -1,0 +1,45 @@
+{
+    "description": "Predefined Q&A pairs for fast-path answers. Update this file without changing code.",
+    "qa_pairs": [
+        {
+            "question": "How do I contact JA Assure?",
+            "answer": "You can reach JA Assure through: Malaysia - Hotline: +60 3821 03700, WhatsApp: +60 11107 71700 | Singapore - Hotline: +65 6100 0603, WhatsApp: +65 9647 9700 | Hong Kong - Hotline: +852 9134 0700, WhatsApp: +852 9134 0700 | Email: my@jade.insure | Website: https://www.jade.insure/"
+        },
+        {
+            "question": "What is the customer care number?",
+            "answer": "JA Assure customer care: Malaysia - +60 3821 03700, Singapore - +65 6100 0603, Hong Kong - +852 9134 0700, Email: my@jade.insure"
+        },
+        {
+            "question": "What types of businesses does JA Assure cover?",
+            "answer": "JA Assure covers: Jewellery Retailers, Jewellery & Gold Manufacturers, Jewellery & Gold Bullion Distributors, Diamond Dealers, Money Changers, Remittance Services, Luxury Good Retailers, Luxury Watch Retailers, Pawnbrokers, and Precious Stones Dealers."
+        },
+        {
+            "question": "What security features are assessed in proposals?",
+            "answer": "JA Assure assesses: CCTV systems, alarm systems, door access controls, safes and strong rooms, display showcase protection, transit security, guard arrangements, and central monitoring stations."
+        },
+        {
+            "question": "What is a proposal form?",
+            "answer": "A proposal form is an insurance application document submitted by a business seeking coverage. It contains details about the business profile, physical setup, security measures, claim history, and coverage requirements."
+        },
+        {
+            "question": "How are claims handled?",
+            "answer": "Claims are processed based on the claim history recorded in each proposal. Proposals are categorized as either having no claims within 3 years or having claims within the past 3 years."
+        },
+        {
+            "question": "What is transit coverage?",
+            "answer": "Transit coverage protects goods during transportation. Proposals assess whether businesses use armoured vehicles, Jaguar transit services, armed guards during transit, and GPS trackers in vehicles and bags."
+        },
+        {
+            "question": "What safe grades are recognized?",
+            "answer": "Safe grades range from Ungraded to Grade VII. Higher grades indicate stronger security. Proposals also track whether safes have time-locking features and certification."
+        },
+        {
+            "question": "What CCTV features are tracked?",
+            "answer": "CCTV assessment includes: recording capability, number of cameras, brand and model, backup type (real-time remote, on-site, periodic), maintenance contracts, additional capabilities (motion detection, night vision), and retention period."
+        },
+        {
+            "question": "What premise types are covered?",
+            "answer": "Covered premise types include: Office buildings, Shopping centres, Shop houses, and Others. Physical setup assessment also covers roof, wall, and floor materials."
+        }
+    ]
+}

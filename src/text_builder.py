@@ -1,11 +1,13 @@
 from src.schemas import SECTION_SCHEMAS
-from src.mappings import FIELD_MAPPINGS
+from src.mappings import FIELD_MAPPINGS, decode_record
 
 
 def build_section_text(chunk: dict) -> str:
     section = chunk["section"]
-    data = chunk["data"]
+    raw_data = chunk["data"]
     quote_id = chunk["quote_id"]
+
+    data = decode_record(raw_data, section)
 
     schema = SECTION_SCHEMAS.get(section)
     if not schema:

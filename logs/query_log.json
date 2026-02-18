@@ -1,0 +1,1046 @@
+[
+  {
+    "timestamp": "2026-02-19T01:52:23.777660",
+    "query": "Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "refused",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.464,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T01:59:43.489156",
+    "query": "Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 48
+  },
+  {
+    "timestamp": "2026-02-19T02:00:02.201287",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-19T02:00:19.381113",
+    "query": "What is the renewal date for MYJADEQT001?",
+    "query_type": "semantic",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 0.5292,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:02:33.264358",
+    "query": "Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 48
+  },
+  {
+    "timestamp": "2026-02-19T02:02:33.291204",
+    "query": "Does MYJADEQT001 use armed guards during transit?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 52
+  },
+  {
+    "timestamp": "2026-02-19T02:03:04.154927",
+    "query": "Does MYJADEQT001 have a CCTV maintenance contract?Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 46
+  },
+  {
+    "timestamp": "2026-02-19T02:04:01.880818",
+    "query": "Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 48
+  },
+  {
+    "timestamp": "2026-02-19T02:04:13.515765",
+    "query": "Does MYJADEQT001 use armed guards during transit?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 52
+  },
+  {
+    "timestamp": "2026-02-19T02:04:29.122196",
+    "query": "Does MYJADEQT001 have a CCTV maintenance contract?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 46
+  },
+  {
+    "timestamp": "2026-02-19T02:06:58.429872",
+    "query": "Does MYJADEQT001 use armed guards during transit?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 59
+  },
+  {
+    "timestamp": "2026-02-19T02:06:58.475008",
+    "query": "Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "refused",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.464,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:06:58.500096",
+    "query": "Does MYJADEQT001 have a CCTV maintenance contract?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 46
+  },
+  {
+    "timestamp": "2026-02-19T02:06:58.509064",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-19T02:08:18.164977",
+    "query": "What is the renewal date for MYJADEQT001?Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "refused",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.4101,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:08:40.676558",
+    "query": "What is the renewal date for MYJADEQT001?",
+    "query_type": "semantic",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 0.5292,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:10:52.861601",
+    "query": "Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "refused",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.464,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:10:52.871635",
+    "query": "Does MYJADEQT001 use armed guards during transit?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 59
+  },
+  {
+    "timestamp": "2026-02-19T02:10:52.921132",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-19T02:11:59.477369",
+    "query": "What is the renewal date for MYJADEQT001?exit",
+    "query_type": "semantic",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 0.5097,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:12:33.015967",
+    "query": "Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 48
+  },
+  {
+    "timestamp": "2026-02-19T02:12:33.043142",
+    "query": "Does MYJADEQT001 use armed guards during transit?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 59
+  },
+  {
+    "timestamp": "2026-02-19T02:12:33.051667",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-19T02:13:17.076671",
+    "query": "What is the renewal date for MYJADEQT001?Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 48
+  },
+  {
+    "timestamp": "2026-02-19T02:13:30.244365",
+    "query": "Does MYJADEQT001 use armed guards during transit?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 59
+  },
+  {
+    "timestamp": "2026-02-19T02:13:45.110836",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-19T02:13:55.824075",
+    "query": "What is the renewal date for MYJADEQT001?",
+    "query_type": "semantic",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 0.5292,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:14:45.613197",
+    "query": "What is MYJADEQT001's credit score?",
+    "query_type": "refused",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.4409,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:14:55.197134",
+    "query": "Has this business ever been investigated for fraud?",
+    "query_type": "refused",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.2492,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:15:10.149094",
+    "query": "Who approved this proposal?",
+    "query_type": "refused",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.3803,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:15:18.953721",
+    "query": "What is the monthly premium for MYJADEQT001?",
+    "query_type": "semantic",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 0.5158,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:15:29.050780",
+    "query": "python evaluation.py",
+    "query_type": "refused",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0845,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:28:37.437236",
+    "query": "give the name of the businesses operating in penang",
+    "query_type": "refused",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.429,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-19T02:33:25.084073",
+    "query": "give the name of the businesses operating in penang",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 95
+  },
+  {
+    "timestamp": "2026-02-19T02:34:32.593618",
+    "query": "give the name of the businesses operating in penang",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 95
+  },
+  {
+    "timestamp": "2026-02-19T02:34:33.059348",
+    "query": "which businesses are in johor",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 258
+  },
+  {
+    "timestamp": "2026-02-19T02:34:33.069537",
+    "query": "list all pawn shop proposals",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 973
+  },
+  {
+    "timestamp": "2026-02-19T02:34:33.078381",
+    "query": "how many proposals in johor",
+    "query_type": "analytical_handler",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-19T02:35:35.227279",
+    "query": "give the name of the businesses operating in penang",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 95
+  },
+  {
+    "timestamp": "2026-02-19T02:35:35.252999",
+    "query": "which businesses are in johor",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 258
+  },
+  {
+    "timestamp": "2026-02-19T02:35:35.262889",
+    "query": "list all pawn shop proposals",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 973
+  },
+  {
+    "timestamp": "2026-02-19T02:35:35.272161",
+    "query": "how many proposals in johor",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 29
+  },
+  {
+    "timestamp": "2026-02-19T02:35:35.710025",
+    "query": "how many pawn shops are there",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 239
+  },
+  {
+    "timestamp": "2026-02-19T02:36:10.750668",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "structured",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-19T02:36:11.152828",
+    "query": "businesses in kuala lumpur",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 192
+  },
+  {
+    "timestamp": "2026-02-19T02:36:11.542671",
+    "query": "list all proposals",
+    "query_type": "analytical_handler",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 230
+  },
+  {
+    "timestamp": "2026-02-19T02:36:18.064898",
+    "query": "what is JA Assure?",
+    "query_type": "semantic",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 0.5343,
+    "answer_length": 77
+  },
+  {
+    "timestamp": "2026-02-19T02:36:18.471705",
+    "query": "how many proposals have CCTV maintenance contracts?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 239
+  },
+  {
+    "timestamp": "2026-02-19T02:38:02.527750",
+    "query": "How many proposals have CCTV maintenance contracts?",
+    "query_type": "analytical_specific",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 30
+  },
+  {
+    "timestamp": "2026-02-19T02:38:02.562643",
+    "query": "how many proposals in johor",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 29
+  },
+  {
+    "timestamp": "2026-02-19T02:38:02.572754",
+    "query": "give the name of the businesses operating in penang",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 95
+  },
+  {
+    "timestamp": "2026-02-19T02:39:07.812830",
+    "query": "give the name of the businesses operating in penang",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 95
+  },
+  {
+    "timestamp": "2026-02-19T02:39:46.543460",
+    "query": "how many businesses have shop lifting cases and what are their names?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 239
+  },
+  {
+    "timestamp": "2026-02-19T02:48:35.549196",
+    "query": "how many businesses have shop lifting cases and what are their names?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 239
+  },
+  {
+    "timestamp": "2026-02-19T02:48:42.543480",
+    "query": "give the name of the businesses operating in penang",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 95
+  },
+  {
+    "timestamp": "2026-02-19T02:48:48.488408",
+    "query": "which proposals have CCTV maintenance contracts?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 307
+  },
+  {
+    "timestamp": "2026-02-19T02:48:55.289125",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-19T02:52:02.223701",
+    "query": "how many businesses have shop lifting cases and what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-19T02:52:08.756306",
+    "query": "which proposals have CCTV maintenance contracts?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 307
+  },
+  {
+    "timestamp": "2026-02-19T02:52:14.944703",
+    "query": "How many proposals have CCTV maintenance contracts?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 32
+  },
+  {
+    "timestamp": "2026-02-19T02:52:21.685821",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-19T02:53:10.266208",
+    "query": "how many businesses have shop lifting cases and what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 52
+  },
+  {
+    "timestamp": "2026-02-19T02:53:16.667831",
+    "query": "how many proposals have burglary claims?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 78
+  },
+  {
+    "timestamp": "2026-02-19T02:53:23.367777",
+    "query": "which proposals have CCTV maintenance contracts?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 307
+  },
+  {
+    "timestamp": "2026-02-19T02:53:29.816724",
+    "query": "How many proposals have CCTV maintenance contracts?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 32
+  },
+  {
+    "timestamp": "2026-02-19T02:53:37.284699",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-19T02:53:43.974743",
+    "query": "give the name of the businesses operating in penang",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 95
+  },
+  {
+    "timestamp": "2026-02-19T02:54:35.608711",
+    "query": "how many businesses have shop lifting cases and what are their names?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 239
+  },
+  {
+    "timestamp": "2026-02-19T02:55:09.507483",
+    "query": "how many businesses have shop lifting cases and what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 78
+  },
+  {
+    "timestamp": "2026-02-19T03:14:42.774548",
+    "query": "how many businesses have shoplifting cases and what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 165
+  },
+  {
+    "timestamp": "2026-02-19T03:17:09.209201",
+    "query": "how many shops dont have any shoplifting cases and what are there names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T03:17:34.720602",
+    "query": "give the names of these proposals",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 174
+  },
+  {
+    "timestamp": "2026-02-19T04:02:25.108397",
+    "query": "how many businesses dont have shop lifting cases",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:03:09.256577",
+    "query": "and what are there names?how many businesses dont have shop lifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 646
+  },
+  {
+    "timestamp": "2026-02-19T04:13:43.089255",
+    "query": "how many businesses dont have shop lifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-19T04:13:55.210447",
+    "query": "how many businesses have shoplifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:14:59.295373",
+    "query": "how many businesses dont have shop lifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-19T04:15:11.059338",
+    "query": "how many businesses have shoplifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:15:22.952519",
+    "query": "what are the names of businesses that have shoplifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 174
+  },
+  {
+    "timestamp": "2026-02-19T04:15:35.205534",
+    "query": "how many proposals have CCTV maintenance contracts?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:15:46.669037",
+    "query": "how many businesses dont have alarms?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:25:22.889264",
+    "query": "how many proposals have no shop lifting cases and what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 451
+  },
+  {
+    "timestamp": "2026-02-19T04:26:19.869813",
+    "query": "how many have shop lifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:27:33.740164",
+    "query": "how many proposals are located in johr bahru?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 78
+  },
+  {
+    "timestamp": "2026-02-19T04:28:21.216855",
+    "query": "how many proposals are located in johor bahru?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 78
+  },
+  {
+    "timestamp": "2026-02-19T04:32:10.620124",
+    "query": "how many proposals are located in johor bahru?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:32:24.352278",
+    "query": "which businesses are in kuala lumpur?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 3,
+    "top_similarity_score": 1.0,
+    "answer_length": 142
+  },
+  {
+    "timestamp": "2026-02-19T04:32:37.504507",
+    "query": "how many businesses dont have shop lifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-19T04:32:50.750041",
+    "query": "how many proposals have CCTV maintenance contracts?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:33:06.623141",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 62
+  },
+  {
+    "timestamp": "2026-02-19T04:36:11.303890",
+    "query": "how many proposals are located in johor bahru?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:37:13.809630",
+    "query": "what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 52
+  },
+  {
+    "timestamp": "2026-02-19T04:38:23.651313",
+    "query": "what are the names of the proposals in johor bahru?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 122
+  },
+  {
+    "timestamp": "2026-02-19T04:41:55.572071",
+    "query": "how many businesses have shoplifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:42:08.131712",
+    "query": "what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 174
+  },
+  {
+    "timestamp": "2026-02-19T04:42:21.594701",
+    "query": "how many proposals are located in johor bahru?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:42:34.560267",
+    "query": "give me their names",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 174
+  },
+  {
+    "timestamp": "2026-02-19T04:42:47.617448",
+    "query": "how many businesses dont have shop lifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-19T04:43:47.898581",
+    "query": "how many businesses have shoplifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:44:01.701541",
+    "query": "what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 174
+  },
+  {
+    "timestamp": "2026-02-19T04:44:15.680933",
+    "query": "how many proposals are located in johor bahru?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:44:29.952608",
+    "query": "give me their names",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 174
+  },
+  {
+    "timestamp": "2026-02-19T04:44:44.183059",
+    "query": "how many businesses dont have shop lifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-19T04:45:48.788594",
+    "query": "how many businesses have shoplifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:45:48.962237",
+    "query": "what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 174
+  },
+  {
+    "timestamp": "2026-02-19T04:46:03.818154",
+    "query": "how many proposals are located in johor bahru?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:46:04.054416",
+    "query": "give me their names",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 94
+  },
+  {
+    "timestamp": "2026-02-19T04:46:17.783124",
+    "query": "how many businesses dont have shop lifting cases?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 11,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-19T04:50:28.086435",
+    "query": "how many businesses are located in penang?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T04:51:12.320978",
+    "query": "what is the name of the business?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 563
+  },
+  {
+    "timestamp": "2026-02-19T04:56:32.992187",
+    "query": "how much is the house coverage for suresh kumar?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 655
+  },
+  {
+    "timestamp": "2026-02-19T05:13:11.652184",
+    "query": "how much is the house coverage for suresh kumar?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 67
+  },
+  {
+    "timestamp": "2026-02-19T05:13:28.020964",
+    "query": "what type of business does City FX Exchange have?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 151
+  },
+  {
+    "timestamp": "2026-02-19T05:13:44.897769",
+    "query": "does Mehta Pawn Services have a strong room?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 66
+  },
+  {
+    "timestamp": "2026-02-19T05:14:59.844644",
+    "query": "how much is the house coverage for suresh kumar?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 67
+  },
+  {
+    "timestamp": "2026-02-19T05:16:02.315751",
+    "query": "how often is the stock check carried out for suresh kumar?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  }
+]

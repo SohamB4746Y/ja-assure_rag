@@ -20,6 +20,12 @@ SECTION_COLUMNS = [
     "summary_coverage_values"
 ]
 
+# Simple value columns (not JSON) that need to be extracted
+SIMPLE_VALUE_COLUMNS = [
+    ("shop_lifting", "shop_lifting_label"),
+]
+
+
 def extract_sections(row: dict, json_parser):
     sections = []
 
@@ -29,6 +35,7 @@ def extract_sections(row: dict, json_parser):
         "user_name": row.get("user_name"),
     }
 
+    # Extract JSON sections
     for section in SECTION_COLUMNS:
         parsed = json_parser(row.get(section))
         if parsed:
@@ -36,6 +43,17 @@ def extract_sections(row: dict, json_parser):
                 "quote_id": base_metadata["quote_id"],
                 "section": section,
                 "data": parsed,
+                "metadata": base_metadata
+            })
+
+    # Extract simple value columns as their own section
+    for col_name, field_name in SIMPLE_VALUE_COLUMNS:
+        value = row.get(col_name)
+        if value is not None and str(value).strip() != "":
+            sections.append({
+                "quote_id": base_metadata["quote_id"],
+                "section": col_name,
+                "data": {field_name: str(value)},
                 "metadata": base_metadata
             })
 

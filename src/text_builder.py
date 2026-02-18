@@ -21,10 +21,36 @@ def build_section_text(chunk: dict) -> str:
     lines.append(f"Proposal {quote_id} – {schema['title']}:")
 
     def has_value(value) -> bool:
-        return value not in [None, "", [], {}]
+        return value not in [None, "", [], {}, -1, "-1", 0, "0"]
 
     def label_for(key: str) -> str:
         return mappings.get(key, key.replace("_", " ").title())
+
+    # Special handling for claim_history section (mixed dict with nested list)
+    if section == "claim_history" and isinstance(data, dict):
+        claim_status = data.get("claim_history_label")
+        if has_value(claim_status):
+            lines.append(f"Claim Status: {claim_status}")
+        
+        additional_details = data.get("additional_details", [])
+        if isinstance(additional_details, list):
+            valid_claims = [
+                item for item in additional_details
+                if isinstance(item, dict) and has_value(item.get("year_of_claim_label"))
+            ]
+            for i, claim in enumerate(valid_claims, start=1):
+                lines.append(f"Claim {i}:")
+                year = claim.get("year_of_claim_label")
+                amount = claim.get("amount_of_claim_label")
+                desc = claim.get("description_label")
+                if has_value(year):
+                    lines.append(f"- Year: {year}")
+                if has_value(amount):
+                    lines.append(f"- Amount: {amount}")
+                if has_value(desc):
+                    lines.append(f"- Description: {desc}")
+        
+        return "\n".join(lines)
 
     # Array sections (e.g. claim history)
     if schema.get("array") or isinstance(data, list):

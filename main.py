@@ -172,6 +172,13 @@ def build_index(text_chunks: list[dict], embedder: Embedder) -> None:
     """
     Build FAISS index from text chunks with retry logic.
     
+    Pre-decodes every field at ingestion time so downstream code paths
+    work with human-readable values. Uses decode_field(field_name, value)
+    which routes each field to its correct decode map — the field_name
+    is the routing key because the same code means different things
+    in different fields (e.g. 001 = Yes for recording_label but
+    001 = Concrete for roof_materials_label).
+    
     Args:
         text_chunks: List of chunk dictionaries with 'text' key
         embedder: Embedder instance
@@ -180,17 +187,44 @@ def build_index(text_chunks: list[dict], embedder: Embedder) -> None:
     
     texts = [chunk["text"] for chunk in text_chunks]
     
-    # Build metadata list
-    metadatas = [
-        {
+    # Build metadata list with pre-decoded fields
+    metadatas = []
+    for chunk in text_chunks:
+        raw_fields = chunk["fields"]
+        
+        # Build a flat decoded dict — field_name is REQUIRED for correct decoding
+        # because the same code means different things in different fields
+        decoded_flat = {}
+        
+        if isinstance(raw_fields, dict):
+            for field_name, value in raw_fields.items():
+                if value not in [None, "", [], {}, -1, "-1"]:
+                    decoded_flat[field_name] = decode_field(field_name, str(value))
+                else:
+                    decoded_flat[field_name] = str(value) if value is not None else ""
+        
+        elif isinstance(raw_fields, list):
+            # Handle list-of-dicts sections (e.g., safe section)
+            for item in raw_fields:
+                if isinstance(item, dict):
+                    for field_name, value in item.items():
+                        if value not in [None, "", [], {}, -1, "-1"]:
+                            decoded_flat[field_name] = decode_field(field_name, str(value))
+                        else:
+                            decoded_flat[field_name] = str(value) if value is not None else ""
+        
+        # Add top-level metadata fields to decoded_flat for unified lookup
+        decoded_flat["risk_location"] = str(chunk["metadata"].get("risk_location", ""))
+        decoded_flat["user_name"] = str(chunk["metadata"].get("user_name", ""))
+        
+        metadatas.append({
             "quote_id": chunk["quote_id"],
             "section": chunk["section"],
             "text": chunk["text"],
-            "fields": chunk["fields"],
+            "fields": raw_fields,            # keep raw for backward compat
+            "decoded_fields": decoded_flat,  # fully decoded, field-name-aware
             **chunk["metadata"]
-        }
-        for chunk in text_chunks
-    ]
+        })
     
     # Embed with retry logic (Pattern 3)
     vectors = embedder.embed_with_retry(texts)
@@ -360,12 +394,14 @@ def structured_lookup(query: str) -> Optional[str]:
         if chunk.get("quote_id") != quote_id:
             continue
         
-        fields = chunk.get("fields", {})
+        # Use decoded_fields — values are pre-decoded with correct field context
+        # Fall back to raw fields only if decoded_fields not available
+        search_fields = chunk.get("decoded_fields") or chunk.get("fields", {})
         
-        if not isinstance(fields, dict):
+        if not isinstance(search_fields, dict):
             continue
         
-        for field_name, value in fields.items():
+        for field_name, value in search_fields.items():
             score = score_field_match(field_name, query)
             
             # Track the best match (highest score)
@@ -376,11 +412,10 @@ def structured_lookup(query: str) -> Optional[str]:
     # Step 4: Only return if best match has score >= 2 (at least 2 words matched)
     if best_match and best_match[0] >= 2:
         field_name = best_match[1]
-        value = best_match[2]
+        value = best_match[2]  # already decoded — do NOT call decode_field() again
         
-        decoded_value = decode_field(field_name, str(value))
         human_label = field_name.replace("_label", "").replace("_", " ").title()
-        return f"{human_label} for {quote_id}: {decoded_value}"
+        return f"{human_label} for {quote_id}: {value}"
     
     return None
 

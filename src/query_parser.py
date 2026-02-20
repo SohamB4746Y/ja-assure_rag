@@ -236,6 +236,14 @@ PARSING RULES:
 14. CRITICAL — NEVER set filter_field to the same field as output_fields unless you are explicitly filtering the whole dataset by that field's value. If query says "what is the claim history of X", output_fields=["claim_history_label"] and filter_field=null, filter_contains="X". Do NOT set filter_field=claim_history_label.
 15. CRITICAL — filter_contains must contain EXACTLY the name as stated in the query. If the query says "Rapid FX Money Exchange" then filter_contains must be "Rapid FX Money Exchange". NEVER replace a business name with a person name. NEVER invent names. Copy the exact string from the query.
 16. CRITICAL — When a query asks about a SPECIFIC named business or person (filter_contains is set), do NOT also set filter_field and filter_value unless the query explicitly asks for filtering within that business's data.
+17. CRITICAL — For location-based queries ("how many in Penang", "proposals located in X"), filter_contains must contain ONLY the location name exactly as stated in the query. NEVER use a business name or person name as filter_contains for location queries. Example: "how many proposals are in Penang?" → filter_contains="Penang". Example: "proposals in Johor Bahru" → filter_contains="Johor Bahru".
+18. CRITICAL — ZERO TOLERANCE FOR CONTEXT BLEED: 
+    filter_contains must ALWAYS come from the CURRENT question only.
+    NEVER copy filter_contains from a previous conversation turn.
+    If the current question asks about "Somesh Das", filter_contains="Somesh Das".
+    If the current question asks about "GPS tracker businesses", filter_contains=null.
+    Read the CURRENT question. Ignore all previous filter_contains values.
+    This rule overrides everything else.
 
 EXAMPLES:
 - "How many have CCTV maintenance?" → {{"intent": "count", "target_fields": ["cctv_maintenance_contract_label"], "filter_field": "cctv_maintenance_contract_label", "filter_value": "001", "output_fields": ["business_name_label"], "understood_question": "Count proposals with CCTV maintenance (=Yes/001)"}}
@@ -298,15 +306,113 @@ class QueryParser:
     LLM-assisted query parser that converts natural language to structured queries.
     """
     
-    def __init__(self, llm: LLMClient):
+    def __init__(self, llm: LLMClient, metadata: list[dict] = None):
         """
         Initialize the query parser.
         
         Args:
             llm: LLM client for parsing
+            metadata: Optional list of chunk metadata dicts for runtime entity extraction
         """
         self.llm = llm
         self.conversation_history: list[dict] = []
+        
+        # Load known entities from metadata at runtime
+        self._known_persons: list[str] = []
+        self._known_businesses: list[str] = []
+        
+        if metadata:
+            self._load_entities_from_metadata(metadata)
+        
+        # Use hardcoded fallback if metadata didn't provide enough entities
+        if not self._known_persons or not self._known_businesses:
+            self._use_fallback_entities()
+    
+    def _load_entities_from_metadata(self, metadata: list[dict]) -> None:
+        """Extract known person and business names from metadata at runtime."""
+        persons = set()
+        businesses = set()
+        for chunk in metadata:
+            user_name = chunk.get("user_name", "")
+            if user_name and isinstance(user_name, str) and user_name.strip():
+                persons.add(user_name.strip())
+            
+            fields = chunk.get("decoded_fields") or chunk.get("fields", {})
+            if isinstance(fields, dict):
+                for field_name, value in fields.items():
+                    if "person_in_charge" in field_name.lower() and value and isinstance(value, str) and value.strip():
+                        persons.add(value.strip())
+                    if "business_name" in field_name.lower() and value and isinstance(value, str) and value.strip():
+                        businesses.add(value.strip())
+        
+        self._known_persons = sorted(persons)
+        self._known_businesses = sorted(businesses)
+    
+    def _use_fallback_entities(self) -> None:
+        """Use hardcoded entity lists as fallback when metadata is unavailable."""
+        if not self._known_persons:
+            self._known_persons = [
+                "Somesh Das", "Rohan Mehta", "Rahul Mehta", "Ankit Verma",
+                "Aamir Khan", "Suresh Kumar", "Naveen Iyer", "Kunal Shah",
+                "Rakesh Pillai", "Farhan Ali", "Pranav Joshi", "Saad Rahman",
+                "Vikram Nair", "Ashwin Patel", "Irfan Malik"
+            ]
+        if not self._known_businesses:
+            self._known_businesses = [
+                "Ja Assure IN", "FinSecure Money Services", "Mehta Pawn Services",
+                "LuxGold Jewellers", "Global Money Exchange", "Secure Pawn Brokers",
+                "Rapid FX Money Exchange", "Heritage Gold & Jewels",
+                "Heritage Gold and Jewels", "Trust Pawn Brokers", "City FX Exchange",
+                "Royal Gems & Jewels", "Royal Gems and Jewels", "Metro FX Exchange",
+                "Prime Pawn Services", "Sunrise Jewel House", "Harbor FX Services"
+            ]
+    
+    def _extract_entity_from_query(self, query: str) -> Optional[str]:
+        """
+        Extract the most likely entity (person name or business name)
+        from the query using the known names in the database.
+        Returns the matched name if found, None otherwise.
+        """
+        query_lower = query.lower()
+        
+        # Check person names first (case insensitive)
+        for name in self._known_persons:
+            if name.lower() in query_lower:
+                return name
+        
+        # Check business names (case insensitive)
+        for name in self._known_businesses:
+            if name.lower() in query_lower:
+                return name
+        
+        # Check partial business name matches (first two words)
+        for name in self._known_businesses:
+            parts = name.lower().split()
+            if len(parts) >= 2:
+                partial = " ".join(parts[:2])
+                if partial in query_lower:
+                    return name
+        
+        return None
+    
+    # Out-of-scope detection constants
+    OUT_OF_SCOPE_INDICATORS = [
+        "singapore", "indonesia", "thailand", "philippines", "vietnam",
+        "average", "per year", "annually", "total across all",
+        "predict", "forecast", "recommend", "should i", "which is better",
+        "compare to industry", "benchmark", "market rate",
+        "credit score", "credit rating", "financial rating",
+        "who approved", "underwriter", "actuary",
+        "monthly premium", "annual premium", "calculate premium"
+    ]
+    
+    def _is_out_of_scope(self, query: str) -> bool:
+        """Check if query asks about data outside the proposal database scope."""
+        query_lower = query.lower()
+        for indicator in self.OUT_OF_SCOPE_INDICATORS:
+            if indicator in query_lower:
+                return True
+        return False
     
     def add_to_history(self, query: str, parsed: ParsedQuery, answer: str) -> None:
         """
@@ -356,6 +462,20 @@ class QueryParser:
         if len(self.conversation_history) > 5:
             self.conversation_history = self.conversation_history[-5:]
     
+    # Location indicators for context bleed prevention
+    LOCATION_INDICATORS = [
+        "located in", "in penang", "in johor", "in kuala lumpur", "in selangor",
+        "in sabah", "in kedah", "in perak", "in melaka", "in negeri", "in pahang",
+        "in muar", "in taiping", "in ipoh", "in klang", "in seremban",
+        "in kota kinabalu", "in george town", "in sungai petani", "in kuantan",
+        "location", "located", "based in", "situated in"
+    ]
+
+    def _is_location_query(self, query: str) -> bool:
+        """Check if query is about a location/place."""
+        query_lower = query.lower()
+        return any(ind in query_lower for ind in self.LOCATION_INDICATORS)
+
     def _get_entity_from_query(self, query: str) -> str:
         """Extract likely entity name from query for context bleed detection."""
         noise = {"does", "do", "is", "what", "which", "how", "far", "often",
@@ -368,7 +488,8 @@ class QueryParser:
                  "and", "with", "their", "them", "that", "this", "from", "are",
                  "has", "had", "its", "stock", "check", "movements", "contract",
                  "maintenance", "used", "using", "get", "give", "tell", "show",
-                 "sop", "much", "many", "where", "when", "who"}
+                 "sop", "much", "many", "where", "when", "who",
+                 "proposals", "located", "based", "situated", "count", "number"}
         words = query.lower().split()
         entity_words = [w.strip("?.,!") for w in words if w.strip("?.,!") not in noise and len(w.strip("?.,!")) > 2]
         return " ".join(entity_words[:4])
@@ -387,23 +508,32 @@ class QueryParser:
         # Determine whether to suppress filter context from history
         use_history = self.conversation_history
         if current_query and self.conversation_history:
-            last = self.conversation_history[-1]
-            last_contains = last.get("filter_contains", "") or ""
-            if last_contains:
-                current_entity = self._get_entity_from_query(current_query)
-                last_entity = self._get_entity_from_query(last_contains)
-                current_words = set(current_entity.lower().split())
-                last_words = set(last_entity.lower().split())
-                if current_words and last_words and not (current_words & last_words):
-                    # Different entity — suppress filter context to prevent bleed
-                    suppressed = []
-                    for turn in self.conversation_history:
-                        s = turn.copy()
-                        s["filter_contains"] = None
-                        s["filter_field"] = None
-                        s["filter_value"] = None
-                        suppressed.append(s)
-                    use_history = suppressed
+            should_suppress = False
+            
+            # Location queries must NEVER inherit business/person names
+            if self._is_location_query(current_query):
+                should_suppress = True
+            else:
+                # Entity-change detection for non-location queries
+                last = self.conversation_history[-1]
+                last_contains = last.get("filter_contains", "") or ""
+                if last_contains:
+                    current_entity = self._get_entity_from_query(current_query)
+                    last_entity = self._get_entity_from_query(last_contains)
+                    current_words = set(current_entity.lower().split())
+                    last_words = set(last_entity.lower().split())
+                    if current_words and last_words and not (current_words & last_words):
+                        should_suppress = True
+            
+            if should_suppress:
+                suppressed = []
+                for turn in self.conversation_history:
+                    s = turn.copy()
+                    s["filter_contains"] = None
+                    s["filter_field"] = None
+                    s["filter_value"] = None
+                    suppressed.append(s)
+                use_history = suppressed
         
         lines = ["CONVERSATION HISTORY (most recent turn is the most relevant for follow-up references):"]
         for i, turn in enumerate(use_history, 1):
@@ -482,9 +612,96 @@ class QueryParser:
             parse_success=True
         )
     
+    def _try_deterministic_count(self, query: str) -> Optional[ParsedQuery]:
+        """
+        Intercept simple 'how many proposals have X' queries deterministically.
+        Maps natural language feature phrases directly to field names and values.
+        Returns ParsedQuery if matched, None if LLM should handle it instead.
+        """
+        query_lower = query.lower().strip()
+        
+        if not any(w in query_lower for w in ["how many", "count", "number of"]):
+            return None
+        
+        # Map natural language phrases to (field_name, yes_value, no_value)
+        # yes_value = the code meaning "has this feature"
+        # no_value = the code meaning "does not have this feature"
+        FEATURE_MAP = {
+            "display window": ("do_you_have_display_window_label", "001", "002"),
+            "have display window": ("do_you_have_display_window_label", "001", "002"),
+            "has display window": ("do_you_have_display_window_label", "001", "002"),
+            "window display": ("do_you_have_display_window_label", "001", "002"),
+            "wall showcase": ("do_you_have_wall_showcase_label", "001", "002"),
+            "counter showcase": ("do_you_have_counter_showcase_label", "001", "002"),
+            "alarm": ("do_you_have_alarm_label", "001", "002"),
+            "cctv maintenance": ("cctv_maintenance_contract_label", "001", "002"),
+            "cctv recording": ("recording_label", "001", "002"),
+            "strong room": ("do_you_have_a_strong_room_label", "001", "002"),
+            "armoured vehicle": ("do_you_use_armoured_vehicle_label", "001", "002"),
+            "armed guards": ("do_you_use_armed_guards_during_transit_label", "001", "002"),
+            "guards at premise": ("do_you_use_guards_at_premise_label", "001", "002"),
+            "gps tracker": ("installed_gps_tracker_in_transit_vehicles_label", "001", "002"),
+            "jaguar transit": ("usage_of_jaguar_transit_label", "001", "002"),
+            "standard operating procedure": ("standard_operating_procedure_label", "001", "002"),
+            "sop": ("standard_operating_procedure_label", "001", "002"),
+            "stock records": ("do_you_keep_detailed_records_of_stock_movements_label", "001", "002"),
+            "detailed records": ("do_you_keep_detailed_records_of_stock_movements_label", "001", "002"),
+            "shoplifting": ("shop_lifting_label", "1", "2"),
+            "shop lifting": ("shop_lifting_label", "1", "2"),
+            "time locking": ("time_locking_label", "001", "002"),
+            "central monitoring": ("central_monitoring_stations_label", "001", "002"),
+            "alarm maintenance": ("under_maintenance_contract_label", "001", "002"),
+            "fidelity guarantee": ("fidelity_guarantee_insurance_add_coverage_label", "001", "002"),
+            "director house": ("director_house_question_label", "001", "002"),
+            "background check": ("background_checks_for_all_employees_label", "001", "002"),
+        }
+        
+        # Detect negation — "don't have", "without", "no", "not"
+        negation = any(w in query_lower for w in [
+            "don't have", "dont have", "do not have", "without", 
+            "no ", "not have", "haven't", "lack"
+        ])
+        
+        # Find matching feature phrase
+        matched_field = None
+        matched_yes = None
+        matched_no = None
+        
+        for phrase, (field_name, yes_val, no_val) in FEATURE_MAP.items():
+            if phrase in query_lower:
+                matched_field = field_name
+                matched_yes = yes_val
+                matched_no = no_val
+                break
+        
+        if not matched_field:
+            return None
+        
+        # Apply negation
+        filter_value = matched_no if negation else matched_yes
+        
+        return ParsedQuery(
+            intent="count",
+            target_fields=[matched_field],
+            filter_field=matched_field,
+            filter_value=filter_value,
+            filter_contains=None,
+            quote_id=None,
+            output_fields=["business_name_label"],
+            understood_question=f"Count proposals where {matched_field}={'Yes' if not negation else 'No'}",
+            raw_query=query,
+            parse_success=True
+        )
+    
     def parse(self, query: str) -> ParsedQuery:
         """
         Parse a natural language query into a structured format.
+        
+        Call order:
+        1. Deterministic count handler
+        2. Out-of-scope check (before LLM)
+        3. Deterministic follow-up detection
+        4. LLM parsing with post-parse validation
         
         Args:
             query: User's natural language question
@@ -492,10 +709,31 @@ class QueryParser:
         Returns:
             ParsedQuery object with extracted information
         """
-        # DETERMINISTIC follow-up detection (runs BEFORE LLM)
+        # 1. DETERMINISTIC count handler — ALWAYS first
+        deterministic = self._try_deterministic_count(query)
+        if deterministic:
+            return deterministic
+        
+        # 2. Out of scope check — return graceful refusal
+        if self._is_out_of_scope(query):
+            return ParsedQuery(
+                intent="out_of_scope",
+                target_fields=[],
+                filter_field=None,
+                filter_value=None,
+                filter_contains=None,
+                quote_id=None,
+                output_fields=[],
+                understood_question=query,
+                raw_query=query,
+                parse_success=False
+            )
+        
+        # 3. DETERMINISTIC follow-up detection (runs BEFORE LLM)
         if self._is_followup_reference(query):
             return self._resolve_followup(query)
         
+        # 4. Fall through to LLM parsing
         history_section = self._build_history_section(current_query=query)
         prompt = QUERY_PARSE_PROMPT.format(
             fields=AVAILABLE_FIELDS,
@@ -517,7 +755,7 @@ class QueryParser:
             raw_intent = parsed.get("intent", "lookup").lower().strip()
             intent = self._normalize_intent(raw_intent, query)
 
-            return ParsedQuery(
+            parsed_result = ParsedQuery(
                 intent=intent,
                 target_fields=parsed.get("target_fields", []),
                 filter_field=parsed.get("filter_field"),
@@ -529,6 +767,22 @@ class QueryParser:
                 raw_query=query,
                 parse_success=True
             )
+            
+            # POST-PARSE VALIDATION: Override wrong filter_contains from context bleed
+            query_entity = self._extract_entity_from_query(query)
+            if query_entity:
+                # Query mentions a specific entity — force filter_contains to that entity
+                parsed_result.filter_contains = query_entity
+            elif parsed_result.filter_contains:
+                # Query has no specific entity — check if filter_contains is from context bleed
+                # by seeing if the filter_contains value appears in the current query
+                contains_val = parsed_result.filter_contains.lower()
+                if contains_val not in query.lower():
+                    # filter_contains does not appear in current query — it's context bleed
+                    # Clear it
+                    parsed_result.filter_contains = None
+            
+            return parsed_result
             
         except Exception as e:
             return self._fallback_parse(query)

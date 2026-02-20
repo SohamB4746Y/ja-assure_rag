@@ -716,6 +716,16 @@ def handle_query(
     parsed = query_parser.parse(query)
     logger.info(f"Parsed query - Intent: {parsed.intent}, Fields: {parsed.target_fields}, Filter: {parsed.filter_field}={parsed.filter_value}, Contains: {parsed.filter_contains}")
     
+    # Handle out-of-scope queries gracefully
+    if parsed.intent == "out_of_scope":
+        answer = ("This question is outside the scope of the proposal database. "
+                  "I can only answer questions about data available in the "
+                  "insurance proposal records.")
+        log_query(query, "out_of_scope", quote_id, 0, 0.0, answer)
+        if query_parser:
+            query_parser.add_raw_to_history(query, answer)
+        return clean_output(answer)
+    
     # Execute the parsed query deterministically
     result = query_executor.execute(parsed)
     
@@ -917,8 +927,8 @@ def main():
     print("\nSystem ready. Type 'exit' to quit.")
     print("Type 'rebuild' to re-index the data.\n")
     
-    # Persistent query parser with conversation history
-    query_parser = QueryParser(llm)
+    # Persistent query parser with conversation history (pass metadata for runtime entity extraction)
+    query_parser = QueryParser(llm, metadata=metadata)
     
     while True:
         try:

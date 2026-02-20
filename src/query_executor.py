@@ -26,6 +26,40 @@ from dataclasses import dataclass
 from src.query_parser import ParsedQuery
 
 
+# ---- Section keyword mapping for field-match disambiguation ----
+SECTION_KEYWORDS = {
+    "backup": ["cctv"],
+    "cctv": ["cctv"],
+    "recording": ["cctv"],
+    "camera": ["cctv"],
+    "retention": ["cctv"],
+    "safe": ["safe"],
+    "grade": ["safe"],
+    "vault": ["safe", "strong_room"],
+    "strong room": ["strong_room"],
+    "alarm": ["alarm"],
+    "door": ["door_access"],
+    "access": ["door_access"],
+    "transit": ["transit_and_gaurds"],
+    "guard": ["transit_and_gaurds"],
+    "armoured": ["transit_and_gaurds"],
+    "vehicle": ["transit_and_gaurds"],
+    "claim": ["claim_history"],
+    "police": ["additional_details"],
+    "background": ["additional_details"],
+    "stock check": ["additional_details"],
+    "records": ["records_keeping"],
+    "premise": ["physical_setup"],
+    "roof": ["physical_setup"],
+    "wall": ["physical_setup"],
+    "floor": ["physical_setup"],
+    "showcase": ["display_showcases", "display_counters", "counter_show_case"],
+    "window": ["display_window"],
+    "director": ["add_on_coverage"],
+    "fidelity": ["add_on_coverage"],
+}
+
+
 @dataclass
 class QueryResult:
     """Result of executing a parsed query."""
@@ -67,13 +101,14 @@ class SmartQueryExecutor:
     # Field matching helper
     # ------------------------------------------------------------------
     
-    def _field_match_score(self, requested_field: str, actual_field: str) -> int:
+    def _field_match_score(self, requested_field: str, actual_field: str,
+                            chunk_section: str = "", query: str = "") -> int:
         """
         Score how well a requested field name matches an actual field name.
         Higher score = better match.
         
-        Uses the field_name as context — must preserve field_name for correct
-        contextual decoding.
+        Includes a section-relevance bonus/penalty so that fields from the
+        correct section are preferred when multiple fields share a keyword.
         """
         req = requested_field.lower().replace("_label", "").replace("_", " ")
         act = actual_field.lower().replace("_label", "").replace("_", " ")
@@ -84,19 +119,56 @@ class SmartQueryExecutor:
         
         # One is fully contained in the other
         if req in act or act in req:
-            return 50 + len(min(req, act, key=len))
+            base = 50 + len(min(req, act, key=len))
+        else:
+            # Word overlap
+            noise = {"the", "a", "an", "of", "in", "for", "is", "do", "you", "label"}
+            req_words = set(req.split()) - noise
+            act_words = set(act.split()) - noise
+            
+            if not req_words:
+                return 0
+            
+            overlap = len(req_words & act_words)
+            base = overlap * 10 if overlap > 0 else 0
         
-        # Word overlap — field name provides decoding context
-        noise = {"the", "a", "an", "of", "in", "for", "is", "do", "you", "label"}
-        req_words = set(req.split()) - noise
-        act_words = set(act.split()) - noise
-        
-        if not req_words:
+        if base == 0:
             return 0
         
-        overlap = len(req_words & act_words)
-        return overlap * 10 if overlap > 0 else 0
+        # Section relevance bonus / penalty
+        section_bonus = 0
+        if chunk_section and query:
+            query_lower = query.lower()
+            relevant_keywords = [k for k in SECTION_KEYWORDS if k in query_lower]
+            if relevant_keywords:
+                all_preferred = set()
+                for k in relevant_keywords:
+                    all_preferred.update(SECTION_KEYWORDS[k])
+                if chunk_section in all_preferred:
+                    section_bonus = 25   # correct section
+                else:
+                    section_bonus = -20  # wrong section
+        
+        return max(0, base + section_bonus)
     
+    def _is_result_relevant(self, result: dict, parsed: ParsedQuery) -> bool:
+        """
+        Check if a result's field actually answers what was asked.
+        Prevents returning business_name when door_access was requested.
+        """
+        returned_field = result.get("field", "")
+        requested_fields = parsed.output_fields or []
+
+        if not requested_fields:
+            return True
+
+        max_score = 0
+        for req_field in requested_fields:
+            score = self._field_match_score(req_field, returned_field)
+            max_score = max(max_score, score)
+
+        return max_score >= 20
+
     def _get_search_fields(self, chunk: dict) -> dict:
         """
         Build a unified search dict from a chunk.
@@ -167,6 +239,8 @@ class SmartQueryExecutor:
             if not search_fields:
                 continue
             
+            section = chunk.get("section", "")
+            
             # Scored matching for output_fields
             for output_field in (parsed.output_fields or []):
                 best_score = 0
@@ -174,7 +248,9 @@ class SmartQueryExecutor:
                 best_value = None
                 
                 for field_name, value in search_fields.items():
-                    score = self._field_match_score(output_field, field_name)
+                    score = self._field_match_score(output_field, field_name,
+                                                    chunk_section=section,
+                                                    query=parsed.raw_query)
                     if score > best_score:
                         best_score = score
                         best_field_name = field_name
@@ -195,7 +271,9 @@ class SmartQueryExecutor:
                     best_value = None
                     
                     for field_name, value in search_fields.items():
-                        score = self._field_match_score(target, field_name)
+                        score = self._field_match_score(target, field_name,
+                                                        chunk_section=section,
+                                                        query=parsed.raw_query)
                         if score > best_score:
                             best_score = score
                             best_field_name = field_name
@@ -216,6 +294,9 @@ class SmartQueryExecutor:
             if key not in seen:
                 seen.add(key)
                 unique_results.append(r)
+        
+        # Validate relevance (Fix 5)
+        unique_results = [r for r in unique_results if self._is_result_relevant(r, parsed)]
         
         if unique_results:
             details = [f"{r['field'].replace('_label', '').replace('_', ' ').title()}: {r['value']}" for r in unique_results]
@@ -398,13 +479,16 @@ class SmartQueryExecutor:
                     if out_field in retrieved_fields:
                         continue  # Already found this field
                     
-                    # Use scored matching
+                    # Use scored matching with section awareness
+                    section = chunk.get("section", "")
                     best_score = 0
                     best_field_name = None
                     best_value = None
                     
                     for field_name, value in search_fields.items():
-                        score = self._field_match_score(out_field, field_name)
+                        score = self._field_match_score(out_field, field_name,
+                                                        chunk_section=section,
+                                                        query=parsed.raw_query)
                         if score > best_score:
                             best_score = score
                             best_field_name = field_name
@@ -428,6 +512,9 @@ class SmartQueryExecutor:
                     "field": ", ".join(output_fields),
                     "value": "Not found"
                 })
+        
+        # Validate relevance (Fix 5)
+        results = [r for r in results if self._is_result_relevant(r, parsed)]
         
         if results:
             details = []

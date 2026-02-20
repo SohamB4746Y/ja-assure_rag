@@ -152,6 +152,71 @@ Parse this question and output ONLY a JSON object with these fields:
     "understood_question": "brief restatement of what user is asking"
 }}
 
+NATURAL LANGUAGE PHRASE MAPPINGS — ALWAYS use these exact field names when you detect the corresponding natural language phrase in the query:
+
+"type of business" / "what kind of business" / "what business" / "nature of business"
+  → nature_of_business_label (NOT business_name_label)
+
+"door access" / "how do they access" / "entry method" / "access control"
+  → door_access_label
+
+"background check" / "employee check" / "staff check" / "screening"
+  → background_checks_for_all_employees_label
+
+"stock records" / "detailed records" / "keep records" / "record stock" / "stock movements"
+  → do_you_keep_detailed_records_of_stock_movements_label
+  (NEVER invent a field name — this is the exact field name, use it verbatim)
+
+"standard operating procedure" / "SOP" / "procedures in place"
+  → standard_operating_procedure_label
+
+"CCTV backup" / "type of backup" / "backup type" / "recording backup"
+  → type_of_back_up_label (NOT director_house_question_cctv_label)
+
+"claim history" / "claims" / "previous claims" / "any claims"
+  → claim_history_label (use in output_fields ONLY, never in filter_field unless explicitly filtering by claim status)
+
+"stock check frequency" / "how often stock" / "stock check" / "checking stock"
+  → how_often_is_the_stock_check_carried_out_label
+
+"nearest police" / "police station" / "distance to police" / "how far police"
+  → the_nearest_police_station_label
+
+"armed guards transit" / "guards during transit" / "transit guards"
+  → do_you_use_armed_guards_during_transit_label (NOT do_you_use_guards_at_premise_label)
+
+"guards at premise" / "guards at shop" / "security guards on site"
+  → do_you_use_guards_at_premise_label
+
+"armoured vehicle" / "armored vehicle" / "security vehicle"
+  → do_you_use_armoured_vehicle_label
+
+"strong room" / "strongroom" / "vault room"
+  → do_you_have_a_strong_room_label
+
+"CCTV maintenance" / "camera maintenance" / "maintenance contract for CCTV"
+  → cctv_maintenance_contract_label
+
+"CCTV retention" / "how long CCTV" / "recording retention" / "how long recordings kept"
+  → retained_period_of_cctv_recording_label
+
+"safe grade" / "grade of safe" / "safe rating"
+  → grade_label
+
+"GPS tracker" / "GPS in bags" / "tracker in bags"
+  → installed_gps_tracker_in_transit_bags_label
+
+"GPS in vehicles" / "tracker in vehicles" / "vehicle GPS"
+  → installed_gps_tracker_in_transit_vehicles_label
+
+"records maintained" / "how records kept" / "online or offline records"
+  → records_maintained_in_label
+
+CRITICAL RULE: You MUST map the query to the exact field names listed above.
+NEVER construct a field name by concatenating words from the question itself.
+If you are unsure of the field name, pick the closest one from AVAILABLE_FIELDS.
+An imperfect field name from the list is always better than an invented one.
+
 PARSING RULES:
 1. "intent" MUST be exactly ONE word from: count, list, lookup, compare. Never combine them.
 2. For "how many" / "count" questions → intent = "count"
@@ -167,6 +232,10 @@ PARSING RULES:
 10. output_fields = what fields to show in the answer
 11. CRITICAL: If there is CONVERSATION HISTORY above, use it to resolve references like "these", "those", "them", "the above", "their names", etc. The follow-up query MUST inherit the same filter_field and filter_value from the previous query context.
 12. Pay close attention to NEGATION words: "don't have", "without", "no", "not" → these flip the filter value to the opposite.
+13. CRITICAL — NEVER set filter_field when the query is asking for a specific entity by name. When filter_contains has a business name or person name, set filter_field=null and filter_value=null. filter_field is ONLY for filtering the entire dataset (e.g., "show all businesses WITH alarm").
+14. CRITICAL — NEVER set filter_field to the same field as output_fields unless you are explicitly filtering the whole dataset by that field's value. If query says "what is the claim history of X", output_fields=["claim_history_label"] and filter_field=null, filter_contains="X". Do NOT set filter_field=claim_history_label.
+15. CRITICAL — filter_contains must contain EXACTLY the name as stated in the query. If the query says "Rapid FX Money Exchange" then filter_contains must be "Rapid FX Money Exchange". NEVER replace a business name with a person name. NEVER invent names. Copy the exact string from the query.
+16. CRITICAL — When a query asks about a SPECIFIC named business or person (filter_contains is set), do NOT also set filter_field and filter_value unless the query explicitly asks for filtering within that business's data.
 
 EXAMPLES:
 - "How many have CCTV maintenance?" → {{"intent": "count", "target_fields": ["cctv_maintenance_contract_label"], "filter_field": "cctv_maintenance_contract_label", "filter_value": "001", "output_fields": ["business_name_label"], "understood_question": "Count proposals with CCTV maintenance (=Yes/001)"}}
@@ -185,6 +254,14 @@ EXAMPLES:
 - "What is the alarm brand for MYJADEQT003?" → {{"intent": "lookup", "quote_id": "MYJADEQT003", "output_fields": ["alarm_brand_name_label"], "understood_question": "Get alarm brand for MYJADEQT003"}}
 - "How often is the stock check carried out for Suresh Kumar?" → {{"intent": "lookup", "target_fields": ["how_often_is_the_stock_check_carried_out_label"], "filter_field": null, "filter_value": null, "filter_contains": "Suresh Kumar", "output_fields": ["how_often_is_the_stock_check_carried_out_label"], "understood_question": "Get stock check frequency for Suresh Kumar"}}
 - "How much cash does Heritage Gold & Jewels keep in premise?" → {{"intent": "lookup", "target_fields": ["value_of_cash_in_premise_label"], "filter_field": null, "filter_value": null, "filter_contains": "Heritage Gold & Jewels", "output_fields": ["value_of_cash_in_premise_label"], "understood_question": "Get cash in premise value for Heritage Gold & Jewels"}}
+- "What type of business does Suresh Kumar run?" → {{"intent": "lookup", "target_fields": ["nature_of_business_label"], "filter_field": null, "filter_value": null, "filter_contains": "Suresh Kumar", "output_fields": ["nature_of_business_label"], "understood_question": "Get nature of business for Suresh Kumar"}}
+- "Does Heritage Gold and Jewels have a CCTV maintenance contract?" → {{"intent": "lookup", "target_fields": ["cctv_maintenance_contract_label"], "filter_field": null, "filter_value": null, "filter_contains": "Heritage Gold and Jewels", "output_fields": ["cctv_maintenance_contract_label"], "understood_question": "Check CCTV maintenance contract for Heritage Gold and Jewels"}}
+- "What is the door access type used by Global Money Exchange?" → {{"intent": "lookup", "target_fields": ["door_access_label"], "filter_field": null, "filter_value": null, "filter_contains": "Global Money Exchange", "output_fields": ["door_access_label"], "understood_question": "Get door access type for Global Money Exchange"}}
+- "Does Rapid FX Money Exchange use armed guards during transit?" → {{"intent": "lookup", "target_fields": ["do_you_use_armed_guards_during_transit_label"], "filter_field": null, "filter_value": null, "filter_contains": "Rapid FX Money Exchange", "output_fields": ["do_you_use_armed_guards_during_transit_label"], "understood_question": "Check if Rapid FX Money Exchange uses armed guards during transit"}}
+- "What background checks does LuxGold Jewellers do?" → {{"intent": "lookup", "target_fields": ["background_checks_for_all_employees_label"], "filter_field": null, "filter_value": null, "filter_contains": "LuxGold Jewellers", "output_fields": ["background_checks_for_all_employees_label"], "understood_question": "Get background check details for LuxGold Jewellers"}}
+- "What is the claim history of Heritage Gold?" → {{"intent": "lookup", "target_fields": ["claim_history_label"], "filter_field": null, "filter_value": null, "filter_contains": "Heritage Gold", "output_fields": ["claim_history_label"], "understood_question": "Get claim history for Heritage Gold"}}
+- "Does Royal Gems keep detailed records of stock movements?" → {{"intent": "lookup", "target_fields": ["do_you_keep_detailed_records_of_stock_movements_label"], "filter_field": null, "filter_value": null, "filter_contains": "Royal Gems", "output_fields": ["do_you_keep_detailed_records_of_stock_movements_label"], "understood_question": "Check if Royal Gems keeps detailed records of stock movements"}}
+- "What type of CCTV backup does Secure Pawn use?" → {{"intent": "lookup", "target_fields": ["type_of_back_up_label"], "filter_field": null, "filter_value": null, "filter_contains": "Secure Pawn", "output_fields": ["type_of_back_up_label"], "understood_question": "Get CCTV backup type for Secure Pawn"}}
 
 IMPORTANT REMINDERS:
 - intent must be EXACTLY one of: count, list, lookup, compare. NEVER output "count|list" or any combined form.
@@ -279,9 +356,27 @@ class QueryParser:
         if len(self.conversation_history) > 5:
             self.conversation_history = self.conversation_history[-5:]
     
-    def _build_history_section(self) -> str:
+    def _get_entity_from_query(self, query: str) -> str:
+        """Extract likely entity name from query for context bleed detection."""
+        noise = {"does", "do", "is", "what", "which", "how", "far", "often",
+                 "type", "of", "the", "a", "an", "for", "have", "use", "run",
+                 "business", "carry", "out", "keep", "detailed", "records",
+                 "standard", "operating", "procedure", "in", "place", "armed",
+                 "guards", "during", "transit", "background", "checks", "long",
+                 "retain", "cctv", "recordings", "safe", "grade", "nearest",
+                 "police", "station", "strong", "room", "door", "access", "backup",
+                 "and", "with", "their", "them", "that", "this", "from", "are",
+                 "has", "had", "its", "stock", "check", "movements", "contract",
+                 "maintenance", "used", "using", "get", "give", "tell", "show",
+                 "sop", "much", "many", "where", "when", "who"}
+        words = query.lower().split()
+        entity_words = [w.strip("?.,!") for w in words if w.strip("?.,!") not in noise and len(w.strip("?.,!")) > 2]
+        return " ".join(entity_words[:4])
+
+    def _build_history_section(self, current_query: str = "") -> str:
         """
         Build a conversation history section for the prompt.
+        Detects entity changes between turns to prevent context bleed.
         
         Returns:
             History text or empty string
@@ -289,8 +384,29 @@ class QueryParser:
         if not self.conversation_history:
             return ""
         
+        # Determine whether to suppress filter context from history
+        use_history = self.conversation_history
+        if current_query and self.conversation_history:
+            last = self.conversation_history[-1]
+            last_contains = last.get("filter_contains", "") or ""
+            if last_contains:
+                current_entity = self._get_entity_from_query(current_query)
+                last_entity = self._get_entity_from_query(last_contains)
+                current_words = set(current_entity.lower().split())
+                last_words = set(last_entity.lower().split())
+                if current_words and last_words and not (current_words & last_words):
+                    # Different entity — suppress filter context to prevent bleed
+                    suppressed = []
+                    for turn in self.conversation_history:
+                        s = turn.copy()
+                        s["filter_contains"] = None
+                        s["filter_field"] = None
+                        s["filter_value"] = None
+                        suppressed.append(s)
+                    use_history = suppressed
+        
         lines = ["CONVERSATION HISTORY (most recent turn is the most relevant for follow-up references):"]
-        for i, turn in enumerate(self.conversation_history, 1):
+        for i, turn in enumerate(use_history, 1):
             lines.append(f"Turn {i}:")
             lines.append(f"  User asked: {turn['query']}")
             lines.append(f"  Understood as: {turn['understood_question']}")
@@ -299,7 +415,7 @@ class QueryParser:
             lines.append(f"  Answer given: {turn['answer_preview']}")
         
         # Emphasize the LAST turn for follow-up resolution
-        last = self.conversation_history[-1]
+        last = use_history[-1]
         lines.append("")
         lines.append("=== MOST RECENT TURN (use this for follow-up references like 'their', 'these', 'those', 'them', 'the names') ===")
         lines.append(f"  Last question: {last['query']}")
@@ -380,7 +496,7 @@ class QueryParser:
         if self._is_followup_reference(query):
             return self._resolve_followup(query)
         
-        history_section = self._build_history_section()
+        history_section = self._build_history_section(current_query=query)
         prompt = QUERY_PARSE_PROMPT.format(
             fields=AVAILABLE_FIELDS,
             query=query,

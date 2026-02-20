@@ -33,6 +33,103 @@ FORMAT RULES:
 
 Write a natural, helpful response to the user's question using ONLY the data above:"""
 
+# ---- sentinel values that should be treated as "no data" ----
+_EMPTY_SENTINELS = {None, "", "None", "nan", "0", "-1", "N/A"}
+
+
+def _field_match_score(requested: str, actual: str) -> int:
+    """Score how well *requested* field name matches *actual* field name."""
+    req = requested.lower().replace("_label", "").replace("_", " ")
+    act = actual.lower().replace("_label", "").replace("_", " ")
+    if req == act:
+        return 100
+    if req in act or act in req:
+        return 50 + len(min(req, act, key=len))
+    noise = {"the", "a", "an", "of", "in", "for", "is", "do", "you", "label"}
+    req_words = set(req.split()) - noise
+    act_words = set(act.split()) - noise
+    if not req_words:
+        return 0
+    overlap = len(req_words & act_words)
+    return overlap * 10 if overlap > 0 else 0
+
+
+def _is_empty(value) -> bool:
+    """Return True if *value* should be treated as missing/empty."""
+    if value is None:
+        return True
+    s = str(value).strip()
+    if s in _EMPTY_SENTINELS:
+        return True
+    # Also catch list-of-dict empties like [{'amount': '0', 'year': '0', ...}]
+    if s.startswith("[") and s.endswith("]"):
+        # Quick heuristic: if every dict value is empty/zero, treat as empty
+        try:
+            import ast
+            items = ast.literal_eval(s)
+            if isinstance(items, list) and all(
+                isinstance(d, dict) and all(str(v).strip() in _EMPTY_SENTINELS for v in d.values())
+                for d in items
+            ):
+                return True
+        except Exception:
+            pass
+    return False
+
+
+def _filter_result(parsed: ParsedQuery, result: QueryResult) -> QueryResult:
+    """
+    Filter a QueryResult to:
+      1. Only include rows whose field best-matches one of parsed.output_fields
+         (when output_fields is non-empty).
+      2. Exclude rows with empty/sentinel values.
+
+    Returns a *new* QueryResult (the original is not mutated).
+    """
+    output_fields = parsed.output_fields or []
+
+    # --- Step 1: remove rows with empty values (Bug 2) ---
+    non_empty = [
+        (row, detail)
+        for row, detail in zip(result.data, result.details)
+        if not _is_empty(row.get("value"))
+    ]
+
+    # --- Step 2: if output_fields specified, keep only best match per field (Bug 1) ---
+    if output_fields and non_empty:
+        kept = []
+        for of in output_fields:
+            best_score = 0
+            best_pair = None
+            for row, detail in non_empty:
+                score = _field_match_score(of, row.get("field", ""))
+                if score > best_score:
+                    best_score = score
+                    best_pair = (row, detail)
+            if best_pair and best_score >= 10:
+                kept.append(best_pair)
+        non_empty = kept
+
+    if not non_empty:
+        return QueryResult(
+            success=False,
+            data=[],
+            count=0,
+            summary="Data not available in proposal records.",
+            details=[],
+        )
+
+    filtered_data = [pair[0] for pair in non_empty]
+    filtered_details = [pair[1] for pair in non_empty]
+
+    return QueryResult(
+        success=True,
+        data=filtered_data,
+        count=len(filtered_data),
+        summary=result.summary,
+        details=filtered_details,
+    )
+
 
 def format_answer(
     llm: LLMClient,
@@ -59,6 +156,10 @@ def format_answer(
         if parsed.filter_contains:
             return f"0 proposals found with '{parsed.filter_contains}' in the records."
         return "0 proposals match the criteria."
+    
+    # ---- Apply output-field + empty-value filter for lookup results ----
+    if parsed.intent == "lookup" and result.data and result.details:
+        result = _filter_result(parsed, result)
     
     # For non-count/list queries with no results
     if not result.success or result.count == 0:

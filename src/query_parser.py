@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from src.llm_client import LLMClient
 
 
-# All available fields in the data (for the LLM to map to)
+                                                          
 AVAILABLE_FIELDS = """
 BUSINESS INFO:
 - business_name_label: Name of the business
@@ -212,6 +212,24 @@ NATURAL LANGUAGE PHRASE MAPPINGS — ALWAYS use these exact field names when you
 "records maintained" / "how records kept" / "online or offline records"
   → records_maintained_in_label
 
+"safe model" / "model of safe" / "safe brand" / "what safe"
+  → safe_model_label
+
+"safe capacity" / "capacity of safe"
+  → safe_capacity_label
+
+"value in safe" / "stock in safe" / "value of stock in safe"
+  → value_of_stock_in_safe_label
+
+"value out of safe" / "stock outside safe" / "value of stock out"
+  → value_of_stock_out_of_safe_label
+
+"transit limit" / "cash in transit" / "transit cash limit"
+  → limit_per_transit_label
+
+"director house" / "director coverage" / "director house coverage"
+  → director_house_coverage_label
+
 CRITICAL RULE: You MUST map the query to the exact field names listed above.
 NEVER construct a field name by concatenating words from the question itself.
 If you are unsure of the field name, pick the closest one from AVAILABLE_FIELDS.
@@ -289,7 +307,7 @@ Output ONLY the JSON, no explanation."""
 @dataclass
 class ParsedQuery:
     """Structured representation of a parsed query."""
-    intent: str  # count, list, lookup, compare, aggregate
+    intent: str                                           
     target_fields: list[str]
     filter_field: Optional[str]
     filter_value: Optional[str]
@@ -317,14 +335,14 @@ class QueryParser:
         self.llm = llm
         self.conversation_history: list[dict] = []
         
-        # Load known entities from metadata at runtime
+                                                      
         self._known_persons: list[str] = []
         self._known_businesses: list[str] = []
         
         if metadata:
             self._load_entities_from_metadata(metadata)
         
-        # Use hardcoded fallback if metadata didn't provide enough entities
+                                                                           
         if not self._known_persons or not self._known_businesses:
             self._use_fallback_entities()
     
@@ -375,17 +393,17 @@ class QueryParser:
         """
         query_lower = query.lower()
         
-        # Check person names first (case insensitive)
+                                                     
         for name in self._known_persons:
             if name.lower() in query_lower:
                 return name
         
-        # Check business names (case insensitive)
+                                                 
         for name in self._known_businesses:
             if name.lower() in query_lower:
                 return name
         
-        # Check partial business name matches (first two words)
+                                                               
         for name in self._known_businesses:
             parts = name.lower().split()
             if len(parts) >= 2:
@@ -395,7 +413,7 @@ class QueryParser:
         
         return None
     
-    # Out-of-scope detection constants
+                                      
     OUT_OF_SCOPE_INDICATORS = [
         "singapore", "indonesia", "thailand", "philippines", "vietnam",
         "average", "per year", "annually", "total across all",
@@ -434,7 +452,7 @@ class QueryParser:
             "understood_question": parsed.understood_question,
             "answer_preview": answer[:200]
         })
-        # Keep only last 5 turns
+                                
         if len(self.conversation_history) > 5:
             self.conversation_history = self.conversation_history[-5:]
     
@@ -458,11 +476,11 @@ class QueryParser:
             "understood_question": query,
             "answer_preview": answer[:200]
         })
-        # Keep only last 5 turns
+                                
         if len(self.conversation_history) > 5:
             self.conversation_history = self.conversation_history[-5:]
     
-    # Location indicators for context bleed prevention
+                                                      
     LOCATION_INDICATORS = [
         "located in", "in penang", "in johor", "in kuala lumpur", "in selangor",
         "in sabah", "in kedah", "in perak", "in melaka", "in negeri", "in pahang",
@@ -505,16 +523,16 @@ class QueryParser:
         if not self.conversation_history:
             return ""
         
-        # Determine whether to suppress filter context from history
+                                                                   
         use_history = self.conversation_history
         if current_query and self.conversation_history:
             should_suppress = False
             
-            # Location queries must NEVER inherit business/person names
+                                                                       
             if self._is_location_query(current_query):
                 should_suppress = True
             else:
-                # Entity-change detection for non-location queries
+                                                                  
                 last = self.conversation_history[-1]
                 last_contains = last.get("filter_contains", "") or ""
                 if last_contains:
@@ -544,7 +562,7 @@ class QueryParser:
                 lines.append(f"  Intent: {turn['intent']}, Filter: {turn['filter_field']}={turn['filter_value']}, Contains: {turn['filter_contains']}")
             lines.append(f"  Answer given: {turn['answer_preview']}")
         
-        # Emphasize the LAST turn for follow-up resolution
+                                                          
         last = use_history[-1]
         lines.append("")
         lines.append("=== MOST RECENT TURN (use this for follow-up references like 'their', 'these', 'those', 'them', 'the names') ===")
@@ -571,7 +589,7 @@ class QueryParser:
         
         query_lower = query.lower().strip()
         
-        # Short queries with reference words are almost always follow-ups
+                                                                         
         followup_patterns = [
             "their names", "the names", "give names", "give me names",
             "list them", "show them", "what are they", "who are they",
@@ -586,7 +604,7 @@ class QueryParser:
             if pattern in query_lower:
                 return True
         
-        # Very short queries that are purely referential
+                                                        
         if len(query_lower.split()) <= 5 and any(w in query_lower for w in ["them", "their", "those", "these", "above", "names"]):
             return True
         
@@ -623,9 +641,9 @@ class QueryParser:
         if not any(w in query_lower for w in ["how many", "count", "number of"]):
             return None
         
-        # Map natural language phrases to (field_name, yes_value, no_value)
-        # yes_value = the code meaning "has this feature"
-        # no_value = the code meaning "does not have this feature"
+                                                                           
+                                                         
+                                                                  
         FEATURE_MAP = {
             "display window": ("do_you_have_display_window_label", "001", "002"),
             "have display window": ("do_you_have_display_window_label", "001", "002"),
@@ -656,13 +674,13 @@ class QueryParser:
             "background check": ("background_checks_for_all_employees_label", "001", "002"),
         }
         
-        # Detect negation — "don't have", "without", "no", "not"
+                                                                
         negation = any(w in query_lower for w in [
             "don't have", "dont have", "do not have", "without", 
             "no ", "not have", "haven't", "lack"
         ])
         
-        # Find matching feature phrase
+                                      
         matched_field = None
         matched_yes = None
         matched_no = None
@@ -677,7 +695,7 @@ class QueryParser:
         if not matched_field:
             return None
         
-        # Apply negation
+                        
         filter_value = matched_no if negation else matched_yes
         
         return ParsedQuery(
@@ -709,12 +727,12 @@ class QueryParser:
         Returns:
             ParsedQuery object with extracted information
         """
-        # 1. DETERMINISTIC count handler — ALWAYS first
+                                                       
         deterministic = self._try_deterministic_count(query)
         if deterministic:
             return deterministic
         
-        # 2. Out of scope check — return graceful refusal
+                                                         
         if self._is_out_of_scope(query):
             return ParsedQuery(
                 intent="out_of_scope",
@@ -729,11 +747,11 @@ class QueryParser:
                 parse_success=False
             )
         
-        # 3. DETERMINISTIC follow-up detection (runs BEFORE LLM)
+                                                                
         if self._is_followup_reference(query):
             return self._resolve_followup(query)
         
-        # 4. Fall through to LLM parsing
+                                        
         history_section = self._build_history_section(current_query=query)
         prompt = QUERY_PARSE_PROMPT.format(
             fields=AVAILABLE_FIELDS,
@@ -744,14 +762,14 @@ class QueryParser:
         try:
             response = self.llm.generate(prompt)
             
-            # Extract JSON from response
+                                        
             json_match = re.search(r'\{[\s\S]*\}', response)
             if not json_match:
                 return self._fallback_parse(query)
             
             parsed = json.loads(json_match.group())
             
-            # Normalize intent: extract single primary intent
+                                                             
             raw_intent = parsed.get("intent", "lookup").lower().strip()
             intent = self._normalize_intent(raw_intent, query)
 
@@ -768,18 +786,18 @@ class QueryParser:
                 parse_success=True
             )
             
-            # POST-PARSE VALIDATION: Override wrong filter_contains from context bleed
+                                                                                      
             query_entity = self._extract_entity_from_query(query)
             if query_entity:
-                # Query mentions a specific entity — force filter_contains to that entity
+                                                                                         
                 parsed_result.filter_contains = query_entity
             elif parsed_result.filter_contains:
-                # Query has no specific entity — check if filter_contains is from context bleed
-                # by seeing if the filter_contains value appears in the current query
+                                                                                               
+                                                                                     
                 contains_val = parsed_result.filter_contains.lower()
                 if contains_val not in query.lower():
-                    # filter_contains does not appear in current query — it's context bleed
-                    # Clear it
+                                                                                           
+                              
                     parsed_result.filter_contains = None
             
             return parsed_result
@@ -796,16 +814,16 @@ class QueryParser:
         query_lower = query.lower()
         valid_intents = ["count", "list", "lookup", "compare"]
 
-        # If already a valid single intent, return it
+                                                     
         if raw_intent in valid_intents:
             return raw_intent
 
-        # Split on common delimiters
+                                    
         parts = re.split(r'[|/,\s]+', raw_intent)
         found = [p.strip() for p in parts if p.strip() in valid_intents]
 
         if not found:
-            # Infer from query keywords
+                                       
             if any(w in query_lower for w in ["how many", "count", "number of", "total"]):
                 return "count"
             elif any(w in query_lower for w in ["list", "show", "which", "what are", "give", "name"]):
@@ -814,13 +832,13 @@ class QueryParser:
                 return "compare"
             return "lookup"
 
-        # If multiple found, prioritize based on query
+                                                      
         if "count" in found and any(w in query_lower for w in ["how many", "count", "number of", "total"]):
             return "count"
         if "list" in found and any(w in query_lower for w in ["list", "show", "which", "what are", "names"]):
             return "list"
         
-        # Default to first found
+                                
         return found[0]
 
     def _fallback_parse(self, query: str) -> ParsedQuery:
@@ -835,11 +853,11 @@ class QueryParser:
         """
         query_lower = query.lower()
         
-        # Extract quote ID
+                          
         quote_match = re.search(r'MYJADEQT\d+', query, re.IGNORECASE)
         quote_id = quote_match.group().upper() if quote_match else None
         
-        # Determine intent
+                          
         if any(w in query_lower for w in ["how many", "count", "number of"]):
             intent = "count"
         elif any(w in query_lower for w in ["list", "show", "what are", "which"]):

@@ -98,6 +98,17 @@ class SmartQueryExecutor:
                 self.metadata = pickle.load(f)
     
     # ------------------------------------------------------------------
+    # Empty / null value helper
+    # ------------------------------------------------------------------
+    
+    def _is_empty_value(self, value) -> bool:
+        """Return True if *value* represents missing / null / empty data."""
+        if value is None:
+            return True
+        val_str = str(value).strip().lower()
+        return val_str in {"none", "null", "", "-1", "nan", "0", "n/a"}
+    
+    # ------------------------------------------------------------------
     # Field matching helper
     # ------------------------------------------------------------------
     
@@ -599,16 +610,31 @@ class SmartQueryExecutor:
                 matched_field = None
                 matched_value = None
                 
+                # Determine whether this is a negation query (filter_value
+                # represents "No" / absence).  Negation queries should also
+                # match proposals where the field is empty/missing.
+                NO_CODES = {"no", "002", "false", "2"}
+                YES_CODES = {"yes", "001", "true", "1"}
+                is_negation = expected in NO_CODES
+                
                 # Search in decoded fields
                 for field_name, value in search_fields.items():
                     if filter_key in field_name.lower().replace("_label", ""):
+                        # Skip empty/null values for positive filters —
+                        # missing data must never be counted as "Yes".
+                        # For negation filters, empty/null means the
+                        # proposal lacks the feature → treat as a match.
+                        if self._is_empty_value(value):
+                            if is_negation:
+                                matched = True
+                                matched_field = field_name
+                                matched_value = "N/A"
+                            break  # field found but empty — stop searching fields
+                        
                         value_lower = str(value).lower().strip()
                         
                         # Normalize yes/no matching — decoded values may be "Yes"/"No"
                         # but filter_value from LLM may be codes like "001"/"002"
-                        YES_CODES = {"yes", "001", "true", "1"}
-                        NO_CODES = {"no", "002", "false", "2", "0"}
-                        
                         if expected in YES_CODES and value_lower in YES_CODES:
                             matched = True
                         elif expected in NO_CODES and value_lower in NO_CODES:
@@ -628,6 +654,12 @@ class SmartQueryExecutor:
                     for top_key in ("risk_location", "user_name"):
                         if filter_key in top_key.lower():
                             top_val = str(chunk.get(top_key, "")).lower().strip()
+                            if self._is_empty_value(top_val):
+                                if is_negation:
+                                    matched = True
+                                    matched_field = top_key
+                                    matched_value = "N/A"
+                                break
                             if expected in top_val:
                                 matched = True
                                 matched_field = top_key

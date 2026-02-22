@@ -390,6 +390,9 @@ class QueryParser:
         Extract the most likely entity (person name or business name)
         from the query using the known names in the database.
         Returns the matched name if found, None otherwise.
+        
+        Falls back to Title Case heuristic: consecutive capitalised words
+        that are not common question/stop words are treated as an entity.
         """
         query_lower = query.lower()
         
@@ -410,6 +413,47 @@ class QueryParser:
                 partial = " ".join(parts[:2])
                 if partial in query_lower:
                     return name
+        
+        # -----------------------------------------------------------
+        # Safety net: extract Title Case phrases as candidate entities
+        # -----------------------------------------------------------
+        IGNORE_WORDS = {
+            "What", "Which", "How", "Does", "Do", "Is", "Are", "Who",
+            "Where", "When", "The", "A", "An", "CCTV", "GPS", "SOP"
+        }
+        
+        words = query.split()
+        segments: list[list[str]] = []
+        current_segment: list[str] = []
+        
+        for word in words:
+            # Strip trailing punctuation for the check but keep original
+            stripped = word.rstrip("?.,!;:")
+            if stripped and stripped[0].isupper() and stripped not in IGNORE_WORDS:
+                current_segment.append(stripped)
+            else:
+                if current_segment:
+                    segments.append(current_segment)
+                    current_segment = []
+        if current_segment:
+            segments.append(current_segment)
+        
+        # Pick the longest segment with at least 2 words (likely a name)
+        # Fall back to any single-word segment if nothing longer exists
+        best = None
+        for seg in segments:
+            if len(seg) >= 2:
+                if best is None or len(seg) > len(best):
+                    best = seg
+        
+        if best is None:
+            for seg in segments:
+                if len(seg) == 1 and seg[0] not in IGNORE_WORDS:
+                    best = seg
+                    break
+        
+        if best and len(best) >= 2:
+            return " ".join(best)
         
         return None
     
@@ -645,33 +689,37 @@ class QueryParser:
                                                          
                                                                   
         FEATURE_MAP = {
-            "display window": ("do_you_have_display_window_label", "001", "002"),
-            "have display window": ("do_you_have_display_window_label", "001", "002"),
-            "has display window": ("do_you_have_display_window_label", "001", "002"),
-            "window display": ("do_you_have_display_window_label", "001", "002"),
-            "wall showcase": ("do_you_have_wall_showcase_label", "001", "002"),
-            "counter showcase": ("do_you_have_counter_showcase_label", "001", "002"),
-            "alarm": ("do_you_have_alarm_label", "001", "002"),
-            "cctv maintenance": ("cctv_maintenance_contract_label", "001", "002"),
-            "cctv recording": ("recording_label", "001", "002"),
-            "strong room": ("do_you_have_a_strong_room_label", "001", "002"),
-            "armoured vehicle": ("do_you_use_armoured_vehicle_label", "001", "002"),
-            "armed guards": ("do_you_use_armed_guards_during_transit_label", "001", "002"),
-            "guards at premise": ("do_you_use_guards_at_premise_label", "001", "002"),
-            "gps tracker": ("installed_gps_tracker_in_transit_vehicles_label", "001", "002"),
-            "jaguar transit": ("usage_of_jaguar_transit_label", "001", "002"),
-            "standard operating procedure": ("standard_operating_procedure_label", "001", "002"),
-            "sop": ("standard_operating_procedure_label", "001", "002"),
-            "stock records": ("do_you_keep_detailed_records_of_stock_movements_label", "001", "002"),
-            "detailed records": ("do_you_keep_detailed_records_of_stock_movements_label", "001", "002"),
-            "shoplifting": ("shop_lifting_label", "1", "2"),
-            "shop lifting": ("shop_lifting_label", "1", "2"),
-            "time locking": ("time_locking_label", "001", "002"),
-            "central monitoring": ("central_monitoring_stations_label", "001", "002"),
-            "alarm maintenance": ("under_maintenance_contract_label", "001", "002"),
-            "fidelity guarantee": ("fidelity_guarantee_insurance_add_coverage_label", "001", "002"),
-            "director house": ("director_house_question_label", "001", "002"),
-            "background check": ("background_checks_for_all_employees_label", "001", "002"),
+            "display window":     ("do_you_have_display_window_label",                  "Yes", "No"),
+            "have display window": ("do_you_have_display_window_label",                 "Yes", "No"),
+            "has display window": ("do_you_have_display_window_label",                  "Yes", "No"),
+            "window display":     ("do_you_have_display_window_label",                  "Yes", "No"),
+            "wall showcase":      ("do_you_have_wall_showcase_label",                   "Yes", "No"),
+            "counter showcase":   ("do_you_have_counter_showcase_label",                "Yes", "No"),
+            "alarm":              ("do_you_have_alarm_label",                           "Yes", "No"),
+            "cctv maintenance":   ("cctv_maintenance_contract_label",                   "Yes", "No"),
+            "cctv recording":     ("recording_label",                                   "Yes", "No"),
+            "strong room":        ("do_you_have_a_strong_room_label",                   "Yes", "No"),
+            "armoured vehicle":   ("do_you_use_armoured_vehicle_label",                 "Yes", "No"),
+            "armed guards":       ("do_you_use_armed_guards_during_transit_label",      "Yes", "No"),
+            "guards at premise":  ("do_you_use_guards_at_premise_label",                "Yes", "No"),
+            "gps tracker":        ("installed_gps_tracker_in_transit_vehicles_label",   "Yes", "No"),
+            "jaguar transit":     ("usage_of_jaguar_transit_label",                     "Yes", "No"),
+            "standard operating procedure": ("standard_operating_procedure_label",      "Yes", "No"),
+            "sop":                ("standard_operating_procedure_label",                "Yes", "No"),
+            "stock records":      ("do_you_keep_detailed_records_of_stock_movements_label", "Yes", "No"),
+            "detailed records":   ("do_you_keep_detailed_records_of_stock_movements_label", "Yes", "No"),
+            "shoplifting":        ("shop_lifting_label",                                "Yes", "No"),
+            "shop lifting":       ("shop_lifting_label",                                "Yes", "No"),
+            "time locking":       ("time_locking_label",                                "Yes", "No"),
+            "central monitoring": ("central_monitoring_stations_label",                 "Yes", "No"),
+            "alarm maintenance":  ("under_maintenance_contract_label",                  "Yes", "No"),
+            "fidelity guarantee": ("fidelity_guarantee_insurance_add_coverage_label",   "Yes", "No"),
+            "director house":     ("director_house_question_label",                     "Yes", "No"),
+            "background check":   ("background_checks_for_all_employees_label",         "Yes", "No"),
+            "claims within":      ("claim_history_label", "Claims within the past 3 years", "No claim within 3 years"),
+            "claim history":      ("claim_history_label", "Claims within the past 3 years", "No claim within 3 years"),
+            "past 3 years":       ("claim_history_label", "Claims within the past 3 years", "No claim within 3 years"),
+            "no claim":           ("claim_history_label", "No claim within 3 years", "Claims within the past 3 years"),
         }
         
                                                                 
@@ -710,7 +758,85 @@ class QueryParser:
             raw_query=query,
             parse_success=True
         )
-    
+
+    def _try_deterministic_field_lookup(self, query: str) -> Optional[str]:
+        """
+        Maps natural language phrases to exact field names deterministically.
+        Returns the correct field_name string if matched, None otherwise.
+        """
+        query_lower = query.lower()
+        
+        FIELD_PHRASE_MAP = [
+            # Safe section — check most specific first
+            (["safe model", "model of safe", "safe brand", "which safe"],     "safe_model_label"),
+            (["safe grade", "grade of safe", "safe rating"],                  "grade_label"),
+            (["safe capacity", "capacity of safe"],                           "safe_capacity_label"),
+            (["value in safe", "stock in safe", "value of stock in safe"],    "value_of_stock_in_safe_label"),
+            (["value out of safe", "stock out of safe", "outside the safe"],  "value_of_stock_out_of_safe_label"),
+            (["key combination", "safe key", "safe access type"],             "key_combination_code_or_both_label"),
+            
+            # CCTV section
+            (["cctv backup", "type of backup", "backup type", "recording backup"], "type_of_back_up_label"),
+            (["cctv retention", "how long cctv", "retain cctv", "retention period", "how long recording"], "retained_period_of_cctv_recording_label"),
+            (["cctv maintenance", "camera maintenance", "maintenance contract for cctv"], "cctv_maintenance_contract_label"),
+            (["cctv model", "camera model", "model of cctv"],                 "model_label"),
+            (["number of cameras", "how many cameras", "camera count"],       "number_of_cctv_label"),
+            
+            # Alarm section
+            (["alarm model", "model of alarm", "alarm brand"],                "alarm_model_label"),
+            (["alarm type", "type of alarm", "alarm system type"],            "type_of_alarm_label"),
+            (["alarm connection", "alarm connected to", "connection type"],   "connection_type_label"),
+            (["alarm maintenance", "alarm contract", "maintenance for alarm"],"under_maintenance_contract_label"),
+            
+            # Transit section
+            (["armoured vehicle", "armored vehicle", "security vehicle"],     "do_you_use_armoured_vehicle_label"),
+            (["armed guards transit", "guards during transit", "transit guards"], "do_you_use_armed_guards_during_transit_label"),
+            (["transit limit", "cash in transit", "transit cash limit"],      "limit_per_transit_label"),
+            (["gps tracker", "gps in vehicle", "vehicle tracker", "gps installed"], "installed_gps_tracker_in_transit_vehicles_label"),
+            (["jaguar transit", "jaguar service"],                            "usage_of_jaguar_transit_label"),
+            
+            # Physical setup
+            (["roof material", "type of roof", "roof type"],                  "roof_materials_label"),
+            (["wall material", "type of wall", "wall type"],                  "wall_materials_label"),
+            (["floor material", "type of floor", "floor type"],               "floor_materials_label"),
+            (["premise type", "type of premise", "building type"],            "premise_type_label"),
+            (["strong room", "strongroom", "vault room"],                     "do_you_have_a_strong_room_label"),
+            (["display window", "have display window"],                       "do_you_have_display_window_label"),
+            (["wall showcase", "have wall showcase"],                         "do_you_have_wall_showcase_label"),
+            (["counter showcase", "display counter"],                         "do_you_have_counter_showcase_label"),
+            
+            # Door access
+            (["door access", "access type", "entry method", "how do they access", "how is access"], "door_access_label"),
+            
+            # Additional details
+            (["background check", "employee check", "staff screening", "employee screening"], "background_checks_for_all_employees_label"),
+            (["police station", "nearest police", "distance to police", "how far police"], "the_nearest_police_station_label"),
+            (["stock check frequency", "how often stock", "stock check", "checking stock", "how often is the stock"], "how_often_is_the_stock_check_carried_out_label"),
+            (["stock records", "detailed records", "keep records of stock", "record stock movements"], "do_you_keep_detailed_records_of_stock_movements_label"),
+            (["standard operating procedure", "sop", "procedures in place", "have a sop"], "standard_operating_procedure_label"),
+            (["central monitoring", "monitoring station"],                    "central_monitoring_stations_label"),
+            (["time locking", "time lock"],                                   "time_locking_label"),
+            
+            # Business profile
+            (["nature of business", "type of business", "what kind of business", "what business do"], "nature_of_business_label"),
+            (["business name", "name of business", "company name"],           "business_name_label"),
+            (["contact number", "phone number", "mobile number", "contact no"], "contact_number_label"),
+            (["email", "correspondence email", "email address"],              "correspondence_email_label"),
+            
+            # Claim history
+            (["claim history", "previous claims", "any claims", "claims history", "claim record"], "claim_history_label"),
+            
+            # Records keeping
+            (["records maintained", "how records kept", "online or offline", "records online"], "records_maintained_in_label"),
+        ]
+        
+        for phrases, field_name in FIELD_PHRASE_MAP:
+            for phrase in phrases:
+                if phrase in query_lower:
+                    return field_name
+        
+        return None
+
     def parse(self, query: str) -> ParsedQuery:
         """
         Parse a natural language query into a structured format.
@@ -731,6 +857,9 @@ class QueryParser:
         deterministic = self._try_deterministic_count(query)
         if deterministic:
             return deterministic
+        
+                                                                        
+        deterministic_field = self._try_deterministic_field_lookup(query)
         
                                                          
         if self._is_out_of_scope(query):
@@ -758,6 +887,9 @@ class QueryParser:
             query=query,
             history_section=history_section
         )
+        
+        if deterministic_field:
+            prompt += f'\n\nCRITICAL OVERRIDE: You MUST set output_fields to ["{deterministic_field}"] for this query. Do not use any other field name.'
         
         try:
             response = self.llm.generate(prompt)

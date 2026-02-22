@@ -2,7 +2,7 @@ import requests
 
 
 class LLMClient:
-    def __init__(self, model="llama3:8b", base_url="http://localhost:11434"):
+    def __init__(self, model="llama3.1:8b", base_url="http://localhost:11434"):
         self.model = model
         self.url = f"{base_url}/api/generate"
 

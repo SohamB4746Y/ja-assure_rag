@@ -1,0 +1,36 @@
+/Users/admin22/Documents/Coding/ja-assure_rag/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [19691]
+INFO:     Waiting for application startup.
+2026-02-20 20:07:46,897 - api - INFO - Starting JA Assure RAG API...
+2026-02-20 20:07:46,897 - api - INFO - Initializing system components...
+2026-02-20 20:07:46,919 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-20 20:07:46,919 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-20 20:07:47,553 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+
+=== JA Assure | Production RAG System ===
+
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  6.08it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  6.07it/s]
+2026-02-20 20:07:47,733 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-20 20:07:47,733 - ja_assure_rag - INFO - LLM client initialized
+2026-02-20 20:07:47,736 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-20 20:07:47,736 - api - INFO - API startup complete. Ready to handle requests.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:62094 - "GET /health HTTP/1.1" 200 OK
+2026-02-20 20:08:33,643 - api - INFO - Received query: What is the business name of MYJADEQT001?
+2026-02-20 20:08:33,715 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-20 20:09:06,271 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-20 20:09:06,274 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-20 20:09:06,281 - api - INFO - Generated answer (length: 44 chars)
+INFO:     127.0.0.1:62102 - "POST /query HTTP/1.1" 200 OK
+2026-02-20 20:09:50,608 - api - INFO - Received query: How many proposals have CCTV maintenance contracts?
+2026-02-20 20:09:50,880 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-20 20:09:50,883 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['cctv_maintenance_contract_label'], Filter: cctv_maintenance_contract_label=001, Contains: None
+2026-02-20 20:09:50,885 - ja_assure_rag - INFO - Smart query executor handled - 8 results
+2026-02-20 20:09:50,887 - api - INFO - Generated answer (length: 33 chars)
+INFO:     127.0.0.1:62185 - "POST /query HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [19691]

@@ -1042,5 +1042,734 @@
     "num_chunks_retrieved": 1,
     "top_similarity_score": 1.0,
     "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T18:26:51.052968",
+    "query": "Does MYJADEQT001 use an armoured vehicle?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 537
+  },
+  {
+    "timestamp": "2026-02-19T18:27:10.201492",
+    "query": "What is the safe grade for MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 3,
+    "top_similarity_score": 1.0,
+    "answer_length": 86
+  },
+  {
+    "timestamp": "2026-02-19T18:27:28.865263",
+    "query": "What is the claim history for MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-19T18:27:47.124874",
+    "query": "What type of door access does MYJADEQT001 use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 6,
+    "top_similarity_score": 1.0,
+    "answer_length": 219
+  },
+  {
+    "timestamp": "2026-02-19T18:28:06.378765",
+    "query": "How often is stock checked for MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-19T18:28:34.275780",
+    "query": "What is the nature of business for MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 6,
+    "top_similarity_score": 1.0,
+    "answer_length": 219
+  },
+  {
+    "timestamp": "2026-02-19T18:29:02.895675",
+    "query": "Does MYJADEQT001 have CCTV recording?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 300
+  },
+  {
+    "timestamp": "2026-02-19T19:06:08.477610",
+    "query": "what is the recording label of rohan mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 55
+  },
+  {
+    "timestamp": "2026-02-20T15:16:34.247028",
+    "query": "what is the safe model label of rahul mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 3,
+    "top_similarity_score": 1.0,
+    "answer_length": 189
+  },
+  {
+    "timestamp": "2026-02-20T16:12:26.973002",
+    "query": "what is the safe model label of rahul mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 3,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-20T16:13:47.590120",
+    "query": "what is the alarm model label for rahul mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T16:19:26.705116",
+    "query": "Does Rahul Mehta use an armoured vehicle for transit?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 67
+  },
+  {
+    "timestamp": "2026-02-20T16:19:45.178572",
+    "query": "What type of business does Suresh Kumar run?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 70
+  },
+  {
+    "timestamp": "2026-02-20T16:20:04.053767",
+    "query": "Does Heritage Gold and Jewels have a CCTV maintenance contract?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T16:20:23.126579",
+    "query": "How often does Sunrise Jewel House carry out stock checks?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 3,
+    "top_similarity_score": 1.0,
+    "answer_length": 84
+  },
+  {
+    "timestamp": "2026-02-20T16:20:50.951736",
+    "query": "What is the door access type used by Global Money Exchange?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 74
+  },
+  {
+    "timestamp": "2026-02-20T16:21:19.248216",
+    "query": "Does Trust Pawn Brokers have a strong room?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 65
+  },
+  {
+    "timestamp": "2026-02-20T16:21:46.677293",
+    "query": "What is the safe grade for Mehta Pawn Services?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 3,
+    "top_similarity_score": 1.0,
+    "answer_length": 51
+  },
+  {
+    "timestamp": "2026-02-20T16:22:15.107777",
+    "query": "How far is the nearest police station from City FX Exchange?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 75
+  },
+  {
+    "timestamp": "2026-02-20T16:22:45.456155",
+    "query": "Does Rapid FX Money Exchange use armed guards during transit?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T16:23:12.466293",
+    "query": "What background checks does LuxGold Jewellers do for employees?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 66
+  },
+  {
+    "timestamp": "2026-02-20T16:23:39.734062",
+    "query": "What is the claim history of Heritage Gold and Jewels?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T16:24:08.968201",
+    "query": "Does Royal Gems and Jewels keep detailed records of stock movements?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T16:24:36.321488",
+    "query": "What type of CCTV backup does Secure Pawn Brokers use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 69
+  },
+  {
+    "timestamp": "2026-02-20T16:25:04.048877",
+    "query": "How long does FinSecure Money Services retain their CCTV recordings?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 83
+  },
+  {
+    "timestamp": "2026-02-20T17:28:09.829785",
+    "query": "What type of business does Suresh Kumar run?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 92
+  },
+  {
+    "timestamp": "2026-02-20T18:15:15.747303",
+    "query": "Does Heritage Gold and Jewels have a CCTV maintenance contract?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T18:40:09.122906",
+    "query": "What is the door access type used by Global Money Exchange?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-20T18:41:06.056168",
+    "query": "Does Rapid FX Money Exchange use armed guards during transit?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 83
+  },
+  {
+    "timestamp": "2026-02-20T18:42:01.095885",
+    "query": "What background checks does LuxGold Jewellers do?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 143
+  },
+  {
+    "timestamp": "2026-02-20T18:42:55.673695",
+    "query": "What is the claim history of Heritage Gold and Jewels?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 77
+  },
+  {
+    "timestamp": "2026-02-20T18:43:51.342219",
+    "query": "Does Royal Gems and Jewels keep detailed records of stock movements?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 88
+  },
+  {
+    "timestamp": "2026-02-20T18:44:45.363610",
+    "query": "What type of CCTV backup does Secure Pawn Brokers use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 84
+  },
+  {
+    "timestamp": "2026-02-20T19:13:58.635079",
+    "query": "What type of business does Suresh Kumar run?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 92
+  },
+  {
+    "timestamp": "2026-02-20T19:14:54.225808",
+    "query": "Does Heritage Gold and Jewels have a CCTV maintenance contract?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T19:20:08.158990",
+    "query": "how many businesses have shop lifting label and what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 174
+  },
+  {
+    "timestamp": "2026-02-20T19:26:05.046229",
+    "query": "how many proposals have display window label?",
+    "query_type": "analytical_specific",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-20T19:28:09.957815",
+    "query": "how many proposals have successful display window label?",
+    "query_type": "analytical_specific",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-20T19:29:56.322412",
+    "query": "How many proposals have a display window?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 78
+  },
+  {
+    "timestamp": "2026-02-20T19:34:10.909205",
+    "query": "How many proposals have a display window?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 5,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-20T19:34:10.943908",
+    "query": "How many proposals have an alarm?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 14,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-20T19:35:05.522315",
+    "query": "How many proposals don't have a strong room?How many proposals have a display window?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 10,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-20T19:35:08.081073",
+    "query": "How many proposals have a display window?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 5,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-20T19:35:26.456688",
+    "query": "how many proposals have a display window?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 5,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-20T19:35:41.845435",
+    "query": "how many proposals have an alarm?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 14,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-20T19:35:55.615722",
+    "query": "how many proposals have a strong room?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 10,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-20T19:36:40.326409",
+    "query": "how many proposals are located in penang?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-20T19:37:48.792172",
+    "query": "what are the proposal id of the proposals located in penang?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 2,
+    "top_similarity_score": 1.0,
+    "answer_length": 94
+  },
+  {
+    "timestamp": "2026-02-20T19:46:23.747765",
+    "query": "How many proposals are located in Penang?",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 30
+  },
+  {
+    "timestamp": "2026-02-20T19:47:37.258324",
+    "query": "What are the names of businesses in Johor Bahru?",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 258
+  },
+  {
+    "timestamp": "2026-02-20T19:47:54.613333",
+    "query": "How many proposals have a display window?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 5,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-20T19:51:08.228787",
+    "query": "What is the safe model used by Rahul Mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T19:51:38.165812",
+    "query": "What type of door access does Aamir Khan use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-20T19:52:08.688547",
+    "query": "Does Naveen Iyer use armed guards during transit?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 83
+  },
+  {
+    "timestamp": "2026-02-20T19:52:37.908329",
+    "query": "What is the claim history of Kunal Shah?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 77
+  },
+  {
+    "timestamp": "2026-02-20T19:53:07.951027",
+    "query": "How far is the nearest police station from Rakesh Pillai?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 66
+  },
+  {
+    "timestamp": "2026-02-20T19:53:38.111013",
+    "query": "What background checks does Ankit Verma do for employees?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 143
+  },
+  {
+    "timestamp": "2026-02-20T19:54:08.314690",
+    "query": "Does Pranav Joshi keep detailed records of stock movements?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 88
+  },
+  {
+    "timestamp": "2026-02-20T19:54:37.578917",
+    "query": "What type of CCTV backup does Farhan Ali use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 84
+  },
+  {
+    "timestamp": "2026-02-20T19:55:07.463740",
+    "query": "How long does Vikram Nair retain CCTV recordings?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 66
+  },
+  {
+    "timestamp": "2026-02-20T19:55:37.455271",
+    "query": "Does Ashwin Patel have a strong room?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 66
+  },
+  {
+    "timestamp": "2026-02-20T19:56:07.860043",
+    "query": "What is the safe grade for Irfan Malik?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-20T19:56:38.546208",
+    "query": "How often does Saad Rahman carry out stock checks?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 84
+  },
+  {
+    "timestamp": "2026-02-20T19:57:09.172908",
+    "query": "Does Suresh Kumar have a standard operating procedure?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 66
+  },
+  {
+    "timestamp": "2026-02-20T19:57:38.852327",
+    "query": "What is the nature of business of Somesh Das?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 92
+  },
+  {
+    "timestamp": "2026-02-20T20:00:16.080048",
+    "query": "Does Rohan Mehta have a display window?what is the business name of somesh das?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 82
+  },
+  {
+    "timestamp": "2026-02-20T20:09:06.274151",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-20T20:09:50.885348",
+    "query": "How many proposals have CCTV maintenance contracts?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-20T20:17:21.980004",
+    "query": "give the most common risk locations",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 57
+  },
+  {
+    "timestamp": "2026-02-20T20:23:30.392473",
+    "query": "how many businesses have shoplifting cases and what are there names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 4,
+    "top_similarity_score": 1.0,
+    "answer_length": 202
+  },
+  {
+    "timestamp": "2026-02-20T20:25:31.458071",
+    "query": "what is the risk location of somesh das?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 79
+  },
+  {
+    "timestamp": "2026-02-20T20:26:03.898779",
+    "query": "which businesses use gps tracker and what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 102
+  },
+  {
+    "timestamp": "2026-02-20T20:27:18.220917",
+    "query": "list companies in singapore with highest cash limits?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 3,
+    "top_similarity_score": 1.0,
+    "answer_length": 142
+  },
+  {
+    "timestamp": "2026-02-20T20:29:37.430091",
+    "query": "what is the average property value insured per year?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 67
+  },
+  {
+    "timestamp": "2026-02-20T21:07:53.099659",
+    "query": "\u201cShow most common risk locations in Hong Kong.\u201d",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 50
+  },
+  {
+    "timestamp": "2026-02-20T21:07:53.501203",
+    "query": "\u201cList companies in Singapore with highest cash limits.\u201d",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 144
+  },
+  {
+    "timestamp": "2026-02-20T21:07:53.598728",
+    "query": "\u201cWhat is the average property value insured per year?\u201d",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 144
+  },
+  {
+    "timestamp": "2026-02-20T21:10:54.425272",
+    "query": "\u201cWhich proposals from Thailand used GPS trackers?\u201dWhat is the safe model used by Rahul Mehta?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 144
+  },
+  {
+    "timestamp": "2026-02-20T21:12:21.444810",
+    "query": "What is the safe model used by Rahul Mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 67
+  },
+  {
+    "timestamp": "2026-02-20T21:14:18.520943",
+    "query": "what is the safe model of rahul mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 67
+  },
+  {
+    "timestamp": "2026-02-20T21:17:44.391119",
+    "query": "WHAT IS THE SAFE MODEL OF RAHUL MEHTA?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 68
   }
 ]

@@ -1,8 +1,13 @@
 import json
 import pickle
 import re
+import os
 import numpy as np
 import faiss
+
+# Enable offline mode for HuggingFace
+os.environ["HF_HUB_OFFLINE"] = "1"
+os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
 from embeddings.embedder import Embedder
 from src.llm_client import LLMClient

@@ -2,6 +2,8 @@ certifi==2026.1.4
 charset-normalizer==3.4.4
 et_xmlfile==2.0.0
 faiss-cpu==1.13.0
+fastapi==0.115.0
+uvicorn==0.34.0
 filelock==3.19.1
 fsspec==2025.10.0
 hf-xet==1.2.0

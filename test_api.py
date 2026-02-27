@@ -10,7 +10,7 @@ import signal
 import os
 
 API_URL = "http://localhost:8000"
-STARTUP_WAIT = 35  # Wait for system initialization
+STARTUP_WAIT = 60  # Max wait (seconds) for system initialization
 
 def test_api():
     """Test the API by starting it, making a request, then stopping it."""
@@ -23,7 +23,7 @@ def test_api():
     env["TRANSFORMERS_OFFLINE"] = "1"
     
     process = subprocess.Popen(
-        ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"],
+        [sys.executable, "-m", "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         env=env,
@@ -31,17 +31,23 @@ def test_api():
     )
     
     try:
-        print(f"Waiting {STARTUP_WAIT} seconds for initialization...")
-        time.sleep(STARTUP_WAIT)
-        
-        # Test 1: Health check
-        print("\n1. Testing health endpoint...")
-        response = requests.get(f"{API_URL}/health", timeout=5)
-        print(f"   Status: {response.status_code}")
-        print(f"   Response: {response.json()}")
-        assert response.status_code == 200
-        assert response.json()["status"] == "ok"
-        print("   ✓ Health check passed")
+        print(f"Waiting up to {STARTUP_WAIT} seconds for initialization and health...")
+
+        # Poll health endpoint until ready
+        ready = False
+        for _ in range(STARTUP_WAIT):
+            try:
+                response = requests.get(f"{API_URL}/health", timeout=5)
+                if response.status_code == 200 and response.json().get("status") == "ok":
+                    ready = True
+                    print("   ✓ Health check passed")
+                    break
+            except Exception:
+                pass
+            time.sleep(1)
+
+        if not ready:
+            raise RuntimeError("API did not become healthy within the timeout")
         
         # Test 2: Query endpoint
         print("\n2. Testing query endpoint...")

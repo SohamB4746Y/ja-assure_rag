@@ -30,14 +30,20 @@ from loader.section_extractor import extract_sections
 from src.text_builder import build_section_text
 from src.llm_client import LLMClient
 from src.qa_store import PredefinedQAStore
-from src.query_classifier import classify_query, extract_quote_id
+from src.query_classifier import (
+    classify_query,
+    extract_quote_id,
+    QueryClassifier,
+    PartialAnswerEngine,
+    QueryClassification,
+)
 from src.prompt_builder import build_prompt, get_refusal_message
 from src.output_cleaner import clean_output
 from src.analytical_engine import AnalyticalEngine
 from src.mappings import decode_field
 from src.query_parser import QueryParser, ParsedQuery
 from src.query_executor import SmartQueryExecutor, QueryResult
-from src.answer_formatter import format_answer
+from src.answer_formatter import format_answer, format_classified_response
 from embeddings.embedder import Embedder, cosine_similarity
 
                                                                
@@ -65,6 +71,10 @@ TOP_K_CHUNKS = 5
                                                                
 
 os.makedirs(LOG_DIR, exist_ok=True)
+
+# Module-level lazy singletons — created on first query, not at import time
+_scope_classifier: Optional[QueryClassifier] = None
+_partial_engine: Optional[PartialAnswerEngine] = None
 
 logging.basicConfig(
     level=logging.INFO,
@@ -684,12 +694,40 @@ def handle_query(
     Returns:
         Answer string
     """
+    global _scope_classifier, _partial_engine
     query = query.strip()
+
+    # ------------------------------------------------------------------
+    # Scope pre-check — runs before any embedding or LLM call (~1 ms)
+    # ------------------------------------------------------------------
+    if _scope_classifier is None:
+        _scope_classifier = QueryClassifier()
+    if _partial_engine is None:
+        _partial_engine = PartialAnswerEngine(METADATA_PATH)
+
+    scope = _scope_classifier.classify(query)
+
+    if scope.classification in ("OUT_OF_SCOPE", "NONSENSICAL"):
+        answer = format_classified_response(scope)
+        log_query(query, scope.classification.lower(), None, 0, 0.0, answer)
+        if query_parser:
+            query_parser.add_raw_to_history(query, answer)
+        return clean_output(answer)
+
+    if scope.classification == "PARTIALLY_ANSWERABLE":
+        partial_answer = _partial_engine.dispatch(
+            scope.partial_handler or "", query
+        )
+        answer = format_classified_response(scope, partial_answer)
+        log_query(query, "partially_answerable", None, 0, 0.0, answer)
+        if query_parser:
+            query_parser.add_raw_to_history(query, answer)
+        return clean_output(answer)
+
+    # ANSWERABLE — fall through to existing pipeline
+    # ------------------------------------------------------------------
     quote_id = extract_quote_id(query)
-    
-                                                 
-                                         
-                                                 
+
     query_embedding = embedder.embed_single(query)
     predefined_answer = qa_store.find_match(query_embedding, PREDEFINED_SIMILARITY_THRESHOLD)
     

@@ -9,6 +9,7 @@ from __future__ import annotations
 from src.llm_client import LLMClient
 from src.query_parser import ParsedQuery
 from src.query_executor import QueryResult
+from src.query_classifier import QueryClassification
 
 
 FORMAT_PROMPT = """You are formatting a database query result into a natural language answer.
@@ -211,7 +212,7 @@ def format_answer(
     # For compare queries
     if parsed.intent == "compare":
         return result.summary
-    
+
     # For complex results, use LLM to format
     prompt = FORMAT_PROMPT.format(
         question=parsed.raw_query,
@@ -230,3 +231,57 @@ def format_answer(
         if result.details:
             return result.summary + "\n" + "\n".join(f"- {d}" for d in result.details[:10])
         return result.summary
+
+
+def format_classified_response(
+    classification: QueryClassification,
+    partial_answer: str = None,
+) -> str:
+    """
+    Format a user-facing response based on a QueryClassification result.
+
+    - OUT_OF_SCOPE   → explain the gap; suggest an answerable alternative.
+    - NONSENSICAL    → flag the ambiguity; suggest clarification.
+    - PARTIALLY_ANSWERABLE → present what we *can* answer, then note the gap.
+    - ANSWERABLE     → return None (let the existing pipeline handle it).
+
+    Never returns raw numeric codes (001 / 002 etc.).
+    """
+    c = classification.classification
+
+    if c == "OUT_OF_SCOPE":
+        lines = [
+            "This question is outside the scope of the proposal database.",
+            "",
+            f"Reason: {classification.out_of_scope_reason}",
+        ]
+        if classification.available_alternative:
+            lines += ["", f"What you can ask instead: {classification.available_alternative}"]
+        return "\n".join(lines)
+
+    if c == "NONSENSICAL":
+        lines = [
+            "I could not interpret this question clearly.",
+            "",
+            f"Issue: {classification.out_of_scope_reason}",
+        ]
+        if classification.available_alternative:
+            lines += ["", f"Did you mean to ask: {classification.available_alternative}"]
+        return "\n".join(lines)
+
+    if c == "PARTIALLY_ANSWERABLE":
+        lines = []
+        if partial_answer:
+            lines.append(partial_answer)
+            lines.append("")
+        lines.append(
+            "Note: Some aspects of this question are outside the database scope."
+        )
+        if classification.out_of_scope_reason:
+            lines.append(classification.out_of_scope_reason)
+        if classification.available_alternative:
+            lines += ["", f"Additional options: {classification.available_alternative}"]
+        return "\n".join(lines)
+
+    # ANSWERABLE — existing pipeline handles it
+    return None

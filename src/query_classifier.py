@@ -271,7 +271,8 @@ class QueryClassifier:
         "temporal": [
             "this quarter", "last quarter", "this year", "last year",
             "year-over-year", "yoy", "growth", "historical",
-            "increased coverage", "changed",
+            "increased coverage", "changed", "trend", "over time",
+            "compared to last", "previous year", "prior year",
         ],
         "foreign_countries": [
             "philippines", "indonesia", "thailand",
@@ -294,8 +295,10 @@ class QueryClassifier:
     PARTIAL_ANSWER_PATTERNS = [
         {
             "triggers": [
+                "rank", "ranked", "top proposals",
                 "highest insured", "highest value", "highest sum",
-                "most insured", "largest sum",
+                "most insured", "largest sum", "sort by value",
+                "order by sum", "by sum assured",
             ],
             "handler": "rank_by_sum_assured",
             "description": "Can rank proposals by sum_assured values",
@@ -415,10 +418,14 @@ class QueryClassifier:
 
         # 4 — determine final classification
         #
-        # Rule A: foreign-country references ALWAYS produce OUT_OF_SCOPE —
-        #         even if a partial handler matched, the user is asking about
-        #         a country we have no data for.
-        if "foreign_countries" in triggered_domains:
+        # Rule A: certain OOS domains ALWAYS produce OUT_OF_SCOPE regardless
+        #         of whether a partial handler also matched.
+        #   • foreign_countries  — data from another country entirely
+        #   • temporal           — time-based comparisons (yoy, trends, etc.)
+        #                          We have no historical data for these; showing
+        #                          a current ranking would be misleading.
+        _always_oos = {"foreign_countries", "temporal"}
+        if _always_oos & set(triggered_domains):
             return QueryClassification(
                 classification="OUT_OF_SCOPE",
                 out_of_scope_reason=self._explain_scope(triggered_domains, q),
@@ -481,15 +488,33 @@ class QueryClassifier:
         return bool(re.search(r"\b" + re.escape(trigger) + r"\b", q))
 
     def _is_nonsensical(self, q: str) -> bool:
-        """Detect self-contradictory or grammatically broken queries."""
+        """
+        Detect genuinely self-contradictory or unresolvable queries.
+
+        Criteria (all other unusual queries are OUT_OF_SCOPE instead):
+        1. Two DIFFERENT country names in the same query
+           (e.g. "proposals from Malaysia in Philippines")
+        2. Query is too short to be meaningful (fewer than 2 meaningful words)
+
+        NOTE: year-over-year / growth / trend are NOT nonsensical.
+        They are valid business questions about data that doesn't exist.
+        → Those belong in OUT_OF_SCOPE_DOMAINS["temporal"].
+        """
+        # Rule 1 — contradictory country pair
         countries = [
             "malaysia", "philippines", "indonesia",
             "singapore", "thailand", "vietnam",
+            "cambodia", "myanmar",
         ]
-        if sum(1 for c in countries if c in q) >= 2:
+        found = [c for c in countries if c in q]
+        if len(found) >= 2 and len(set(found)) >= 2:
             return True
-        if "year-over-year" in q or "yoy" in q:
+
+        # Rule 2 — too short to interpret
+        meaningful_words = [w for w in q.split() if len(w) > 2]
+        if len(meaningful_words) < 2:
             return True
+
         return False
 
     def _explain_scope(self, triggered_domains: List[str], _q: str) -> str:
@@ -584,6 +609,42 @@ class PartialAnswerEngine:
         return self._metadata
 
     # ------------------------------------------------------------------
+    # Shared helper: quote_id → business_name map
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _build_business_name_map(metadata: list) -> dict:
+        """
+        Scan all business_profile section chunks and return a mapping of
+        quote_id → human-readable business name.
+
+        Must be called at the start of every partial-answer handler so that
+        the correct business name is shown regardless of which section chunk
+        is currently being iterated.
+        """
+        name_map: dict = {}
+        for chunk in metadata:
+            if chunk.get("section") != "business_profile":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+            df = chunk.get("decoded_fields") or {}
+            fields = chunk.get("fields") or {}
+            name = (
+                df.get("business_name_label")
+                or fields.get("business_name_label")
+                or chunk.get("user_name")
+                or qid
+            )
+            # Reject sentinel values
+            if name and str(name).strip().lower() not in ("", "none", "nan", "unknown"):
+                name_map[qid] = str(name).strip()
+            else:
+                name_map[qid] = qid
+        return name_map
+
+    # ------------------------------------------------------------------
     # Dispatcher
     # ------------------------------------------------------------------
 
@@ -600,46 +661,65 @@ class PartialAnswerEngine:
         return fn() if fn else "Partial data handler not available."
 
     # ------------------------------------------------------------------
-    # Handler: rank proposals by sum assured
+    # Handler: rank proposals by sum assured (Bug 1 + Bug 2 fix)
     # ------------------------------------------------------------------
 
-    def handle_rank_by_sum_assured(self, top_n: int = 10) -> str:
+    _EMPTY_VALUES = {None, "", "None", -1, "-1", 0, "0", "nan", "N/A", "n/a"}
+
+    def handle_rank_by_sum_assured(self, top_n: int = 15) -> str:
+        metadata = self.metadata
+        # Bug 1 fix: build name map from business_profile chunks
+        name_map = self._build_business_name_map(metadata)
+
         ranked = []
         seen: set = set()
-        for chunk in self.metadata:
+        for chunk in metadata:
+            # Bug 2 fix: ONLY read stock values from sum_assured section
+            if chunk.get("section") != "sum_assured":
+                continue
             qid = chunk.get("quote_id")
             if not qid or qid in seen:
                 continue
+            seen.add(qid)
+
             raw = chunk.get("fields") or {}
-            if not isinstance(raw, dict):
+            stock_raw = raw.get("maximum_stock_in_premises_label")
+
+            # Skip None / empty / sentinel values — never count as a match
+            if stock_raw in self._EMPTY_VALUES:
                 continue
-            stock_value = raw.get("maximum_stock_in_premises_label")
             try:
-                stock_value = (
-                    float(stock_value)
-                    if stock_value not in (None, "", "-1")
-                    else 0.0
-                )
+                stock_value = float(str(stock_raw).replace(",", ""))
             except (TypeError, ValueError):
-                stock_value = 0.0
+                continue
             if stock_value <= 0:
                 continue
-            df = chunk.get("decoded_fields") or {}
-            business_name = df.get("business_name_label") or qid
-            seen.add(qid)
+
+            business_name = name_map.get(qid, qid)
             ranked.append((business_name, qid, stock_value))
 
+        total_proposals = len({c.get("quote_id") for c in metadata if c.get("quote_id")})
+
         if not ranked:
-            return "Sum assured data not available in current records."
+            return (
+                "Sum assured data is available for only some proposals. "
+                "You can ask about a specific business's insured value."
+            )
 
         ranked.sort(key=lambda x: x[2], reverse=True)
-        lines = ["Proposals ranked by insured stock value (descending):"]
+        lines = ["Proposals ranked by insured stock value (highest first):"]
         for i, (name, qid, value) in enumerate(ranked[:top_n], 1):
             lines.append(f"{i}. {name} ({qid}): RM {value:,.0f}")
+
+        missing = total_proposals - len(ranked)
+        if missing > 0:
+            lines.append(
+                f"\nNote: {missing} proposal(s) did not submit stock value data."
+            )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
-    # Handler: filter proposals by a numeric threshold (e.g. above $5M)
+    # Handler: filter proposals by a numeric threshold (Bug 1 + Bug 2 fix)
     # ------------------------------------------------------------------
 
     def handle_filter_by_threshold(self, query: str) -> str:
@@ -669,27 +749,32 @@ class PartialAnswerEngine:
                 "Please specify a numeric value (e.g. 'above RM 5 million')."
             )
 
+        metadata = self.metadata
+        # Bug 1 fix: build name map from business_profile chunks
+        name_map = self._build_business_name_map(metadata)
+
         results = []
         seen: set = set()
-        for chunk in self.metadata:
+        for chunk in metadata:
+            # Bug 2 fix: ONLY read stock values from sum_assured section
+            if chunk.get("section") != "sum_assured":
+                continue
             qid = chunk.get("quote_id")
             if not qid or qid in seen:
                 continue
+
             raw = chunk.get("fields") or {}
-            if not isinstance(raw, dict):
+            stock_raw = raw.get("maximum_stock_in_premises_label")
+
+            if stock_raw in self._EMPTY_VALUES:
                 continue
-            stock_val = raw.get("maximum_stock_in_premises_label")
             try:
-                stock_val = (
-                    float(stock_val)
-                    if stock_val not in (None, "", "-1")
-                    else 0.0
-                )
+                stock_val = float(str(stock_raw).replace(",", ""))
             except (TypeError, ValueError):
-                stock_val = 0.0
+                continue
+
             if stock_val > threshold:
-                df = chunk.get("decoded_fields") or {}
-                business_name = df.get("business_name_label") or qid
+                business_name = name_map.get(qid, qid)
                 results.append((business_name, qid, stock_val))
                 seen.add(qid)
 
@@ -706,107 +791,188 @@ class PartialAnswerEngine:
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
-    # Handler: group proposals by industry with total sum assured
+    # Handler: group proposals by industry (Bug 4 fix — two-map approach)
     # ------------------------------------------------------------------
 
     def handle_group_by_industry(self) -> str:
-        industry_data: dict = defaultdict(
-            lambda: {"count": 0, "total_value": 0.0}
-        )
-        seen: set = set()
-        for chunk in self.metadata:
-            qid = chunk.get("quote_id")
-            if not qid or qid in seen:
-                continue
-            seen.add(qid)
-            df = chunk.get("decoded_fields") or {}
-            industry = df.get("nature_of_business_label") or "Unknown"
-            raw = chunk.get("fields") or {}
-            try:
-                stock_val = float(
-                    raw.get("maximum_stock_in_premises_label") or 0
-                )
-            except (TypeError, ValueError):
-                stock_val = 0.0
-            industry_data[industry]["count"] += 1
-            industry_data[industry]["total_value"] += stock_val
+        metadata = self.metadata
 
-        if not industry_data:
+        # Step 1: Build industry map from business_profile chunks.
+        # industry data lives in a different section from stock data.
+        name_map: dict = {}
+        industry_map: dict = {}  # quote_id → decoded industry label
+        for chunk in metadata:
+            if chunk.get("section") != "business_profile":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+            df = chunk.get("decoded_fields") or {}
+            fields = chunk.get("fields") or {}
+
+            name = (
+                df.get("business_name_label")
+                or fields.get("business_name_label")
+                or chunk.get("user_name")
+                or qid
+            )
+            name_map[qid] = (
+                str(name).strip()
+                if name and str(name).strip().lower() not in ("", "none", "unknown")
+                else qid
+            )
+
+            industry = df.get("nature_of_business_label")
+            if not industry or str(industry).strip().lower() in ("", "none", "unknown"):
+                industry = "Other / Not Specified"
+            industry_map[qid] = str(industry).strip()
+
+        # Step 2: Build stock value map from sum_assured chunks ONLY.
+        stock_map: dict = {}  # quote_id → float stock value
+        for chunk in metadata:
+            if chunk.get("section") != "sum_assured":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+            raw = chunk.get("fields") or {}
+            stock_raw = raw.get("maximum_stock_in_premises_label")
+            if stock_raw in self._EMPTY_VALUES:
+                continue
+            try:
+                stock_map[qid] = float(str(stock_raw).replace(",", ""))
+            except (TypeError, ValueError):
+                pass
+
+        if not industry_map:
             return "Industry data not available."
 
+        # Step 3: Group by industry combining the two maps.
+        industry_data: dict = defaultdict(
+            lambda: {"count": 0, "total_value": 0.0, "has_value_count": 0}
+        )
+        for qid in industry_map:
+            ind = industry_map[qid]
+            stock = stock_map.get(qid, 0.0)
+            industry_data[ind]["count"] += 1
+            industry_data[ind]["total_value"] += stock
+            if stock > 0:
+                industry_data[ind]["has_value_count"] += 1
+
+        # Step 4: Sort by total value descending, then count descending.
         sorted_industries = sorted(
             industry_data.items(),
-            key=lambda x: x[1]["total_value"],
+            key=lambda x: (x[1]["total_value"], x[1]["count"]),
             reverse=True,
         )
-        lines = ["Industries by total insured value:"]
+
+        lines = ["Industries represented in proposal database:"]
         for industry, data in sorted_industries:
-            value_str = (
-                f"RM {data['total_value']:,.0f}"
-                if data["total_value"] > 0
-                else "Value not available"
-            )
-            lines.append(
-                f"- {industry}: {data['count']} proposal(s), "
-                f"Total: {value_str}"
-            )
+            count = data["count"]
+            total = data["total_value"]
+            has_val = data["has_value_count"]
+            if total > 0:
+                value_str = (
+                    f"Total insured: RM {total:,.0f} "
+                    f"({has_val}/{count} proposals have value data)"
+                )
+            else:
+                value_str = "Insured values not submitted in proposals"
+            lines.append(f"- {industry}: {count} proposal(s) \u2014 {value_str}")
+
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
-    # Handler: security feature summary across all proposals
+    # Handler: security feature summary (anti-theft handler fix)
     # ------------------------------------------------------------------
+
+    # Maps section name → the primary Yes/No field to check in that section.
+    # alarm / cctv / armoured vehicle / strong room are the four key
+    # anti-theft indicators that each live in their own section chunk.
+    _SECURITY_SECTION_FIELDS: dict = {
+        "alarm":              "do_you_have_alarm_label",
+        "cctv":               "recording_label",
+        "transit_and_gaurds": "do_you_use_armoured_vehicle_label",
+        "strong_room":        "do_you_have_a_strong_room_label",
+    }
+
+    # Human-readable labels for each section
+    _SECURITY_SECTION_LABELS: dict = {
+        "alarm":              "Alarm",
+        "cctv":               "CCTV",
+        "transit_and_gaurds": "Armoured Vehicle",
+        "strong_room":        "Strong Room",
+    }
+
+    _YES_VALUES = {"yes", "001", "true", "1"}
 
     def handle_security_feature_summary(self) -> str:
-        _SECURITY_KEYS = [
-            "cctv", "alarm", "safe", "strong_room", "door_access",
-            "transit", "guard", "gps", "display_window",
-        ]
-        rows = []
-        seen: set = set()
-        for chunk in self.metadata:
-            qid = chunk.get("quote_id")
-            if not qid or qid in seen:
+        metadata = self.metadata
+        # Bug 1 fix: build name map from business_profile chunks
+        name_map = self._build_business_name_map(metadata)
+
+        # Build security feature map: quote_id → {section: bool}
+        security_map: dict = defaultdict(dict)
+        for chunk in metadata:
+            section = chunk.get("section", "")
+            if section not in self._SECURITY_SECTION_FIELDS:
                 continue
-            seen.add(qid)
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
             df = chunk.get("decoded_fields") or {}
-            business = df.get("business_name_label") or qid
-            active: List[str] = []
-            for field_name, value in df.items():
-                fn_lower = field_name.lower()
-                if any(sk in fn_lower for sk in _SECURITY_KEYS):
-                    if str(value).strip().lower() in {"yes", "001", "true", "1"}:
-                        label = (
-                            field_name.replace("_label", "")
-                            .replace("_", " ")
-                            .title()
-                        )
-                        active.append(label)
-            rows.append((business, qid, active))
+            field = self._SECURITY_SECTION_FIELDS[section]
+            value = df.get(field)
+            if value is not None:
+                security_map[qid][section] = (
+                    str(value).strip().lower() in self._YES_VALUES
+                )
 
-        if not rows:
-            return "Security feature data not available."
+        all_quotes = sorted(name_map.keys())
+        if not all_quotes:
+            return "No proposal data found."
 
-        lines = ["Security features per proposal:"]
-        for business, qid, features in rows:
-            feat_str = ", ".join(features) if features else "None documented"
-            lines.append(f"- {business} ({qid}): {feat_str}")
+        lines = [
+            "Security features per proposal "
+            "(Alarm, CCTV, Armoured Vehicle, Strong Room):"
+        ]
+        for qid in all_quotes:
+            name = name_map.get(qid, qid)
+            features = security_map.get(qid, {})
+            active_parts: List[str] = []
+            for sec, label in self._SECURITY_SECTION_LABELS.items():
+                if features.get(sec):
+                    active_parts.append(f"{label}: Yes")
+            if active_parts:
+                lines.append(f"- {name} ({qid}): {', '.join(active_parts)}")
+            else:
+                lines.append(
+                    f"- {name} ({qid}): No security feature data submitted"
+                )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
-    # Handler: distribution of business types
+    # Handler: distribution of business types (two-map fix for correct counts)
     # ------------------------------------------------------------------
 
     def handle_business_type_distribution(self) -> str:
+        metadata = self.metadata
+        # Use ONLY business_profile chunks — prevents double-counting from
+        # multiple section chunks belonging to the same quote_id.
         distribution: dict = defaultdict(int)
         seen: set = set()
-        for chunk in self.metadata:
+        for chunk in metadata:
+            if chunk.get("section") != "business_profile":
+                continue
             qid = chunk.get("quote_id")
             if not qid or qid in seen:
                 continue
             seen.add(qid)
             df = chunk.get("decoded_fields") or {}
-            btype = df.get("nature_of_business_label") or "Unknown"
-            distribution[btype] += 1
+            btype = df.get("nature_of_business_label")
+            if not btype or str(btype).strip().lower() in ("", "none", "unknown"):
+                btype = "Other / Not Specified"
+            distribution[str(btype).strip()] += 1
 
         if not distribution:
             return "Business type data not available."

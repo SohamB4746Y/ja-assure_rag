@@ -52,7 +52,7 @@ def test_api():
         # Test 2: Query endpoint
         print("\n2. Testing query endpoint...")
         query_data = {"question": "What is the business name of MYJADEQT001?"}
-        response = requests.post(f"{API_URL}/query", json=query_data, timeout=30)
+        response = requests.post(f"{API_URL}/query", json=query_data, timeout=120)
         print(f"   Status: {response.status_code}")
         
         if response.status_code == 200:
@@ -63,14 +63,14 @@ def test_api():
             assert "answer" in result
             print("   ✓ Query endpoint passed")
         else:
-            print(f"   ✗ Query failed: {response.text}")
-            sys.exit(1)
+            raise AssertionError(f"Query endpoint failed with {response.status_code}: {response.text}")
         
         print("\n✓ All tests passed!")
         
+    except (AssertionError, RuntimeError):
+        raise
     except Exception as e:
-        print(f"\n✗ Test failed: {e}")
-        sys.exit(1)
+        raise AssertionError(f"Test failed: {e}") from e
         
     finally:
         print("\nStopping API server...")

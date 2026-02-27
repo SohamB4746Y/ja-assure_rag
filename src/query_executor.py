@@ -620,17 +620,26 @@ class SmartQueryExecutor:
                 # Search in decoded fields
                 for field_name, value in search_fields.items():
                     if filter_key in field_name.lower().replace("_label", ""):
-                        # Skip empty/null values for positive filters —
-                        # missing data must never be counted as "Yes".
-                        # For negation filters, empty/null means the
-                        # proposal lacks the feature → treat as a match.
+                        # Guard: skip empty/null field values.
+                        #
+                        # For POSITIVE filters (e.g. armed_guards = Yes):
+                        #   Use `continue` so we keep scanning — the same
+                        #   logical field may appear twice in search_fields
+                        #   (once as a raw None and once as a decoded "Yes").
+                        #   Breaking on the raw None would miss the decoded hit
+                        #   and produce undercounts; a `continue` is safe here.
+                        #
+                        # For NEGATION filters (e.g. alarm = No / missing):
+                        #   An empty/null value means the feature is absent →
+                        #   count the proposal as a match and stop.
                         if self._is_empty_value(value):
                             if is_negation:
                                 matched = True
                                 matched_field = field_name
                                 matched_value = "N/A"
-                            break  # field found but empty — stop searching fields
-                        
+                                break  # negation match confirmed — stop scanning
+                            continue  # positive filter: skip empty, keep scanning
+
                         value_lower = str(value).lower().strip()
                         
                         # Normalize yes/no matching — decoded values may be "Yes"/"No"

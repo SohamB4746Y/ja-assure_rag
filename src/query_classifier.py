@@ -258,13 +258,13 @@ class QueryClassifier:
             "premium amount", "broker premium",
         ],
         "claim_amounts": [
-            "claim amount", "claim value", "claim ratio",
-            "claim frequency", "rejected claim", "fire claim",
-            "fire-related", "claim cause", "peril", "non-disclosure",
+            "claim amount", "claim value",
+            "rejected claim",
+            "claim cause", "peril", "non-disclosure",
         ],
         "policy_lifecycle": [
-            "expiring", "expiry", "renewal", "active policy",
-            "active policies", "approved", "modification", "underwriting",
+            "expiring", "expiry", "renewal",
+            "approved", "modification", "underwriting",
             "turnaround time", "approval status",
         ],
         "broker": ["broker", "agent", "intermediary"],
@@ -283,25 +283,46 @@ class QueryClassifier:
             "southeast asia", "asean",
         ],
         "risk_analytics": [
-            "high-risk zone", "risk zone", "risk ranking",
+            "risk ranking",
             "risk score", "risk distribution", "risk map",
-        ],
-        "regional_analytics": [
-            "lowest frequency", "highest frequency",
-            "regional distribution", "by region analysis",
         ],
     }
 
     PARTIAL_ANSWER_PATTERNS = [
+        # --- Claim / location handlers (TYPE 1, 3, 9) ---
+        {
+            "triggers": [
+                "high-risk zone", "risk zone",
+                "claim frequency by", "claim frequency in",
+                "locations with claims", "fire-related claim",
+                "fire-related claims", "fire claim",
+                "which locations reported", "regions with lowest",
+                "regions with highest", "claim history by region",
+                "claim history by area", "claim history by location",
+            ],
+            "handler": "claims_by_location",
+            "description": "Can show claim history grouped by location",
+        },
+        {
+            "triggers": [
+                "claim ratio", "claim rate", "percentage with claims",
+                "how many have claims", "claims percentage",
+                "claim occurrence", "claim frequency",
+            ],
+            "handler": "claim_rate",
+            "description": "Can show claim occurrence rate across proposals",
+        },
+        # --- Ranking / threshold handlers (TYPE 2, 8) ---
         {
             "triggers": [
                 "rank", "ranked", "top proposals",
                 "highest insured", "highest value", "highest sum",
                 "most insured", "largest sum", "sort by value",
-                "order by sum", "by sum assured",
+                "order by sum", "by sum assured", "largest policy",
+                "highest sum assured", "ranked by value",
             ],
             "handler": "rank_by_sum_assured",
-            "description": "Can rank proposals by sum_assured values",
+            "description": "Can rank proposals by insured values",
         },
         {
             "triggers": [
@@ -312,14 +333,29 @@ class QueryClassifier:
             "handler": "filter_by_threshold",
             "description": "Can filter proposals by numeric threshold",
         },
+        # --- Industry / business distribution handlers (TYPE 6, 7) ---
         {
             "triggers": [
                 "by industry", "by business type", "top industries",
                 "industry distribution", "business distribution",
+                "industries by", "sector by value",
+                "industry total",
             ],
             "handler": "group_by_industry",
             "description": "Can group proposals by nature_of_business_label",
         },
+        {
+            "triggers": [
+                "distribution of policy", "policy type",
+                "types of policy", "types of policies",
+                "policy breakdown", "business type distribution",
+                "industry breakdown", "what types of businesses",
+                "policy distribution",
+            ],
+            "handler": "business_type_distribution",
+            "description": "Can show distribution by nature_of_business_label",
+        },
+        # --- Security handler ---
         {
             "triggers": [
                 "anti-theft", "security features", "security devices",
@@ -328,12 +364,25 @@ class QueryClassifier:
             "handler": "security_feature_summary",
             "description": "Can show security features per proposal",
         },
+        # --- GPS tracker handler (TYPE 5) ---
         {
             "triggers": [
-                "policy type", "types of policy", "policy distribution",
+                "gps tracker", "gps installed", "use gps", "have gps",
+                "included gps", "gps in transit", "gps trackers",
             ],
-            "handler": "business_type_distribution",
-            "description": "Can show distribution by nature_of_business_label",
+            "handler": "gps_tracker_proposals",
+            "description": "Can show which proposals have GPS trackers",
+        },
+        # --- Company listing handler (TYPE 4) ---
+        {
+            "triggers": [
+                "active policies", "list all companies",
+                "list companies", "all businesses",
+                "how many companies", "all proposals",
+                "list all businesses",
+            ],
+            "handler": "list_all_businesses",
+            "description": "Can list all businesses with their proposals",
         },
     ]
 
@@ -343,12 +392,13 @@ class QueryClassifier:
             "in proposal records."
         ),
         "claim_amounts": (
-            "Claim amounts, ratios, and causes are not stored. "
+            "Claim amounts, causes, and rejection details are not stored. "
             "Only whether a claim occurred within the past 3 years is recorded."
         ),
         "policy_lifecycle": (
             "Policy lifecycle data (expiry, renewal, approval status, "
-            "underwriting decisions) is not in the proposal database."
+            "underwriting decisions) is not in the proposal database. "
+            "You can ask 'list all businesses' to see all 15 proposals."
         ),
         "broker": (
             "Broker and intermediary data is not captured in proposals."
@@ -362,12 +412,9 @@ class QueryClassifier:
             "No data from other countries exists in this database."
         ),
         "risk_analytics": (
-            "Actuarial risk scores, risk zones, and frequency analytics "
-            "are not available. Only per-proposal security features exist."
-        ),
-        "regional_analytics": (
-            "Regional frequency distributions are not available. "
-            "Location data exists per proposal but without claim frequency."
+            "Actuarial risk scores and risk-ranking models "
+            "are not available. You can ask about claim history by region "
+            "or security features per proposal instead."
         ),
         "regional_scope": (
             "Only Malaysian proposals exist in this database. "
@@ -527,8 +574,9 @@ class QueryClassifier:
     def _suggest_alternative(self, q: str) -> str:  # noqa: C901
         if "claim" in q:
             return (
-                "You can ask: 'Which proposals have had claims in the past "
-                "3 years?' or 'What is the claim history of [business name]?'"
+                "You can ask: 'What is the claim rate across all proposals?', "
+                "'Show claim history by region', or 'What is the claim history "
+                "of [business name]?'"
             )
         if "premium" in q:
             return (
@@ -651,30 +699,112 @@ class PartialAnswerEngine:
     def dispatch(self, handler: str, query: str) -> str:
         """Route to the correct partial handler by name."""
         _map = {
-            "rank_by_sum_assured":       lambda: self.handle_rank_by_sum_assured(),
-            "filter_by_threshold":       lambda: self.handle_filter_by_threshold(query),
-            "group_by_industry":         lambda: self.handle_group_by_industry(),
-            "security_feature_summary":  lambda: self.handle_security_feature_summary(),
+            "rank_by_sum_assured":        lambda: self.handle_rank_by_sum_assured(),
+            "filter_by_threshold":        lambda: self.handle_filter_by_threshold(query),
+            "group_by_industry":          lambda: self.handle_group_by_industry(),
+            "security_feature_summary":   lambda: self.handle_security_feature_summary(),
             "business_type_distribution": lambda: self.handle_business_type_distribution(),
+            "claims_by_location":         lambda: self.handle_claims_by_location(),
+            "claim_rate":                 lambda: self.handle_claim_rate(),
+            "list_all_businesses":        lambda: self.handle_list_all_businesses(),
+            "gps_tracker_proposals":      lambda: self.handle_gps_tracker_proposals(),
         }
         fn = _map.get(handler)
         return fn() if fn else "Partial data handler not available."
 
     # ------------------------------------------------------------------
-    # Handler: rank proposals by sum assured (Bug 1 + Bug 2 fix)
+    # Shared helper: extract primary insured value from sum_assured fields
     # ------------------------------------------------------------------
 
     _EMPTY_VALUES = {None, "", "None", -1, "-1", 0, "0", "nan", "N/A", "n/a"}
 
+    @classmethod
+    def _safe_float(cls, raw) -> float:
+        """Convert raw field value to float. Returns 0 on failure."""
+        if raw in cls._EMPTY_VALUES:
+            return 0.0
+        try:
+            return float(str(raw).replace(",", ""))
+        except (TypeError, ValueError):
+            return 0.0
+
+    @classmethod
+    def _get_primary_value(cls, fields: dict) -> tuple:
+        """
+        Extract the primary insured value from a sum_assured fields dict.
+
+        Different business types use different value fields:
+        - Jewellers (nature 1, 3): maximum_stock_in_premises_label
+        - Money changers (nature 2): maximum_stock_foreign_currency_in_premise_label
+        - Pawnbrokers (nature 5): value_of_pledged_stock_in_premise_label +
+          value_of_cash_in_premise_label
+
+        Returns:
+            (value_float, label_string) or (0.0, None) if no data.
+        """
+        # 1. Jewellers: stock in premises
+        v = cls._safe_float(fields.get("maximum_stock_in_premises_label"))
+        if v > 0:
+            return (v, "jewellery stock")
+
+        # 2. Money changers: foreign currency stock
+        v = cls._safe_float(
+            fields.get("maximum_stock_foreign_currency_in_premise_label")
+        )
+        if v > 0:
+            return (v, "foreign currency stock")
+
+        # 3. Pawnbrokers: pledged stock + cash in premises
+        pledged = cls._safe_float(
+            fields.get("value_of_pledged_stock_in_premise_label")
+        )
+        cash = cls._safe_float(
+            fields.get("value_of_cash_in_premise_label")
+        )
+        total = pledged + cash
+        if total > 0:
+            return (total, "pledged stock + cash")
+
+        return (0.0, None)
+
+    # ------------------------------------------------------------------
+    # Shared helper: extract state from risk_location string
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _extract_state(risk_location: str) -> str:
+        """
+        Extract the Malaysian state from a risk_location string.
+
+        Format is typically: "City, State, Malaysia" or
+        "Street, Area, City, State, Malaysia".
+        Returns the second-to-last non-"Malaysia" comma-separated part,
+        stripped and title-cased.
+        """
+        if not risk_location:
+            return "Unknown"
+        parts = [p.strip() for p in risk_location.split(",") if p.strip()]
+        # Remove trailing "Malaysia" if present
+        if parts and parts[-1].lower() == "malaysia":
+            parts = parts[:-1]
+        if not parts:
+            return "Unknown"
+        # The last remaining part is the state
+        state = parts[-1].strip()
+        # Special case: "Kuala Lumpur" is both city and state (federal territory)
+        return state if state else "Unknown"
+
+    # ------------------------------------------------------------------
+    # Handler: rank proposals by total insured value (multi-field)
+    # ------------------------------------------------------------------
+
     def handle_rank_by_sum_assured(self, top_n: int = 15) -> str:
         metadata = self.metadata
-        # Bug 1 fix: build name map from business_profile chunks
         name_map = self._build_business_name_map(metadata)
 
         ranked = []
         seen: set = set()
         for chunk in metadata:
-            # Bug 2 fix: ONLY read stock values from sum_assured section
             if chunk.get("section") != "sum_assured":
                 continue
             qid = chunk.get("quote_id")
@@ -682,44 +812,41 @@ class PartialAnswerEngine:
                 continue
             seen.add(qid)
 
-            raw = chunk.get("fields") or {}
-            stock_raw = raw.get("maximum_stock_in_premises_label")
-
-            # Skip None / empty / sentinel values — never count as a match
-            if stock_raw in self._EMPTY_VALUES:
-                continue
-            try:
-                stock_value = float(str(stock_raw).replace(",", ""))
-            except (TypeError, ValueError):
-                continue
-            if stock_value <= 0:
+            fields = chunk.get("fields") or {}
+            value, label = self._get_primary_value(fields)
+            if value <= 0:
                 continue
 
             business_name = name_map.get(qid, qid)
-            ranked.append((business_name, qid, stock_value))
+            ranked.append((business_name, qid, value, label))
 
-        total_proposals = len({c.get("quote_id") for c in metadata if c.get("quote_id")})
+        total_proposals = len(
+            {c.get("quote_id") for c in metadata if c.get("quote_id")}
+        )
 
         if not ranked:
             return (
-                "Sum assured data is available for only some proposals. "
-                "You can ask about a specific business's insured value."
+                "No insured value data found across proposals. "
+                "You can ask about a specific business's details."
             )
 
         ranked.sort(key=lambda x: x[2], reverse=True)
-        lines = ["Proposals ranked by insured stock value (highest first):"]
-        for i, (name, qid, value) in enumerate(ranked[:top_n], 1):
-            lines.append(f"{i}. {name} ({qid}): RM {value:,.0f}")
+        lines = ["Proposals ranked by total insured value (highest first):"]
+        for i, (name, qid, value, label) in enumerate(ranked[:top_n], 1):
+            lines.append(
+                f"{i}. {name} ({qid}): RM {value:,.0f} ({label})"
+            )
 
         missing = total_proposals - len(ranked)
         if missing > 0:
             lines.append(
-                f"\nNote: {missing} proposal(s) did not submit stock value data."
+                f"\nNote: {missing} proposal(s) did not submit "
+                f"insured value data."
             )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
-    # Handler: filter proposals by a numeric threshold (Bug 1 + Bug 2 fix)
+    # Handler: filter proposals by a numeric threshold (multi-field)
     # ------------------------------------------------------------------
 
     def handle_filter_by_threshold(self, query: str) -> str:
@@ -750,44 +877,35 @@ class PartialAnswerEngine:
             )
 
         metadata = self.metadata
-        # Bug 1 fix: build name map from business_profile chunks
         name_map = self._build_business_name_map(metadata)
 
         results = []
         seen: set = set()
         for chunk in metadata:
-            # Bug 2 fix: ONLY read stock values from sum_assured section
             if chunk.get("section") != "sum_assured":
                 continue
             qid = chunk.get("quote_id")
             if not qid or qid in seen:
                 continue
 
-            raw = chunk.get("fields") or {}
-            stock_raw = raw.get("maximum_stock_in_premises_label")
+            fields = chunk.get("fields") or {}
+            value, label = self._get_primary_value(fields)
 
-            if stock_raw in self._EMPTY_VALUES:
-                continue
-            try:
-                stock_val = float(str(stock_raw).replace(",", ""))
-            except (TypeError, ValueError):
-                continue
-
-            if stock_val > threshold:
+            if value > threshold:
                 business_name = name_map.get(qid, qid)
-                results.append((business_name, qid, stock_val))
+                results.append((business_name, qid, value, label))
                 seen.add(qid)
 
         if not results:
             return (
-                f"No proposals found with insured stock value "
+                f"No proposals found with insured value "
                 f"above RM {threshold:,.0f}."
             )
 
         results.sort(key=lambda x: x[2], reverse=True)
         lines = [f"Proposals with insured value above RM {threshold:,.0f}:"]
-        for name, qid, val in results:
-            lines.append(f"- {name} ({qid}): RM {val:,.0f}")
+        for name, qid, val, label in results:
+            lines.append(f"- {name} ({qid}): RM {val:,.0f} ({label})")
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
@@ -797,10 +915,9 @@ class PartialAnswerEngine:
     def handle_group_by_industry(self) -> str:
         metadata = self.metadata
 
-        # Step 1: Build industry map from business_profile chunks.
-        # industry data lives in a different section from stock data.
+        # Step 1: Build industry + name maps from business_profile.
         name_map: dict = {}
-        industry_map: dict = {}  # quote_id → decoded industry label
+        industry_map: dict = {}
         for chunk in metadata:
             if chunk.get("section") != "business_profile":
                 continue
@@ -827,39 +944,35 @@ class PartialAnswerEngine:
                 industry = "Other / Not Specified"
             industry_map[qid] = str(industry).strip()
 
-        # Step 2: Build stock value map from sum_assured chunks ONLY.
-        stock_map: dict = {}  # quote_id → float stock value
+        # Step 2: Build value map from sum_assured using multi-field logic.
+        value_map: dict = {}
         for chunk in metadata:
             if chunk.get("section") != "sum_assured":
                 continue
             qid = chunk.get("quote_id")
             if not qid:
                 continue
-            raw = chunk.get("fields") or {}
-            stock_raw = raw.get("maximum_stock_in_premises_label")
-            if stock_raw in self._EMPTY_VALUES:
-                continue
-            try:
-                stock_map[qid] = float(str(stock_raw).replace(",", ""))
-            except (TypeError, ValueError):
-                pass
+            fields = chunk.get("fields") or {}
+            val, _label = self._get_primary_value(fields)
+            if val > 0:
+                value_map[qid] = val
 
         if not industry_map:
             return "Industry data not available."
 
-        # Step 3: Group by industry combining the two maps.
+        # Step 3: Group by industry using both maps.
         industry_data: dict = defaultdict(
             lambda: {"count": 0, "total_value": 0.0, "has_value_count": 0}
         )
         for qid in industry_map:
             ind = industry_map[qid]
-            stock = stock_map.get(qid, 0.0)
+            stock = value_map.get(qid, 0.0)
             industry_data[ind]["count"] += 1
             industry_data[ind]["total_value"] += stock
             if stock > 0:
                 industry_data[ind]["has_value_count"] += 1
 
-        # Step 4: Sort by total value descending, then count descending.
+        # Step 4: Sort by total value descending, then count.
         sorted_industries = sorted(
             industry_data.items(),
             key=lambda x: (x[1]["total_value"], x[1]["count"]),
@@ -957,9 +1070,11 @@ class PartialAnswerEngine:
 
     def handle_business_type_distribution(self) -> str:
         metadata = self.metadata
-        # Use ONLY business_profile chunks — prevents double-counting from
-        # multiple section chunks belonging to the same quote_id.
-        distribution: dict = defaultdict(int)
+        name_map = self._build_business_name_map(metadata)
+        total = len(name_map)
+
+        # Build type → list of business names
+        type_businesses: dict = defaultdict(list)
         seen: set = set()
         for chunk in metadata:
             if chunk.get("section") != "business_profile":
@@ -971,16 +1086,325 @@ class PartialAnswerEngine:
             df = chunk.get("decoded_fields") or {}
             btype = df.get("nature_of_business_label")
             if not btype or str(btype).strip().lower() in ("", "none", "unknown"):
-                btype = "Other / Not Specified"
-            distribution[str(btype).strip()] += 1
+                btype = "Not Specified"
+            type_businesses[str(btype).strip()].append(name_map.get(qid, qid))
 
-        if not distribution:
+        if not type_businesses:
             return "Business type data not available."
 
         sorted_types = sorted(
-            distribution.items(), key=lambda x: x[1], reverse=True
+            type_businesses.items(), key=lambda x: len(x[1]), reverse=True
         )
-        lines = ["Business type distribution across all proposals:"]
-        for btype, count in sorted_types:
-            lines.append(f"- {btype}: {count} proposal(s)")
+        lines = [
+            f"Policy type distribution across {total} proposals in Malaysia:"
+        ]
+        for btype, businesses in sorted_types:
+            count = len(businesses)
+            pct = round(count / total * 100) if total > 0 else 0
+            biz_str = ", ".join(businesses)
+            label = "Business" if count == 1 else "Businesses"
+            lines.append(
+                f"\n- {btype}: {count} proposal(s) ({pct}%)"
+            )
+            lines.append(f"  {label}: {biz_str}")
+        return "\n".join(lines)
+
+    # ------------------------------------------------------------------
+    # Handler: claim history grouped by location (TYPE 1 + 9)
+    # ------------------------------------------------------------------
+
+    def handle_claims_by_location(self) -> str:
+        metadata = self.metadata
+        name_map = self._build_business_name_map(metadata)
+
+        # Step 1: Build location map from any chunk (risk_location is on all)
+        location_map: dict = {}  # quote_id → state
+        seen_loc: set = set()
+        for chunk in metadata:
+            qid = chunk.get("quote_id")
+            if not qid or qid in seen_loc:
+                continue
+            seen_loc.add(qid)
+            loc = chunk.get("risk_location", "")
+            location_map[qid] = self._extract_state(str(loc))
+
+        # Step 2: Build claim map from claim_history section
+        claim_map: dict = {}  # quote_id → decoded claim label
+        for chunk in metadata:
+            if chunk.get("section") != "claim_history":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+            df = chunk.get("decoded_fields") or {}
+            claim_map[qid] = df.get("claim_history_label", "")
+
+        # Step 3: Group by state
+        state_data: dict = defaultdict(
+            lambda: {
+                "proposals": 0, "with_claims": 0,
+                "no_claims": 0, "no_data": 0,
+                "businesses": [],
+            }
+        )
+        for qid in location_map:
+            state = location_map[qid]
+            claim_label = claim_map.get(qid, "")
+            state_data[state]["proposals"] += 1
+            state_data[state]["businesses"].append(name_map.get(qid, qid))
+            claim_lower = claim_label.lower() if claim_label else ""
+            if "no claim" in claim_lower:
+                state_data[state]["no_claims"] += 1
+            elif "claim" in claim_lower:
+                state_data[state]["with_claims"] += 1
+            else:
+                state_data[state]["no_data"] += 1
+
+        sorted_states = sorted(
+            state_data.items(),
+            key=lambda x: (x[1]["with_claims"], x[1]["proposals"]),
+            reverse=True,
+        )
+
+        total_with_data = sum(
+            d["with_claims"] + d["no_claims"] for d in state_data.values()
+        )
+        total_claims = sum(d["with_claims"] for d in state_data.values())
+        total_no_data = sum(d["no_data"] for d in state_data.values())
+
+        lines = ["Claim history by region across all proposals:"]
+        lines.append("")
+        header = f"{'State':<25} {'Proposals':>10} {'With Claims':>13} {'No Claims':>12}"
+        lines.append(header)
+        lines.append("-" * len(header))
+        for state, data in sorted_states:
+            lines.append(
+                f"{state:<25} {data['proposals']:>10} "
+                f"{data['with_claims']:>13} {data['no_claims']:>12}"
+            )
+        lines.append("")
+
+        if total_claims == 0:
+            lines.append(
+                f"Note: All {total_with_data} proposals with available data "
+                f"show no claims in the past 3 years."
+            )
+        else:
+            lines.append(
+                f"Summary: {total_claims} proposal(s) with claims out of "
+                f"{total_with_data} with claim data."
+            )
+        if total_no_data > 0:
+            lines.append(
+                f"{total_no_data} proposal(s) have no claim data submitted."
+            )
+        return "\n".join(lines)
+
+    # ------------------------------------------------------------------
+    # Handler: claim occurrence rate / ratio (TYPE 3)
+    # ------------------------------------------------------------------
+
+    def handle_claim_rate(self) -> str:
+        metadata = self.metadata
+        name_map = self._build_business_name_map(metadata)
+
+        has_claims: list = []
+        no_claims: list = []
+        no_data: list = []
+
+        for chunk in metadata:
+            if chunk.get("section") != "claim_history":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+            df = chunk.get("decoded_fields") or {}
+            label = (df.get("claim_history_label") or "").lower()
+            name = name_map.get(qid, qid)
+
+            if "no claim" in label:
+                no_claims.append(name)
+            elif "claim" in label:
+                has_claims.append(name)
+            else:
+                no_data.append(name)
+
+        # Also find proposals with NO claim_history chunk at all
+        seen_in_claims = {
+            c.get("quote_id") for c in metadata
+            if c.get("section") == "claim_history"
+        }
+        all_qids = {
+            c.get("quote_id") for c in metadata if c.get("quote_id")
+        }
+        for qid in all_qids - seen_in_claims:
+            no_data.append(name_map.get(qid, qid))
+
+        total_with_data = len(has_claims) + len(no_claims)
+        total_all = total_with_data + len(no_data)
+
+        lines = ["Claim occurrence rate across all proposals:"]
+
+        if total_with_data > 0:
+            no_pct = round(len(no_claims) / total_with_data * 100)
+            has_pct = round(len(has_claims) / total_with_data * 100)
+        else:
+            no_pct = has_pct = 0
+
+        lines.append(
+            f"- No claims in past 3 years: {len(no_claims)} proposals "
+            f"({no_pct}% of proposals with data)"
+        )
+        lines.append(
+            f"- Claims within past 3 years: {len(has_claims)} proposals "
+            f"({has_pct}%)"
+        )
+        if no_data:
+            no_data_str = ", ".join(no_data)
+            lines.append(
+                f"- No claim data submitted: {len(no_data)} proposals "
+                f"({no_data_str})"
+            )
+
+        lines.append("")
+        lines.append(
+            "Note: Claim amounts and causes are not captured in proposal "
+            "records. Only claim occurrence within 3 years is recorded."
+        )
+        return "\n".join(lines)
+
+    # ------------------------------------------------------------------
+    # Handler: list all businesses / proposals (TYPE 4)
+    # ------------------------------------------------------------------
+
+    def handle_list_all_businesses(self) -> str:
+        metadata = self.metadata
+        name_map = self._build_business_name_map(metadata)
+
+        # Build location map
+        location_map: dict = {}
+        industry_map: dict = {}
+        seen: set = set()
+        for chunk in metadata:
+            qid = chunk.get("quote_id")
+            if not qid or qid in seen:
+                continue
+            if chunk.get("section") == "business_profile":
+                seen.add(qid)
+                loc = chunk.get("risk_location", "")
+                location_map[qid] = str(loc).strip() if loc else "Not specified"
+                df = chunk.get("decoded_fields") or {}
+                ind = df.get("nature_of_business_label")
+                if ind and str(ind).strip().lower() not in ("", "none", "unknown"):
+                    industry_map[qid] = str(ind).strip()
+                else:
+                    industry_map[qid] = "Not Specified"
+
+        total = len(name_map)
+        if total == 0:
+            return "No proposal data found."
+
+        lines = [
+            f"All {total} businesses in the proposal database:"
+        ]
+        for i, qid in enumerate(sorted(name_map.keys()), 1):
+            name = name_map[qid]
+            loc = location_map.get(qid, "")
+            ind = industry_map.get(qid, "")
+            lines.append(
+                f"{i:>2}. {name} ({qid}) — {ind}, {loc}"
+            )
+        lines.append("")
+        lines.append(
+            "Each business has exactly one proposal record in the database."
+        )
+        return "\n".join(lines)
+
+    # ------------------------------------------------------------------
+    # Handler: GPS tracker proposals (TYPE 5)
+    # ------------------------------------------------------------------
+
+    def handle_gps_tracker_proposals(self) -> str:
+        metadata = self.metadata
+        name_map = self._build_business_name_map(metadata)
+
+        # Build location map for display
+        loc_map: dict = {}
+        seen_loc: set = set()
+        for chunk in metadata:
+            qid = chunk.get("quote_id")
+            if not qid or qid in seen_loc:
+                continue
+            seen_loc.add(qid)
+            loc = chunk.get("risk_location", "")
+            parts = [p.strip() for p in str(loc).split(",") if p.strip()]
+            # Take the city (first meaningful part)
+            loc_map[qid] = parts[0] if parts else "Unknown"
+
+        # Scan transit_and_gaurds section for GPS fields
+        gps_vehicles_yes: list = []
+        gps_vehicles_no: list = []
+        gps_no_data: list = []
+
+        seen_transit = set()
+        all_qids = set(name_map.keys())
+
+        for chunk in metadata:
+            if chunk.get("section") != "transit_and_gaurds":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid or qid in seen_transit:
+                continue
+            seen_transit.add(qid)
+
+            df = chunk.get("decoded_fields") or {}
+            gps_v = df.get(
+                "installed_gps_tracker_in_transit_vehicles_label", ""
+            )
+            name = name_map.get(qid, qid)
+            city = loc_map.get(qid, "")
+
+            if str(gps_v).strip().lower() in ("yes", "001", "true", "1"):
+                gps_vehicles_yes.append((name, qid, city))
+            elif str(gps_v).strip().lower() in ("no", "002", "false", "0"):
+                gps_vehicles_no.append((name, qid, city))
+            else:
+                gps_no_data.append((name, qid, city))
+
+        # Proposals without transit_and_gaurds chunk at all
+        for qid in all_qids - seen_transit:
+            name = name_map.get(qid, qid)
+            city = loc_map.get(qid, "")
+            gps_no_data.append((name, qid, city))
+
+        lines = []
+        if gps_vehicles_yes:
+            lines.append(
+                f"Proposals with GPS trackers in transit vehicles "
+                f"({len(gps_vehicles_yes)}):"
+            )
+            for i, (name, qid, city) in enumerate(
+                sorted(gps_vehicles_yes, key=lambda x: x[1]), 1
+            ):
+                lines.append(f"{i:>2}. {name} ({qid}) \u2014 {city}")
+        else:
+            lines.append("No proposals have GPS trackers in transit vehicles.")
+
+        if gps_vehicles_no:
+            lines.append("")
+            lines.append(
+                f"Proposals WITHOUT GPS in vehicles ({len(gps_vehicles_no)}):"
+            )
+            for name, qid, city in sorted(
+                gps_vehicles_no, key=lambda x: x[1]
+            ):
+                lines.append(f"- {name} ({qid}) \u2014 {city}")
+
+        if gps_no_data:
+            lines.append("")
+            no_data_ids = ", ".join(qid for _, qid, _ in gps_no_data)
+            lines.append(
+                f"No transit data submitted: {no_data_ids}"
+            )
+
         return "\n".join(lines)

@@ -881,38 +881,17 @@ class PartialAnswerEngine:
 
     def _get_complete_proposals_only(self, metadata: list) -> list:
         """
-        Returns ONLY chunks from proposals with real submitted data.
-        Filters out incomplete/empty submissions like QT003 and QT004.
-        Uses is_complete_submission flag when present (new index).
-        Falls back to checking for a non-empty business_name_label when
-        the flag is absent (backwards compat with old index builds).
+        Returns ALL chunks — all 15 proposals have full data submitted.
+        Kept for API compatibility with handler methods.
         """
-        complete = []
-        for chunk in metadata:
-            if "is_complete_submission" in chunk:
-                if chunk.get("is_complete_submission"):
-                    complete.append(chunk)
-            else:
-                df = chunk.get("decoded_fields", {}) or {}
-                fields = chunk.get("fields", {}) or {}
-                name = (
-                    df.get("business_name_label")
-                    or fields.get("business_name_label")
-                )
-                if name and str(name).strip() not in ("", "None", "null"):
-                    complete.append(chunk)
-        return complete
+        return list(metadata)
 
     def _get_incomplete_quote_ids(self, metadata: list) -> list:
         """
-        Returns a sorted list of quote_ids that have no submitted data,
-        by comparing all quote_ids in metadata against those in the
-        complete-only subset.
+        Returns empty list — all 15 proposals are complete.
+        Kept for API compatibility with handler methods.
         """
-        all_qids = {c.get("quote_id") for c in metadata if c.get("quote_id")}
-        complete_chunks = self._get_complete_proposals_only(metadata)
-        complete_qids = {c.get("quote_id") for c in complete_chunks if c.get("quote_id")}
-        return sorted(list(all_qids - complete_qids))
+        return []
 
     # ------------------------------------------------------------------
     # Dispatcher

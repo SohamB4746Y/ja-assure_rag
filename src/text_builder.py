@@ -3,25 +3,38 @@ from src.mappings import FIELD_MAPPINGS, decode_record
 
 
 def build_section_text(chunk: dict) -> str:
+    """Build searchable text for one section chunk.
+
+    Returns a multi-line string that will be embedded into the FAISS index.
+    Includes the quote_id, risk_location (when available), and all
+    non-empty decoded field values.
+    """
     section = chunk["section"]
     raw_data = chunk["data"]
     quote_id = chunk["quote_id"]
+    risk_location = chunk.get("metadata", {}).get("risk_location", "")
 
     data = decode_record(raw_data, section)
 
     schema = SECTION_SCHEMAS.get(section)
     if not schema:
-        schema = {
-            "title": section.replace("_", " ").title()
-        }
+        schema = {"title": section.replace("_", " ").title()}
 
     mappings = FIELD_MAPPINGS.get(section, {})
 
     lines = []
     lines.append(f"Proposal {quote_id} – {schema['title']}:")
+    if risk_location:
+        lines.append(f"Risk Location: {risk_location}")
 
     def has_value(value) -> bool:
-        return value not in [None, "", [], {}, -1, "-1", 0, "0"]
+        """Return True unless value is clearly empty/missing."""
+        if value is None or value == "" or value == [] or value == {}:
+            return False
+        s = str(value).strip().lower()
+        if s in ("-1", "null", "none", "nan"):
+            return False
+        return True
 
     def label_for(key: str) -> str:
         return mappings.get(key, key.replace("_", " ").title())

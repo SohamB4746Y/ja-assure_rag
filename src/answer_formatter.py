@@ -35,7 +35,7 @@ FORMAT RULES:
 Write a natural, helpful response to the user's question using ONLY the data above:"""
 
 # ---- sentinel values that should be treated as "no data" ----
-_EMPTY_SENTINELS = {None, "", "None", "nan", "0", "-1", "N/A"}
+_EMPTY_SENTINELS = {None, "", "None", "nan", "-1", "N/A"}
 
 
 def _field_match_score(requested: str, actual: str) -> int:

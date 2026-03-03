@@ -65,18 +65,8 @@ MAPPINGS: dict = {
         "34": "Pawnbrokers",
         "35": "Precious Stones Dealers",
     },
-    "nature_of_business_label": {
-        "1":  "Jewellery Retailer",
-        "2":  "Jewellery & Gold Manufacturer",
-        "5":  "Jewellery & Gold Bullion Distributor",
-        "8":  "Diamond Dealers",
-        "10": "Money Changer",
-        "11": "Remittance Services",
-        "12": "Luxury Good Retailer",
-        "13": "Luxury Watch Retailer",
-        "34": "Pawnbrokers",
-        "35": "Precious Stones Dealers",
-    },
+    # NOTE: nature_of_business_label is NOT mapped here.
+    # It uses a different ID system from businesstype_id and should pass through.
 
     # -----------------------------------------------------------------------
     # PHYSICAL SETUP
@@ -528,7 +518,6 @@ _NO_PAD_FIELDS = frozenset({
     "businesstype_id",
     "industry_id_label",
     "businesstype_id_label",
-    "nature_of_business_label",
 })
 
 # Sentinel raw values that should always decode to "" (empty / no data)
@@ -1297,14 +1286,15 @@ def decode_field(field_name: str, value) -> str:
     return result if result is not None else value_str
 
 
-def decode_all_fields(record: dict) -> dict:
+def decode_all_fields(raw_fields: dict) -> dict:
     """
-    Decode every key in *record* using decode_field().
+    Decode every key in *raw_fields* using decode_field().
 
-    Returns a new dict; values with no mapping are passed through unchanged.
-    Nested dicts and lists are handled recursively via decode_record().
+    Returns a new flat dict {k: decode_field(k, v) for k, v in raw_fields.items()}.
     """
-    return decode_record(record)
+    if not isinstance(raw_fields, dict):
+        return {}
+    return {k: decode_field(k, v) for k, v in raw_fields.items()}
 
 
 def decode_record(data, section: str = "") -> object:

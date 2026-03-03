@@ -89,6 +89,27 @@ logging.basicConfig(
 logger = logging.getLogger("ja_assure_rag")
 
 
+# ======================================================================
+# Multi-question splitter
+# ======================================================================
+
+def split_questions(text: str) -> list[str]:
+    """
+    Split text into individual questions on ``?`` followed by whitespace
+    or on newlines.  Returns a list of non-empty strings.
+    """
+    import re
+    # Split on '?' followed by space/newline, or on newlines
+    parts = re.split(r'\?\s+|\n+', text)
+    questions = []
+    for p in parts:
+        p = p.strip().rstrip("?").strip()
+        if p:
+            # Re-add question mark for downstream classifiers
+            questions.append(p + "?")
+    return questions if questions else [text.strip()]
+
+
 def log_query(
     query: str,
     query_type: str,
@@ -721,6 +742,18 @@ def handle_query(
         return clean_output(answer)
 
     # ------------------------------------------------------------------
+    # Analytical engine — deterministic source of truth for aggregation
+    # queries.  Runs BEFORE any LLM or FAISS call.
+    # ------------------------------------------------------------------
+    analytical_result = analytical_engine.run(query)
+    if analytical_result:
+        logger.info("Handled by analytical engine (early)")
+        log_query(query, "analytical", None, 0, 1.0, analytical_result)
+        if query_parser:
+            query_parser.add_raw_to_history(query, analytical_result)
+        return clean_output(analytical_result)
+
+    # ------------------------------------------------------------------
     # Compound multi-field query check (~1 ms, no LLM)
     # Runs BEFORE partial handlers so multi-field queries aren't reduced
     # to a single partial handler (e.g. "values AND GPS in Perak").
@@ -951,10 +984,7 @@ def initialize_system() -> tuple[Embedder, LLMClient, PredefinedQAStore, Analyti
     logger.info("LLM client initialized")
     
                                   
-                                                                         
-    import pandas as pd
-    df = pd.DataFrame()
-    analytical_engine = AnalyticalEngine(df, metadata)
+    analytical_engine = AnalyticalEngine(metadata=metadata)
     logger.info(f"Analytical engine initialized: {analytical_engine.get_record_count()} records")
     
     return embedder, llm, qa_store, analytical_engine, metadata
@@ -996,7 +1026,7 @@ def main():
                                  
                 with open(METADATA_PATH, "rb") as f:
                     metadata = pickle.load(f)
-                analytical_engine = AnalyticalEngine(None, metadata)
+                analytical_engine = AnalyticalEngine(metadata=metadata)
                 # Reset lazy singletons so they reload fresh metadata
                 _partial_engine = None
                 _compound_handler = None
@@ -1005,7 +1035,16 @@ def main():
                 continue
             
                               
-            answer = handle_query(query, embedder, llm, qa_store, analytical_engine, query_parser)
+            questions = split_questions(query)
+            if len(questions) > 1:
+                # Multi-question: answer each, aggregate
+                answers = []
+                for i, sub_q in enumerate(questions, 1):
+                    sub_answer = handle_query(sub_q, embedder, llm, qa_store, analytical_engine, query_parser)
+                    answers.append(f"Q{i}: {sub_q}\n{sub_answer}")
+                answer = "\n\n".join(answers)
+            else:
+                answer = handle_query(query, embedder, llm, qa_store, analytical_engine, query_parser)
             
             print("\n=== ANSWER ===\n")
             print(answer)

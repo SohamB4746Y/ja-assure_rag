@@ -139,15 +139,31 @@ async def query_endpoint(request: QueryRequest):
     logger.info(f"Received query: {question}")
     
     try:
-        # Use the existing handle_query function with persistent query_parser
-        answer = handle_query(
-            query=question,
-            embedder=embedder,
-            llm=llm,
-            qa_store=qa_store,
-            analytical_engine=analytical_engine,
-            query_parser=query_parser
-        )
+        # Multi-question support
+        from main import split_questions
+        questions = split_questions(question)
+        if len(questions) > 1:
+            answers = []
+            for i, sub_q in enumerate(questions, 1):
+                sub_answer = handle_query(
+                    query=sub_q,
+                    embedder=embedder,
+                    llm=llm,
+                    qa_store=qa_store,
+                    analytical_engine=analytical_engine,
+                    query_parser=query_parser
+                )
+                answers.append(f"Q{i}: {sub_q}\n{sub_answer}")
+            answer = "\n\n".join(answers)
+        else:
+            answer = handle_query(
+                query=question,
+                embedder=embedder,
+                llm=llm,
+                qa_store=qa_store,
+                analytical_engine=analytical_engine,
+                query_parser=query_parser
+            )
         
         logger.info(f"Generated answer (length: {len(answer)} chars)")
         

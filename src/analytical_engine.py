@@ -1,412 +1,977 @@
 """
-Analytical Engine for Pandas-based aggregation queries.
+AnalyticalEngine -- deterministic, pure-Python analytics over the 15 proposals.
 
-This module handles all multi-record analytical queries without LLM involvement.
-It operates on decoded dataframes where all codes have been converted to labels.
+Every numeric / aggregate answer comes from this engine.  The LLM is NEVER
+consulted for data values; it is only used downstream to format the output.
+
+The engine is initialised with the FAISS metadata list (one dict per chunk)
+and collapses it into ``self.records`` -- one dict per unique ``quote_id``.
 """
 from __future__ import annotations
 
+import logging
 import re
-import pandas as pd
-from typing import Optional
+from datetime import datetime
+from typing import Optional, List, Dict, Any
 
-# Configuration: Field name patterns for fuzzy matching
-CCTV_PATTERNS = ["cctv", "camera", "recording", "surveillance"]
-ALARM_PATTERNS = ["alarm", "security system", "monitoring"]
-GUARD_PATTERNS = ["guard", "armed", "security personnel"]
-TRANSIT_PATTERNS = ["transit", "armoured", "vehicle", "transport"]
-CLAIM_PATTERNS = ["claim", "loss", "incident"]
-SAFE_PATTERNS = ["safe", "vault", "storage", "strong room"]
-DOOR_PATTERNS = ["door", "access", "entry"]
-PREMISE_PATTERNS = ["premise", "building", "location", "shop"]
+from src.mappings import decode_field
 
-# Yes/No value patterns
-YES_VALUES = ["yes", "001", "true", "1"]
-NO_VALUES = ["no", "002", "false", "0"]
+logger = logging.getLogger("ja_assure_rag.analytical_engine")
+
+_YES = frozenset({"001", "1", "yes", "true"})
+_NO = frozenset({"002", "2", "no", "false"})
+
+
+def _yn(raw) -> str:
+    """Normalise a yes/no raw value."""
+    if raw is None:
+        return ""
+    s = str(raw).strip().lower()
+    if s in _YES:
+        return "Yes"
+    if s in _NO:
+        return "No"
+    return str(raw).strip()
+
+
+def _safe_float(val) -> float:
+    """Best-effort conversion to float; returns 0.0 on failure."""
+    if val is None:
+        return 0.0
+    if isinstance(val, (int, float)):
+        return float(val)
+    s = str(val).replace(",", "").replace("RM", "").replace("$", "").strip()
+    try:
+        return float(s)
+    except (ValueError, TypeError):
+        return 0.0
+
+
+def _extract_state(risk_location: str) -> str:
+    if not risk_location:
+        return "Unknown"
+    parts = [p.strip() for p in risk_location.split(",")]
+    if len(parts) >= 3:
+        return parts[-2]
+    if len(parts) == 2:
+        return parts[-1]
+    return parts[0]
+
+
+def _extract_city(risk_location: str) -> str:
+    if not risk_location:
+        return "Unknown"
+    parts = [p.strip() for p in risk_location.split(",")]
+    return parts[0] if parts else "Unknown"
+
+
+def _parse_date(raw) -> Optional[datetime]:
+    """Best-effort parse of a date value from Excel/metadata."""
+    if raw is None:
+        return None
+    if isinstance(raw, datetime):
+        return raw
+    s = str(raw).strip()
+    if not s or s.lower() in ("nan", "none", "nat", ""):
+        return None
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y"):
+        try:
+            return datetime.strptime(s, fmt)
+        except ValueError:
+            continue
+    return None
+
+
+# ======================================================================
+# Main class
+# ======================================================================
 
 
 class AnalyticalEngine:
     """
-    Pandas-based engine for processing analytical queries.
-    Never calls the LLM - all answers come from data operations.
+    Deterministic analytics over the proposal dataset.
+    ``self.records`` -- list of dicts, one per unique quote_id (length 15).
     """
 
-    def __init__(self, decoded_df: pd.DataFrame, metadata: list[dict] = None):
-        """
-        Initialize the analytical engine.
-
-        Args:
-            decoded_df: DataFrame with decoded (human-readable) values.
-            metadata: Optional list of metadata dicts from FAISS index.
-        """
-        self.df = decoded_df
+    def __init__(self, decoded_df=None, metadata: list[dict] = None):
         self.metadata = metadata or []
-        self._build_field_index()
+        self.records: List[Dict[str, Any]] = []
+        self._build_records()
 
-    def _build_field_index(self) -> None:
-        """Build an index of all fields across all records for fast lookup."""
-        self.all_fields = set()
-        self.field_to_section = {}
+    # ------------------------------------------------------------------
+    # Internal: collapse per-chunk metadata into per-proposal records
+    # ------------------------------------------------------------------
 
-        for meta in self.metadata:
-            if "fields" in meta and isinstance(meta["fields"], dict):
-                for field in meta["fields"].keys():
-                    self.all_fields.add(field.lower())
-                    section = meta.get("section", "unknown")
-                    self.field_to_section[field.lower()] = section
+    def _build_records(self) -> None:
+        """Collapse metadata chunks into one record per quote_id."""
+        proposals: Dict[str, Dict[str, Any]] = {}
+
+        for chunk in self.metadata:
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+
+            if qid not in proposals:
+                proposals[qid] = {
+                    "quote_id": qid,
+                    "risk_location": str(chunk.get("risk_location", "") or ""),
+                    "user_name": str(chunk.get("user_name", "") or ""),
+                    "created_at": _parse_date(chunk.get("created_at")),
+                    "is_paid_on_date": _parse_date(chunk.get("is_paid_on_date")),
+                    "is_complete_submission": chunk.get("is_complete_submission", True),
+                    "business_name": "",
+                    "industry": "",
+                    "industry_id": "",
+                    "nature_of_business": "",
+                    "insured_value": 0.0,
+                    "insured_value_type": "",
+                    "alarm": "",
+                    "cctv": "",
+                    "strong_room": "",
+                    "armoured_vehicle": "",
+                    "gps_vehicle": "",
+                    "gps_bags": "",
+                    "armed_guards_transit": "",
+                    "guards_at_premise": "",
+                    "jaguar_transit": "",
+                    "claim_history_label": "",
+                    "claim_amount": 0.0,
+                    "safe_grade": "",
+                    "shop_lifting": "",
+                    "maximum_stock_in_premises": 0.0,
+                    "maximum_stock_foreign_currency": 0.0,
+                    "value_of_pledged_stock": 0.0,
+                    "value_of_cash_in_premise": 0.0,
+                    "maximum_stock_during_transit": 0.0,
+                }
+
+            rec = proposals[qid]
+            section = chunk.get("section", "")
+            raw = chunk.get("fields", {})
+            if not isinstance(raw, dict):
+                if isinstance(raw, list) and raw and isinstance(raw[0], dict):
+                    raw = raw[0]
+                else:
+                    continue
+
+            if section == "business_profile":
+                rec["business_name"] = str(raw.get("business_name_label", "") or "")
+                nob = raw.get("nature_of_business_label", "")
+                rec["nature_of_business"] = str(nob) if nob else ""
+
+            if section == "industry_id":
+                ind_raw = raw.get("industry_id_label", "")
+                rec["industry_id"] = str(ind_raw) if ind_raw else ""
+
+            if section == "sum_assured":
+                rec["maximum_stock_in_premises"] = _safe_float(
+                    raw.get("maximum_stock_in_premises_label")
+                )
+                rec["maximum_stock_foreign_currency"] = _safe_float(
+                    raw.get("maximum_stock_foreign_currency_in_premise_label")
+                )
+                rec["value_of_pledged_stock"] = _safe_float(
+                    raw.get("value_of_pledged_stock_in_premise_label")
+                )
+                rec["value_of_cash_in_premise"] = _safe_float(
+                    raw.get("value_of_cash_in_premise_label")
+                )
+                rec["maximum_stock_during_transit"] = _safe_float(
+                    raw.get("maximum_stock_during_transit_label")
+                )
+
+            if section == "cctv":
+                rec["cctv"] = _yn(raw.get("recording_label"))
+
+            if section == "alarm":
+                rec["alarm"] = _yn(raw.get("do_you_have_alarm_label"))
+
+            if section == "strong_room":
+                rec["strong_room"] = _yn(raw.get("do_you_have_a_strong_room_label"))
+
+            if section == "safe":
+                g = raw.get("grade_label", "")
+                if g:
+                    rec["safe_grade"] = decode_field("grade_label", g)
+
+            if section == "transit_and_gaurds":
+                rec["armoured_vehicle"] = _yn(
+                    raw.get("do_you_use_armoured_vehicle_label")
+                )
+                rec["gps_vehicle"] = _yn(
+                    raw.get("installed_gps_tracker_in_transit_vehicles_label")
+                )
+                rec["gps_bags"] = _yn(
+                    raw.get("installed_gps_tracker_in_transit_bags_label")
+                )
+                rec["armed_guards_transit"] = _yn(
+                    raw.get("do_you_use_armed_guards_during_transit_label")
+                )
+                rec["guards_at_premise"] = _yn(
+                    raw.get("do_you_use_guards_at_premise_label")
+                )
+                rec["jaguar_transit"] = _yn(
+                    raw.get("usage_of_jaguar_transit_label")
+                )
+
+            if section == "claim_history":
+                ch = str(raw.get("claim_history_label", "")).strip()
+                if ch in ("001", "1"):
+                    rec["claim_history_label"] = "No claim within 3 years"
+                elif ch in ("002", "2"):
+                    rec["claim_history_label"] = "Claims within the past 3 years"
+                else:
+                    rec["claim_history_label"] = _yn(ch)
+                details = raw.get("additional_details", [])
+                if isinstance(details, list):
+                    for item in details:
+                        if isinstance(item, dict):
+                            rec["claim_amount"] += _safe_float(
+                                item.get("amount_of_claim_label")
+                            )
+
+            if section == "shop_lifting":
+                sl = raw.get("shop_lifting_label", "")
+                rec["shop_lifting"] = _yn(sl)
+
+        # Post-process: derive industry and insured_value
+        # Industry is determined by WHICH sum_assured field is populated,
+        # not by nature_of_business_label (which is a sub-type).
+        for rec in proposals.values():
+            stock = rec["maximum_stock_in_premises"]
+            forex = rec["maximum_stock_foreign_currency"]
+            pledged = rec["value_of_pledged_stock"]
+            cash = rec["value_of_cash_in_premise"]
+
+            if stock > 0:
+                rec["industry"] = "Jewellery & Gold"
+                rec["insured_value"] = stock
+                rec["insured_value_type"] = "jewellery stock"
+            elif forex > 0:
+                rec["industry"] = "Money Services"
+                rec["insured_value"] = forex
+                rec["insured_value_type"] = "foreign currency stock"
+            elif pledged > 0 or cash > 0:
+                rec["industry"] = "Pawnbrokers"
+                rec["insured_value"] = pledged + cash
+                rec["insured_value_type"] = "pledged stock + cash"
+            else:
+                rec["industry"] = "Unknown"
+                rec["insured_value"] = 0.0
+                rec["insured_value_type"] = "unknown"
+
+        self.records = sorted(proposals.values(), key=lambda r: r["quote_id"])
+        logger.info(
+            "AnalyticalEngine: loaded %d proposal records", len(self.records)
+        )
+
+    # ------------------------------------------------------------------
+    # Public helpers
+    # ------------------------------------------------------------------
+
+    def get_record_count(self) -> int:
+        return len(self.records)
+
+    def get_unique_quote_ids(self) -> List[str]:
+        return [r["quote_id"] for r in self.records]
+
+    # ==================================================================
+    # 1. Top insured policies
+    # ==================================================================
+
+    def get_top_insured_policies(self, limit: int = 15) -> List[Dict]:
+        """Return proposals sorted by insured_value descending."""
+        ranked = sorted(
+            self.records, key=lambda r: r["insured_value"], reverse=True
+        )
+        results = []
+        for r in ranked[:limit]:
+            results.append(
+                {
+                    "quote_id": r["quote_id"],
+                    "business_name": r["business_name"],
+                    "risk_location": r["risk_location"],
+                    "insured_value": r["insured_value"],
+                    "insured_value_type": r["insured_value_type"],
+                    "industry": r["industry"],
+                }
+            )
+        return results
+
+    # ==================================================================
+    # 2. Industry totals
+    # ==================================================================
+
+    def get_industry_totals(self) -> List[Dict]:
+        """Group by industry -> count, total insured, average insured."""
+        groups: Dict[str, Dict] = {}
+        for r in self.records:
+            ind = r["industry"]
+            if ind not in groups:
+                groups[ind] = {"industry": ind, "count": 0, "total": 0.0}
+            groups[ind]["count"] += 1
+            groups[ind]["total"] += r["insured_value"]
+        for g in groups.values():
+            g["average"] = (
+                round(g["total"] / g["count"], 2) if g["count"] else 0.0
+            )
+            g["total"] = round(g["total"], 2)
+        return sorted(groups.values(), key=lambda g: g["total"], reverse=True)
+
+    # ==================================================================
+    # 3. Claim statistics by region
+    # ==================================================================
+
+    def get_claim_stats_by_region(self) -> List[Dict]:
+        """For each state: proposals with claims, proposals without."""
+        regions: Dict[str, Dict] = {}
+        for r in self.records:
+            state = _extract_state(r["risk_location"])
+            if state not in regions:
+                regions[state] = {
+                    "state": state,
+                    "with_claims": 0,
+                    "no_claims": 0,
+                    "proposals": [],
+                }
+            ch = r["claim_history_label"].lower()
+            if "claim" in ch and "no claim" not in ch:
+                regions[state]["with_claims"] += 1
+            else:
+                regions[state]["no_claims"] += 1
+            regions[state]["proposals"].append(r["quote_id"])
+        return sorted(regions.values(), key=lambda g: g["state"])
+
+    # ==================================================================
+    # 4. Policies above threshold
+    # ==================================================================
+
+    def get_policies_above_threshold(self, threshold_rm: float) -> List[Dict]:
+        """Return proposals where insured_value > threshold_rm."""
+        results = []
+        for r in sorted(
+            self.records, key=lambda x: x["insured_value"], reverse=True
+        ):
+            if r["insured_value"] > threshold_rm:
+                results.append(
+                    {
+                        "quote_id": r["quote_id"],
+                        "business_name": r["business_name"],
+                        "risk_location": r["risk_location"],
+                        "insured_value": r["insured_value"],
+                        "insured_value_type": r["insured_value_type"],
+                        "industry": r["industry"],
+                    }
+                )
+        return results
+
+    # ==================================================================
+    # 5. Security features
+    # ==================================================================
+
+    def get_security_features(self) -> List[Dict]:
+        """For each proposal, return all security feature flags."""
+        results = []
+        for r in self.records:
+            results.append(
+                {
+                    "quote_id": r["quote_id"],
+                    "business_name": r["business_name"],
+                    "alarm": r["alarm"],
+                    "cctv": r["cctv"],
+                    "strong_room": r["strong_room"],
+                    "armoured_vehicle": r["armoured_vehicle"],
+                    "gps_vehicle": r["gps_vehicle"],
+                    "gps_bags": r["gps_bags"],
+                    "armed_guards_transit": r["armed_guards_transit"],
+                    "guards_at_premise": r["guards_at_premise"],
+                    "safe_grade": r["safe_grade"],
+                }
+            )
+        return results
+
+    # ==================================================================
+    # 6. GPS statistics
+    # ==================================================================
+
+    def get_gps_stats(self) -> Dict:
+        """Count proposals with/without GPS trackers."""
+        with_vehicle, without_vehicle = [], []
+        with_bags, without_bags = [], []
+        for r in self.records:
+            if r["gps_vehicle"] == "Yes":
+                with_vehicle.append(r["business_name"])
+            else:
+                without_vehicle.append(r["business_name"])
+            if r["gps_bags"] == "Yes":
+                with_bags.append(r["business_name"])
+            else:
+                without_bags.append(r["business_name"])
+        return {
+            "gps_vehicle_yes": len(with_vehicle),
+            "gps_vehicle_no": len(without_vehicle),
+            "gps_bags_yes": len(with_bags),
+            "gps_bags_no": len(without_bags),
+            "missing_vehicle_gps": without_vehicle,
+            "missing_bags_gps": without_bags,
+        }
+
+    # ==================================================================
+    # 7. Policy type distribution
+    # ==================================================================
+
+    def get_policy_type_distribution(self) -> List[Dict]:
+        """Alias for industry_totals."""
+        return self.get_industry_totals()
+
+    # ==================================================================
+    # 8. Claim ratio
+    # ==================================================================
+
+    def get_claim_ratio(self) -> Dict:
+        """Claim ratio -- not computable without premium data."""
+        has_claims = sum(
+            1
+            for r in self.records
+            if "claim" in r["claim_history_label"].lower()
+            and "no claim" not in r["claim_history_label"].lower()
+        )
+        return {
+            "proposals_with_claims": has_claims,
+            "proposals_total": len(self.records),
+            "computable": False,
+            "reason": "Premium amounts are not recorded in the proposal database.",
+        }
+
+    # ==================================================================
+    # 9. Company policy counts
+    # ==================================================================
+
+    def get_company_policy_counts(self) -> List[Dict]:
+        """Count policies per company (business_name), sorted descending."""
+        counts: Dict[str, int] = {}
+        for r in self.records:
+            name = r["business_name"] or r["quote_id"]
+            counts[name] = counts.get(name, 0) + 1
+        results = [
+            {"business_name": name, "count": cnt}
+            for name, cnt in counts.items()
+        ]
+        return sorted(results, key=lambda x: x["count"], reverse=True)
+
+    # ==================================================================
+    # 10. Average claim amount
+    # ==================================================================
+
+    def get_average_claim_amount(self) -> Dict:
+        """Average claim amount across proposals that have claims."""
+        total_amount = 0.0
+        with_claims = 0
+        all_amounts = []
+        for r in self.records:
+            amt = r["claim_amount"]
+            ch = r["claim_history_label"].lower()
+            has_claim = "claim" in ch and "no claim" not in ch
+            if has_claim and amt > 0:
+                total_amount += amt
+                with_claims += 1
+                all_amounts.append(
+                    {"business_name": r["business_name"], "quote_id": r["quote_id"], "amount": amt}
+                )
+        avg = round(total_amount / with_claims, 2) if with_claims else 0.0
+        return {
+            "total_claim_amount": round(total_amount, 2),
+            "proposals_with_claims": with_claims,
+            "average_claim_amount": avg,
+            "total_proposals": len(self.records),
+            "details": all_amounts,
+        }
+
+    # ==================================================================
+    # 11. Average underwriting turnaround time
+    # ==================================================================
+
+    def get_average_underwriting_tat(self) -> Dict:
+        """Average days between is_paid_on_date and created_at."""
+        durations = []
+        details = []
+        for r in self.records:
+            paid = r.get("is_paid_on_date")
+            created = r.get("created_at")
+            if paid and created:
+                delta = (created - paid).days
+                if delta >= 0:
+                    durations.append(delta)
+                    details.append({
+                        "quote_id": r["quote_id"],
+                        "business_name": r["business_name"],
+                        "is_paid_on_date": paid.strftime("%Y-%m-%d"),
+                        "created_at": created.strftime("%Y-%m-%d"),
+                        "days": delta,
+                    })
+        avg = round(sum(durations) / len(durations), 1) if durations else 0.0
+        return {
+            "average_days": avg,
+            "min_days": min(durations) if durations else 0,
+            "max_days": max(durations) if durations else 0,
+            "proposals_counted": len(durations),
+            "details": details,
+        }
+
+    # ==================================================================
+    # 12. Regions by claim frequency
+    # ==================================================================
+
+    def get_regions_by_claim_frequency(self, ascending: bool = True) -> List[Dict]:
+        """Rank regions (states) by claim frequency — ascending for lowest first."""
+        regions: Dict[str, Dict] = {}
+        for r in self.records:
+            state = _extract_state(r["risk_location"])
+            if state not in regions:
+                regions[state] = {"state": state, "total": 0, "with_claims": 0}
+            regions[state]["total"] += 1
+            ch = r["claim_history_label"].lower()
+            if "claim" in ch and "no claim" not in ch:
+                regions[state]["with_claims"] += 1
+        for g in regions.values():
+            g["claim_rate"] = (
+                round(g["with_claims"] / g["total"] * 100, 1) if g["total"] else 0.0
+            )
+        return sorted(regions.values(), key=lambda x: x["claim_rate"], reverse=not ascending)
+
+    # ==================================================================
+    # 13. Not-available detector
+    # ==================================================================
+
+    _NOT_AVAILABLE_FIELDS = {
+        "premium",
+        "broker",
+        "expiry",
+        "renewal",
+        "rejected",
+        "non-disclosure",
+        "fire cause",
+        "fire-related",
+        "peril cause",
+        "peril type",
+    }
+
+    def is_field_available(self, query: str) -> Optional[str]:
+        """If query asks for a field NOT in the database, return a message."""
+        q = query.lower()
+        for kw in self._NOT_AVAILABLE_FIELDS:
+            if kw in q:
+                return (
+                    f"'{kw}' information is not stored in the proposal database. "
+                    "Available data includes: insured values, security features "
+                    "(CCTV, alarm, GPS, strong room, armoured vehicle, guards), "
+                    "claim history (presence/absence within 3 years), business "
+                    "profile, and risk location."
+                )
+        return None
+
+    # ==================================================================
+    # 10. Master dispatcher (called from main pipeline)
+    # ==================================================================
 
     def run(self, query: str) -> Optional[str]:
         """
-        Execute an analytical query and return the result.
-
-        Args:
-            query: The user's analytical question.
-
-        Returns:
-            Formatted plain-text answer with source record IDs, or None if
-            the query cannot be mapped to data columns.
+        Try to answer an analytical query deterministically.
+        Returns a formatted string answer or None if the query is not analytical.
         """
-        query_lower = query.lower()
+        q = query.lower().strip()
 
-        # Determine the operation type
-        if self._is_counting_query(query_lower):
-            return self._handle_count_query(query_lower)
+        # Not-available check
+        na = self.is_field_available(query)
+        if na:
+            return na
 
-        if self._is_listing_query(query_lower):
-            return self._handle_list_query(query_lower)
+        # Top / highest insured
+        if _matches(
+            q,
+            [
+                "highest insured",
+                "top insured",
+                "highest value",
+                "list policies",
+                "list all policies",
+                "policies with the highest",
+                "all proposals ranked",
+                "proposals by insured value",
+                "rank by insured",
+                "policies in malaysia with the highest insured",
+            ],
+        ):
+            limit = _extract_limit(q) or 15
+            data = self.get_top_insured_policies(limit)
+            return self._fmt_top_insured(data)
 
-        if self._is_comparison_query(query_lower):
-            return self._handle_comparison_query(query_lower)
+        # Above threshold (e.g. "above RM 5000000")
+        m = re.search(r"above\s+(?:rm\s*)?(\d[\d,.]*)", q)
+        if m:
+            threshold = float(m.group(1).replace(",", ""))
+            data = self.get_policies_above_threshold(threshold)
+            if data:
+                return self._fmt_above_threshold(data, threshold)
+            return f"No proposals have insured values above RM {threshold:,.0f}."
 
-        # Try to handle as a general analytical query
-        return self._handle_general_query(query_lower)
+        # Above threshold with "million" (e.g. "above 5 million")
+        m = re.search(r"(?:rm\s*)?(\d[\d,.]*)\s*(?:million|m)\b", q)
+        if m and any(
+            kw in q
+            for kw in ["above", "over", "exceed", "more than", "high-value"]
+        ):
+            raw_num = m.group(1).replace(",", "")
+            multiplier = 1_000_000 if float(raw_num) < 1000 else 1
+            threshold = float(raw_num) * multiplier
+            data = self.get_policies_above_threshold(threshold)
+            if data:
+                return self._fmt_above_threshold(data, threshold)
+            return f"No proposals have insured values above RM {threshold:,.0f}."
 
-    def _is_counting_query(self, query: str) -> bool:
-        """Check if query asks for a count."""
-        signals = ["how many", "count", "total", "number of"]
-        return any(s in query for s in signals)
+        # Industry totals
+        if _matches(
+            q,
+            [
+                "industry total",
+                "top industries",
+                "industry insured",
+                "industries insured",
+                "by total sum",
+                "industry breakdown",
+                "total sum insured by industry",
+            ],
+        ):
+            data = self.get_industry_totals()
+            return self._fmt_industry_totals(data)
 
-    def _is_listing_query(self, query: str) -> bool:
-        """Check if query asks for a list."""
-        signals = ["list all", "which proposals", "which records", "show all", "what are all"]
-        return any(s in query for s in signals)
+        # Security features
+        if _matches(
+            q,
+            [
+                "anti-theft",
+                "anti theft",
+                "security features",
+                "security devices",
+                "include anti-theft",
+                "security measures",
+            ],
+        ):
+            data = self.get_security_features()
+            return self._fmt_security_features(data)
 
-    def _is_comparison_query(self, query: str) -> bool:
-        """Check if query asks for comparison/ranking."""
-        signals = ["highest", "lowest", "maximum", "minimum", "most", "least", "top", "bottom"]
-        return any(s in query for s in signals)
+        # GPS
+        if _matches(
+            q,
+            [
+                "gps tracker",
+                "gps status",
+                "gps in vehicle",
+                "gps in bag",
+                "gps stat",
+            ],
+        ):
+            data = self.get_gps_stats()
+            return self._fmt_gps_stats(data)
 
-    def _handle_count_query(self, query: str) -> Optional[str]:
-        """
-        Handle counting queries like "How many proposals have X?"
+        # Claim stats (general, non-ranked)
+        if _matches(
+            q,
+            [
+                "claim stat",
+                "claims by region",
+                "high-risk zone",
+                "high risk zone",
+                "risk zone",
+                "claim history across",
+                "claims across",
+            ],
+        ):
+            data = self.get_claim_stats_by_region()
+            return self._fmt_claim_stats(data)
 
-        Args:
-            query: Lowercase query string.
+        # Claim ratio
+        if _matches(q, ["claim ratio", "loss ratio"]):
+            data = self.get_claim_ratio()
+            return self._fmt_claim_ratio(data)
 
-        Returns:
-            Count result as string, or None if cannot process.
-        """
-        # Extract what we're counting
-        field_pattern, expected_value = self._extract_condition(query)
+        # Company policy counts
+        if _matches(
+            q,
+            [
+                "company policy count",
+                "companies with highest number",
+                "companies with most",
+                "policies per company",
+                "active policies",
+                "number of active policies",
+                "highest number of active",
+                "most policies",
+                "policies by company",
+                "company with the most",
+                "businesses with the most",
+                "list companies",
+            ],
+        ):
+            data = self.get_company_policy_counts()
+            return self._fmt_company_policy_counts(data)
 
-        if not field_pattern:
-            return None
+        # Average claim amount
+        if _matches(
+            q,
+            [
+                "average claim amount",
+                "mean claim amount",
+                "avg claim amount",
+                "average claim per",
+                "claim amount per property",
+                "average amount of claim",
+                "typical claim amount",
+                "claim amount average",
+            ],
+        ):
+            data = self.get_average_claim_amount()
+            return self._fmt_average_claim_amount(data)
 
-        # Find matching records
-        matching_ids = []
-        total_checked = 0
+        # Underwriting turnaround time
+        if _matches(
+            q,
+            [
+                "underwriting turnaround",
+                "underwriting tat",
+                "turnaround time",
+                "processing time",
+                "average underwriting",
+                "underwriting time",
+                "time to process",
+                "how long does underwriting",
+                "days to underwrite",
+            ],
+        ):
+            data = self.get_average_underwriting_tat()
+            return self._fmt_underwriting_tat(data)
 
-        for meta in self.metadata:
-            quote_id = meta.get("quote_id")
-            fields = meta.get("fields", {})
+        # Regions by claim frequency (lowest / highest)
+        if _matches(
+            q,
+            [
+                "lowest claim frequency",
+                "highest claim frequency",
+                "regions by claim",
+                "region claim frequency",
+                "safest region",
+                "riskiest region",
+                "states by claim",
+                "claim frequency by region",
+                "claim frequency by state",
+            ],
+        ):
+            ascending = any(kw in q for kw in ["lowest", "safest", "least", "fewest"])
+            data = self.get_regions_by_claim_frequency(ascending=ascending)
+            return self._fmt_regions_by_claim_frequency(data, ascending)
 
-            if not isinstance(fields, dict):
-                continue
-
-            total_checked += 1
-
-            for field_name, value in fields.items():
-                field_lower = field_name.lower()
-
-                if self._field_matches_pattern(field_lower, field_pattern):
-                    if self._value_matches(value, expected_value):
-                        if quote_id and quote_id not in matching_ids:
-                            matching_ids.append(quote_id)
-                        break
-
-        if matching_ids:
-            count = len(matching_ids)
-            return f"{count} proposal(s) match the criteria. Quote IDs: {', '.join(sorted(set(matching_ids)))}"
-
-        return f"0 proposals match the criteria."
-
-    def _handle_list_query(self, query: str) -> Optional[str]:
-        """
-        Handle listing queries like "List all proposals with X"
-
-        Args:
-            query: Lowercase query string.
-
-        Returns:
-            List of matching records, or None if cannot process.
-        """
-        field_pattern, expected_value = self._extract_condition(query)
-
-        if not field_pattern:
-            return None
-
-        matching_records = []
-
-        for meta in self.metadata:
-            quote_id = meta.get("quote_id")
-            fields = meta.get("fields", {})
-            section = meta.get("section", "")
-
-            if not isinstance(fields, dict):
-                continue
-
-            for field_name, value in fields.items():
-                field_lower = field_name.lower()
-
-                if self._field_matches_pattern(field_lower, field_pattern):
-                    if self._value_matches(value, expected_value):
-                        matching_records.append({
-                            "quote_id": quote_id,
-                            "section": section,
-                            "field": field_name,
-                            "value": value
-                        })
-                        break
-
-        if matching_records:
-            # Deduplicate by quote_id
-            seen = set()
-            unique_records = []
-            for r in matching_records:
-                if r["quote_id"] not in seen:
-                    seen.add(r["quote_id"])
-                    unique_records.append(r)
-
-            result_lines = [f"Found {len(unique_records)} matching proposal(s):"]
-            for r in unique_records[:20]:  # Limit to 20 results
-                result_lines.append(f"- {r['quote_id']}: {r['field']} = {r['value']}")
-
-            if len(unique_records) > 20:
-                result_lines.append(f"... and {len(unique_records) - 20} more.")
-
-            return "\n".join(result_lines)
-
-        return "No proposals match the criteria."
-
-    def _handle_comparison_query(self, query: str) -> Optional[str]:
-        """
-        Handle comparison queries like "highest sum assured"
-
-        Args:
-            query: Lowercase query string.
-
-        Returns:
-            Comparison result, or None if cannot process.
-        """
-        # Determine if looking for max or min
-        is_max = any(s in query for s in ["highest", "maximum", "most", "top"])
-
-        # Extract the numeric field being compared
-        numeric_patterns = [
-            ("sum assured", "sum_assured"),
-            ("claim amount", "amount_of_claim"),
-            ("stock", "maximum_stock"),
-            ("value", "value"),
-        ]
-
-        target_pattern = None
-        for keyword, pattern in numeric_patterns:
-            if keyword in query:
-                target_pattern = pattern
-                break
-
-        if not target_pattern:
-            return None
-
-        # Find numeric values and their quote IDs
-        values_with_ids = []
-
-        for meta in self.metadata:
-            quote_id = meta.get("quote_id")
-            fields = meta.get("fields", {})
-
-            if not isinstance(fields, dict):
-                continue
-
-            for field_name, value in fields.items():
-                if target_pattern in field_name.lower():
-                    try:
-                        # Try to parse as number
-                        num_val = self._parse_numeric(value)
-                        if num_val is not None:
-                            values_with_ids.append((num_val, quote_id, value))
-                    except (ValueError, TypeError):
-                        continue
-
-        if not values_with_ids:
-            return None
-
-        # Sort and get result
-        values_with_ids.sort(key=lambda x: x[0], reverse=is_max)
-        best = values_with_ids[0]
-
-        comparison_word = "highest" if is_max else "lowest"
-        return f"The {comparison_word} value is {best[2]} for proposal {best[1]}."
-
-    def _handle_general_query(self, query: str) -> Optional[str]:
-        """
-        Handle general analytical queries.
-
-        Args:
-            query: Lowercase query string.
-
-        Returns:
-            Result or None.
-        """
-        # Try to find any matching field and aggregate
-        field_pattern, _ = self._extract_condition(query)
-
-        if not field_pattern:
-            return None
-
-        # Collect all values for this field
-        value_counts = {}
-
-        for meta in self.metadata:
-            fields = meta.get("fields", {})
-
-            if not isinstance(fields, dict):
-                continue
-
-            for field_name, value in fields.items():
-                if self._field_matches_pattern(field_name.lower(), field_pattern):
-                    value_str = str(value)
-                    value_counts[value_str] = value_counts.get(value_str, 0) + 1
-
-        if value_counts:
-            result_lines = [f"Distribution for matching fields:"]
-            for val, count in sorted(value_counts.items(), key=lambda x: -x[1]):
-                result_lines.append(f"- {val}: {count} proposal(s)")
-            return "\n".join(result_lines)
+        # How many proposals
+        if "how many" in q and any(
+            kw in q for kw in ["proposal", "polic", "record"]
+        ):
+            return (
+                f"There are {self.get_record_count()} proposal records "
+                "in the system."
+            )
 
         return None
 
-    def _extract_condition(self, query: str) -> tuple[str, str]:
-        """
-        Extract the field pattern and expected value from a query.
+    # ------------------------------------------------------------------
+    # Formatting helpers
+    # ------------------------------------------------------------------
 
-        Args:
-            query: Lowercase query string.
-
-        Returns:
-            Tuple of (field_pattern, expected_value).
-        """
-        # Check for specific field patterns
-        patterns_to_check = [
-            (CCTV_PATTERNS, "cctv"),
-            (ALARM_PATTERNS, "alarm"),
-            (GUARD_PATTERNS, "guard"),
-            (TRANSIT_PATTERNS, "transit"),
-            (CLAIM_PATTERNS, "claim"),
-            (SAFE_PATTERNS, "safe"),
-            (DOOR_PATTERNS, "door"),
-            (PREMISE_PATTERNS, "premise"),
+    def _fmt_top_insured(self, data: List[Dict]) -> str:
+        lines = [
+            f"Policies ranked by insured value (highest first) "
+            f"-- {len(data)} proposal(s):"
         ]
+        for i, d in enumerate(data, 1):
+            bname = d["business_name"]
+            qid = d["quote_id"]
+            val = d["insured_value"]
+            vtype = d["insured_value_type"]
+            lines.append(f"  {i}. {bname} ({qid}) -- RM {val:,.0f} ({vtype})")
+        return "\n".join(lines)
 
-        field_pattern = None
-        for patterns, category in patterns_to_check:
-            for p in patterns:
-                if p in query:
-                    field_pattern = category
-                    break
-            if field_pattern:
-                break
+    def _fmt_above_threshold(self, data: List[Dict], threshold: float) -> str:
+        lines = [f"Proposals with insured value above RM {threshold:,.0f}:"]
+        for d in data:
+            bname = d["business_name"]
+            qid = d["quote_id"]
+            val = d["insured_value"]
+            vtype = d["insured_value_type"]
+            lines.append(f"  - {bname} ({qid}) -- RM {val:,.0f} ({vtype})")
+        return "\n".join(lines)
 
-        # Determine expected value
-        expected_value = None
-        if "no " in query or "without" in query or "don't" in query or "do not" in query:
-            expected_value = "no"
-        elif "have" in query or "use" in query or "with" in query:
-            expected_value = "yes"
-        elif "maintenance" in query:
-            expected_value = "yes"
+    def _fmt_industry_totals(self, data: List[Dict]) -> str:
+        lines = ["Industry breakdown by total sum insured:"]
+        for d in data:
+            ind = d["industry"]
+            cnt = d["count"]
+            tot = d["total"]
+            avg = d["average"]
+            lines.append(
+                f"  - {ind}: {cnt} proposals, "
+                f"total RM {tot:,.0f}, average RM {avg:,.0f}"
+            )
+        return "\n".join(lines)
 
-        # Special cases
-        if "no claim" in query:
-            expected_value = "no claim"
-        if "claims within" in query or "has claim" in query:
-            expected_value = "claims"
+    def _fmt_security_features(self, data: List[Dict]) -> str:
+        lines = [
+            f"Security / anti-theft features for all {len(data)} proposals:"
+        ]
+        feature_keys = [
+            ("alarm", "Alarm"),
+            ("cctv", "CCTV"),
+            ("strong_room", "Strong Room"),
+            ("armoured_vehicle", "Armoured Vehicle"),
+            ("gps_vehicle", "GPS Vehicle"),
+            ("gps_bags", "GPS Bags"),
+            ("armed_guards_transit", "Armed Guards (Transit)"),
+            ("guards_at_premise", "Guards at Premise"),
+        ]
+        for d in data:
+            parts = []
+            for key, label in feature_keys:
+                val = d.get(key, "")
+                parts.append(f"{label}: {val or 'N/A'}")
+            bname = d["business_name"]
+            qid = d["quote_id"]
+            joined = " | ".join(parts)
+            lines.append(f"  {bname} ({qid}): {joined}")
+        return "\n".join(lines)
 
-        return field_pattern, expected_value
+    def _fmt_gps_stats(self, data: Dict) -> str:
+        lines = [
+            "GPS Tracker Statistics:",
+            f"  GPS in transit vehicles: "
+            f"{data['gps_vehicle_yes']} Yes, {data['gps_vehicle_no']} No",
+            f"  GPS in transit bags: "
+            f"{data['gps_bags_yes']} Yes, {data['gps_bags_no']} No",
+        ]
+        if data["missing_vehicle_gps"]:
+            names = ", ".join(data["missing_vehicle_gps"])
+            lines.append(f"  Missing vehicle GPS: {names}")
+        if data["missing_bags_gps"]:
+            names = ", ".join(data["missing_bags_gps"])
+            lines.append(f"  Missing bags GPS: {names}")
+        return "\n".join(lines)
 
-    def _field_matches_pattern(self, field_name: str, pattern: str) -> bool:
-        """Check if a field name matches a pattern category."""
-        pattern_map = {
-            "cctv": CCTV_PATTERNS,
-            "alarm": ALARM_PATTERNS,
-            "guard": GUARD_PATTERNS,
-            "transit": TRANSIT_PATTERNS,
-            "claim": CLAIM_PATTERNS,
-            "safe": SAFE_PATTERNS,
-            "door": DOOR_PATTERNS,
-            "premise": PREMISE_PATTERNS,
-        }
+    def _fmt_claim_stats(self, data: List[Dict]) -> str:
+        any_claims = any(d["with_claims"] > 0 for d in data)
+        lines = ["Claim statistics by region (state):"]
+        for d in data:
+            st = d["state"]
+            total = d["with_claims"] + d["no_claims"]
+            wc = d["with_claims"]
+            nc = d["no_claims"]
+            lines.append(
+                f"  {st}: {total} proposals -- "
+                f"{wc} with claims, {nc} no claims"
+            )
+        if not any_claims:
+            lines.append(
+                "\n  Note: All proposals report no claims within "
+                "the past 3 years."
+            )
+        return "\n".join(lines)
 
-        patterns = pattern_map.get(pattern, [pattern])
-        return any(p in field_name for p in patterns)
+    def _fmt_claim_ratio(self, data: Dict) -> str:
+        wc = data["proposals_with_claims"]
+        total = data["proposals_total"]
+        lines = [f"Proposals with claims: {wc} out of {total}."]
+        if not data["computable"]:
+            lines.append(data["reason"])
+        return "\n".join(lines)
 
-    def _value_matches(self, value: str, expected: str) -> bool:
-        """Check if a value matches the expected condition."""
-        if expected is None:
-            return True
+    def _fmt_company_policy_counts(self, data: List[Dict]) -> str:
+        lines = [
+            f"Companies ranked by number of active policies "
+            f"({len(data)} companies):"
+        ]
+        for i, d in enumerate(data, 1):
+            lines.append(f"  {i}. {d['business_name']} -- {d['count']} policy(ies)")
+        return "\n".join(lines)
 
-        value_lower = str(value).lower()
-        expected_lower = expected.lower()
+    def _fmt_average_claim_amount(self, data: Dict) -> str:
+        wc = data["proposals_with_claims"]
+        total = data["total_proposals"]
+        avg = data["average_claim_amount"]
+        total_amt = data["total_claim_amount"]
+        lines = [
+            f"Claim amount statistics across {total} proposals:",
+            f"  Proposals with claims: {wc}",
+            f"  Total claim amount: RM {total_amt:,.2f}",
+            f"  Average claim amount (among those with claims): RM {avg:,.2f}",
+        ]
+        if wc == 0:
+            lines.append(
+                "\n  Note: No proposals report claim amounts greater than zero. "
+                "All 15 proposals report no claims within the past 3 years."
+            )
+        if data["details"]:
+            lines.append("\n  Breakdown:")
+            for item in data["details"]:
+                lines.append(
+                    f"    - {item['business_name']} ({item['quote_id']}): "
+                    f"RM {item['amount']:,.2f}"
+                )
+        return "\n".join(lines)
 
-        if expected_lower == "yes":
-            return value_lower in YES_VALUES or value_lower == "yes"
-        elif expected_lower == "no":
-            return value_lower in NO_VALUES or value_lower == "no"
-        elif expected_lower == "no claim":
-            return "no claim" in value_lower or value_lower == "001"
-        elif expected_lower == "claims":
-            return "claim" in value_lower and "no claim" not in value_lower
+    def _fmt_underwriting_tat(self, data: Dict) -> str:
+        avg = data["average_days"]
+        mn = data["min_days"]
+        mx = data["max_days"]
+        count = data["proposals_counted"]
+        lines = [
+            f"Underwriting turnaround time (based on {count} proposals):",
+            f"  Average: {avg} days",
+            f"  Minimum: {mn} days",
+            f"  Maximum: {mx} days",
+        ]
+        if data["details"]:
+            lines.append("\n  Per-proposal breakdown:")
+            for d in data["details"]:
+                lines.append(
+                    f"    - {d['business_name']} ({d['quote_id']}): "
+                    f"{d['days']} days "
+                    f"(paid {d['is_paid_on_date']}, created {d['created_at']})"
+                )
+        return "\n".join(lines)
 
-        return expected_lower in value_lower
+    def _fmt_regions_by_claim_frequency(self, data: List[Dict], ascending: bool) -> str:
+        direction = "lowest" if ascending else "highest"
+        lines = [f"Regions ranked by claim frequency ({direction} first):"]
+        for d in data:
+            lines.append(
+                f"  - {d['state']}: {d['with_claims']} claims out of "
+                f"{d['total']} proposals ({d['claim_rate']}% claim rate)"
+            )
+        if all(d["with_claims"] == 0 for d in data):
+            lines.append(
+                "\n  Note: All proposals report no claims within the past 3 years."
+            )
+        return "\n".join(lines)
 
-    def _parse_numeric(self, value) -> Optional[float]:
-        """Try to parse a value as a number."""
-        if value is None:
-            return None
 
-        if isinstance(value, (int, float)):
-            return float(value)
+# ======================================================================
+# Module-level helpers
+# ======================================================================
 
-        # Try to extract number from string
-        value_str = str(value).replace(",", "").replace("$", "").replace("RM", "").strip()
-        match = re.search(r"[\d.]+", value_str)
-        if match:
-            try:
-                return float(match.group())
-            except ValueError:
-                return None
 
-        return None
+def _matches(query: str, patterns: List[str]) -> bool:
+    """Return True if query contains any of the trigger patterns."""
+    return any(p in query for p in patterns)
 
-    def get_unique_quote_ids(self) -> list[str]:
-        """Get all unique quote IDs in the dataset."""
-        quote_ids = set()
-        for meta in self.metadata:
-            qid = meta.get("quote_id")
-            if qid:
-                quote_ids.add(qid)
-        return sorted(list(quote_ids))
 
-    def get_record_count(self) -> int:
-        """Get the total number of unique records."""
-        return len(self.get_unique_quote_ids())
+def _extract_limit(query: str) -> Optional[int]:
+    """Extract 'top N' or 'first N' from query."""
+    m = re.search(r"(?:top|first|best|bottom|worst)\s+(\d+)", query)
+    if m:
+        return int(m.group(1))
+    return None

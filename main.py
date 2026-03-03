@@ -44,6 +44,7 @@ from src.mappings import decode_field
 from src.query_parser import QueryParser, ParsedQuery
 from src.query_executor import SmartQueryExecutor, QueryResult
 from src.answer_formatter import format_answer, format_classified_response
+from src.compound_query_handler import CompoundQueryHandler
 from embeddings.embedder import Embedder, cosine_similarity
 
                                                                
@@ -75,6 +76,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 # Module-level lazy singletons — created on first query, not at import time
 _scope_classifier: Optional[QueryClassifier] = None
 _partial_engine: Optional[PartialAnswerEngine] = None
+_compound_handler: Optional[CompoundQueryHandler] = None
 
 logging.basicConfig(
     level=logging.INFO,
@@ -694,7 +696,7 @@ def handle_query(
     Returns:
         Answer string
     """
-    global _scope_classifier, _partial_engine
+    global _scope_classifier, _partial_engine, _compound_handler
     query = query.strip()
 
     # ------------------------------------------------------------------
@@ -704,6 +706,10 @@ def handle_query(
         _scope_classifier = QueryClassifier()
     if _partial_engine is None:
         _partial_engine = PartialAnswerEngine(METADATA_PATH)
+    if _compound_handler is None:
+        with open(METADATA_PATH, "rb") as f:
+            _meta = pickle.load(f)
+        _compound_handler = CompoundQueryHandler(_meta)
 
     scope = _scope_classifier.classify(query)
 
@@ -713,6 +719,20 @@ def handle_query(
         if query_parser:
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
+
+    # ------------------------------------------------------------------
+    # Compound multi-field query check (~1 ms, no LLM)
+    # Runs BEFORE partial handlers so multi-field queries aren't reduced
+    # to a single partial handler (e.g. "values AND GPS in Perak").
+    # ------------------------------------------------------------------
+    if _compound_handler and _compound_handler.is_compound_query(query):
+        compound_result = _compound_handler.execute(query)
+        if compound_result:
+            logger.info("Handled by compound query handler")
+            log_query(query, "compound", None, 0, 1.0, compound_result)
+            if query_parser:
+                query_parser.add_raw_to_history(query, compound_result)
+            return clean_output(compound_result)
 
     if scope.classification == "PARTIALLY_ANSWERABLE":
         partial_answer = _partial_engine.dispatch(
@@ -738,13 +758,7 @@ def handle_query(
         if query_parser:
             query_parser.add_raw_to_history(query, predefined_answer)
         return clean_output(predefined_answer)
-    
-                                                 
-                                             
-                                                         
-                                                         
-                               
-                                                 
+
     logger.info("Using LLM-assisted query understanding")
     
     if query_parser is None:
@@ -974,6 +988,7 @@ def main():
                 break
             
             if query.lower() == "rebuild":
+                global _compound_handler, _partial_engine
                 print("Rebuilding index...")
                 _, text_chunks = run_ingestion()
                 build_index(text_chunks, embedder)
@@ -982,6 +997,9 @@ def main():
                 with open(METADATA_PATH, "rb") as f:
                     metadata = pickle.load(f)
                 analytical_engine = AnalyticalEngine(None, metadata)
+                # Reset lazy singletons so they reload fresh metadata
+                _partial_engine = None
+                _compound_handler = None
                 
                 print("Index rebuilt successfully.")
                 continue

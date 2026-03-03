@@ -32,7 +32,7 @@ class CompoundQueryHandler:
         (["armoured vehicle", "armored vehicle", "armoured car"],
          ("transit_and_gaurds", "do_you_use_armoured_vehicle_label")),
         (["gps tracker", "gps installed", "have gps", "use gps",
-          "gps in transit"],
+          "gps status", "gps in transit"],
          ("transit_and_gaurds", "installed_gps_tracker_in_transit_vehicles_label")),
         (["strong room", "strongroom", "vault room"],
          ("strong_room", "do_you_have_a_strong_room_label")),
@@ -85,10 +85,12 @@ class CompoundQueryHandler:
         ("have armed guards", "do_you_use_armed_guards_during_transit_label", "Yes"),
         ("use armed guards", "do_you_use_armed_guards_during_transit_label", "Yes"),
         ("with armed guards", "do_you_use_armed_guards_during_transit_label", "Yes"),
+        ("armed guards", "do_you_use_armed_guards_during_transit_label", "Yes"),
         ("have strong room", "do_you_have_a_strong_room_label", "Yes"),
         ("has strong room", "do_you_have_a_strong_room_label", "Yes"),
         ("with strong room", "do_you_have_a_strong_room_label", "Yes"),
         ("a strong room", "do_you_have_a_strong_room_label", "Yes"),
+        ("strong room", "do_you_have_a_strong_room_label", "Yes"),
         ("have alarm", "do_you_have_alarm_label", "Yes"),
         ("with alarm", "do_you_have_alarm_label", "Yes"),
         ("have gps", "installed_gps_tracker_in_transit_vehicles_label", "Yes"),
@@ -101,7 +103,9 @@ class CompoundQueryHandler:
         ("have display window", "do_you_have_display_window_label", "Yes"),
         ("have sop", "standard_operating_procedure_label", "Yes"),
         ("no armed guards", "do_you_use_armed_guards_during_transit_label", "No"),
+        ("without armed guards", "do_you_use_armed_guards_during_transit_label", "No"),
         ("no strong room", "do_you_have_a_strong_room_label", "No"),
+        ("without strong room", "do_you_have_a_strong_room_label", "No"),
         ("no alarm", "do_you_have_alarm_label", "No"),
         ("no gps", "installed_gps_tracker_in_transit_vehicles_label", "No"),
     ]
@@ -268,7 +272,22 @@ class CompoundQueryHandler:
     # ------------------------------------------------------------------
 
     def _extract_location_filter(self, q: str) -> Optional[str]:
-        """Extract location name from query. Returns the matched string."""
+        """Extract location name from query using regex + known locations."""
+        # First try regex-based extraction: "in <location>"
+        m = re.search(r"\bin\s+([a-z\s,]+)", q)
+        if m:
+            loc = m.group(1)
+            # Stop at the first boundary word
+            for stop in (" with ", " who ", " that ", " and ", " having ",
+                         " have ", " has ", " do ", " does ", " are ",
+                         " where ", " what ", " which "):
+                idx = loc.find(stop)
+                if idx != -1:
+                    loc = loc[:idx]
+            loc = loc.strip().rstrip(".,")
+            if loc:
+                return loc
+        # Fallback: check known location names
         for loc in self._LOCATION_NAMES:
             if loc in q:
                 return loc

@@ -2,30 +2,551 @@
 Complete Decoder Mappings for JA Assure RAG System
 
 Every coded field in the database is mapped here to its human-readable value.
-Organized by section, matching the exact specifications provided.
-
-RULES:
-- Fields with code values (001, 002, etc.) -> decoded via maps
-- Fields marked "Add the Value directly" -> returned as-is (no map needed)
-- Yes/No fields -> YES_NO_MAP
-- Numeric fields (weight, staff count, currency) -> returned as-is
+decode_field() normalises raw codes to 3-digit zero-padded strings before
+lookup, except for industry_id and businesstype_id which use plain integer keys.
 """
 from __future__ import annotations
 from typing import Optional, List
 
 
 # ===========================================================================
-# UNIVERSAL MAPS (used across multiple sections)
+# CANONICAL MAPPINGS
+# Each key is a field_name; each value is a dict of raw_code -> label.
+# industry_id and businesstype_id use plain string integer keys ("1", "13").
+# All other fields use zero-padded 3-digit keys ("001", "010", etc.).
 # ===========================================================================
 
-# Yes/No map - handles "001"/"002", "1"/"2", and boolean formats
+MAPPINGS: dict = {
+
+    # -----------------------------------------------------------------------
+    # INDUSTRY
+    # -----------------------------------------------------------------------
+    "industry_id": {
+        "1":  "Jewellery & Gold",
+        "2":  "Diamond & Precious Stones",
+        "6":  "Money Services",
+        "7":  "Luxury Watches",
+        "13": "Pawnbrokers",
+    },
+
+    # -----------------------------------------------------------------------
+    # BUSINESS TYPE (Malaysia)
+    # -----------------------------------------------------------------------
+    "businesstype_id": {
+        "1":  "Jewellery Retailer",
+        "2":  "Jewellery & Gold Manufacturer",
+        "5":  "Jewellery & Gold Bullion Distributor",
+        "8":  "Diamond Dealers",
+        "10": "Money Changer",
+        "11": "Remittance Services",
+        "12": "Luxury Good Retailer",
+        "13": "Luxury Watch Retailer",
+        "34": "Pawnbrokers",
+        "35": "Precious Stones Dealers",
+    },
+
+    # Also handle _label variants used in decoded_fields
+    "industry_id_label": {
+        "1":  "Jewellery & Gold",
+        "2":  "Diamond & Precious Stones",
+        "6":  "Money Services",
+        "7":  "Luxury Watches",
+        "13": "Pawnbrokers",
+    },
+    "businesstype_id_label": {
+        "1":  "Jewellery Retailer",
+        "2":  "Jewellery & Gold Manufacturer",
+        "5":  "Jewellery & Gold Bullion Distributor",
+        "8":  "Diamond Dealers",
+        "10": "Money Changer",
+        "11": "Remittance Services",
+        "12": "Luxury Good Retailer",
+        "13": "Luxury Watch Retailer",
+        "34": "Pawnbrokers",
+        "35": "Precious Stones Dealers",
+    },
+    "nature_of_business_label": {
+        "1":  "Jewellery Retailer",
+        "2":  "Jewellery & Gold Manufacturer",
+        "5":  "Jewellery & Gold Bullion Distributor",
+        "8":  "Diamond Dealers",
+        "10": "Money Changer",
+        "11": "Remittance Services",
+        "12": "Luxury Good Retailer",
+        "13": "Luxury Watch Retailer",
+        "34": "Pawnbrokers",
+        "35": "Precious Stones Dealers",
+    },
+
+    # -----------------------------------------------------------------------
+    # PHYSICAL SETUP
+    # -----------------------------------------------------------------------
+    "premise_type_label": {
+        "001": "In a office building",
+        "002": "In a shopping centre",
+        "003": "Shop house",
+        "004": "Others",
+    },
+    "roof_materials_label": {
+        "001": "Concrete",
+        "002": "Tiled",
+        "003": "Metal",
+        "004": "Wood",
+    },
+    "wall_materials_label": {
+        "001": "Concrete",
+        "002": "Tiled",
+        "003": "Metal",
+        "004": "Wood",
+    },
+    "floor_materials_label": {
+        "001": "Concrete",
+        "002": "Tiled",
+        "003": "Metal",
+        "004": "Wood",
+    },
+
+    # -----------------------------------------------------------------------
+    # CCTV
+    # -----------------------------------------------------------------------
+    "recording_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "type_of_back_up_label": {
+        "001": "Real-time backup - remote",
+        "002": "Real-time backup - on site only",
+        "003": "Periodic backup - remote",
+        "004": "Periodic backup - onsite",
+        "005": "No backup",
+        "006": "Others",
+    },
+    "cctv_maintenance_contract_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "additional_capability_label": {
+        "001": "Motion detection",
+        "002": "Night vision",
+        "003": "Others",
+    },
+    "retained_period_of_cctv_recording_label": {
+        "001": "1 week",
+        "002": "2 weeks",
+        "003": "3 weeks",
+        "004": "1 month",
+        "005": "3 months",
+        "006": "6 months",
+        "007": "9 months",
+        "008": "1 year",
+        "009": "More than 1 year",
+    },
+
+    # -----------------------------------------------------------------------
+    # DOOR ACCESS
+    # -----------------------------------------------------------------------
+    "door_access_label": {
+        "001": "Combinations",
+        "002": "Finger print",
+        "003": "Facial",
+        "004": "Digital password",
+        "005": "Key only",
+        "006": "Others",
+    },
+    "rear_door_label": {
+        "001": "Steel",
+        "002": "Wooden",
+        "003": "Others",
+    },
+    "main_door_details_label": {
+        "001": "Steel",
+        "002": "Wooden",
+        "003": "Glass",
+        "004": "Others",
+    },
+    "inner_door_details_label": {
+        "001": "Steel",
+        "002": "Wooden",
+        "003": "Glass",
+        "004": "Others",
+    },
+    "inner_door_iron_glass_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "inner_door_iron_wooden_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "main_door_roll_and_iron_wood_label": {
+        "001": "Roller shutter",
+        "002": "Iron grill",
+        "003": "Others",
+    },
+    "rear_door_roll_and_iron_wood_label": {
+        "001": "Roller shutter",
+        "002": "Iron grill",
+        "003": "Others",
+    },
+    "main_door_roll_and_iron_glass_label": {
+        "001": "Roller shutter",
+        "002": "Iron grill",
+        "003": "Others",
+    },
+
+    # -----------------------------------------------------------------------
+    # ALARM
+    # -----------------------------------------------------------------------
+    "do_you_have_alarm_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "connection_type_label": {
+        "001": "Security company",
+        "002": "Landlord security",
+        "003": "Police",
+        "004": "Senior management",
+    },
+    "type_of_alarm_system_label": {
+        "001": "Door contacts",
+        "002": "Roller shutter contacts",
+        "003": "Infra-red beams",
+        "004": "Ultrasonic detector",
+        "005": "Motion detector",
+        "006": "Seismic detector",
+        "007": "Glass sensors",
+        "008": "Portable panic button",
+        "009": "Fixed type panic button",
+        "010": "Others",
+    },
+    "under_maintenance_contract_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "central_monitoring_stations_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+
+    # -----------------------------------------------------------------------
+    # SAFE
+    # -----------------------------------------------------------------------
+    "safe_time_locking_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "grade_label": {
+        "001": "Ungraded",
+        "002": "Grade I",
+        "003": "Grade II",
+        "004": "Grade III",
+        "005": "Grade IV",
+        "006": "Grade V",
+        "007": "Grade VI",
+        "008": "Grade VII",
+    },
+    "certified_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "key_combination_code_or_both_label": {
+        "001": "Key",
+        "002": "Combination code",
+        "003": "Both",
+    },
+    "key_and_combination_code_held_by_separate_personnel_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+
+    # -----------------------------------------------------------------------
+    # STRONG ROOM
+    # -----------------------------------------------------------------------
+    "do_you_have_a_strong_room_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "time_locking_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+
+    # -----------------------------------------------------------------------
+    # DISPLAY SHOWCASES
+    # -----------------------------------------------------------------------
+    "do_you_have_wall_showcase_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "wall_showcase_thickness_label": {
+        "001": "21 mm",
+        "002": "17 - 19 mm",
+        "003": "15 mm",
+        "004": "11 - 13 mm",
+        "005": "9 - 10 mm",
+        "006": "Others",
+    },
+    "wall_showcases_are_protected_by_label": {
+        "001": "Security glass",
+        "002": "Laminated glass",
+        "003": "Others",
+    },
+
+    # -----------------------------------------------------------------------
+    # DISPLAY COUNTERS
+    # -----------------------------------------------------------------------
+    "do_you_have_counter_showcase_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "counter_showcase_thickness_label": {
+        "001": "19 - 21 mm",
+        "002": "15 - 17 mm",
+        "003": "12 - 14 mm",
+        "004": "10 - 11 mm",
+        "005": "6 - 9 mm",
+        "006": "Others",
+    },
+    "counter_showcases_are_protected_by_label": {
+        "001": "External vertical iron grilles and security glass",
+        "002": "External vertical iron grilles and laminated glass",
+        "003": "Internal lateral iron grilles and security glass",
+        "004": "Internal lateral iron grilles and laminated glass",
+        "005": "Security glass",
+        "006": "Laminated glass",
+    },
+    "rear_counter_showcase_are_protected_by_label": {
+        "001": "Iron grilles",
+        "002": "Drawer with keylocks",
+        "003": "Wooden flaps with keylocks",
+        "004": "Wooden flaps with latch locks",
+        "005": "Others",
+    },
+
+    # -----------------------------------------------------------------------
+    # COUNTER SHOWCASE (counter_show_case section)
+    # -----------------------------------------------------------------------
+    "thickness_of_counters_label": {
+        "001": "19 - 21 mm",
+        "002": "15 - 17 mm",
+        "003": "12 - 14 mm",
+        "004": "10 - 11 mm",
+        "005": "6 - 9 mm",
+        "006": "Others",
+    },
+    "dw_counter_showcases_are_protected_by_label": {
+        "001": "External vertical iron grilles and security glass",
+        "002": "External vertical iron grilles and laminated glass",
+        "003": "Internal lateral iron grilles and security glass",
+        "004": "Internal lateral iron grilles and laminated glass",
+        "005": "Security glass",
+        "006": "Laminated glass",
+        "007": "Others",
+    },
+
+    # -----------------------------------------------------------------------
+    # TRANSIT AND GUARDS
+    # -----------------------------------------------------------------------
+    "usage_of_jaguar_transit_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "do_you_use_armoured_vehicle_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "do_you_use_guards_at_premise_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "installed_gps_tracker_in_transit_bags_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "do_you_use_armed_guards_during_transit_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "installed_gps_tracker_in_transit_vehicles_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+
+    # -----------------------------------------------------------------------
+    # RECORDS KEEPING
+    # -----------------------------------------------------------------------
+    "records_maintained_in_label": {
+        "001": "Online",
+        "002": "Offline",
+    },
+    "do_you_keep_detailed_records_of_stock_movements_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+
+    # -----------------------------------------------------------------------
+    # ADDITIONAL DETAILS
+    # -----------------------------------------------------------------------
+    "three_piece_rule_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "the_nearest_police_station_label": {
+        "001": "Less than 2 Km",
+        "002": "Within 2 - 5 Kms",
+        "003": "5 - 10 Kms",
+        "004": "Within 10 - 25 Kms",
+        "005": "More than 25 Kms",
+    },
+    "standard_operating_procedure_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "background_checks_for_all_employees_label": {
+        "001": "Contract in place + financial, criminal, social media checks once a year",
+        "002": "Contract in place + criminal, social media checks once a year",
+        "003": "Contract in place + Social media checks once a year",
+        "004": "Contract in place",
+    },
+    "how_often_is_the_stock_check_carried_out_label": {
+        "001": "Daily",
+        "002": "Weekly",
+        "003": "Monthly",
+        "004": "Less than 6 months",
+        "005": "More than 6 months",
+    },
+
+    # -----------------------------------------------------------------------
+    # ADD-ON COVERAGE
+    # -----------------------------------------------------------------------
+    "director_house_question_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "director_house_question_cctv_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "director_house_question_safe_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "director_house_question_burglar_system_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "fidelity_guarantee_insurance_add_coverage_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "outward_entrustment_question_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "exhibtion_coverage_question_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "international_coverage_question_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "exhibition_insurance_question_label": {
+        "001": "Exhibition site risk only",
+        "002": "Exhibition site risk including transit to/from by professional carrier",
+    },
+    "destination_airport_label": {
+        "001": "Bangkok airport",
+        "002": "Hong Kong airport",
+        "003": "Kuala Lumpur airport",
+        "004": "Singapore airport",
+        "005": "Tokyo airport",
+        "006": "Sydney airport",
+        "007": "Melbourne airport",
+        "008": "Jakarta airport",
+        "009": "All others",
+    },
+
+    # -----------------------------------------------------------------------
+    # CLAIM HISTORY
+    # -----------------------------------------------------------------------
+    "claim_history_label": {
+        "001": "No claim within 3 years",
+        "002": "Claims within the past 3 years",
+    },
+
+    # -----------------------------------------------------------------------
+    # DISPLAY WINDOW
+    # -----------------------------------------------------------------------
+    "do_you_have_display_window_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+    "display_window_protected_by_label": {
+        "001": "Security glass",
+        "002": "Laminated glass",
+        "003": "Others",
+    },
+    "display_window_thickness_label": {
+        "001": "21 mm",
+        "002": "17 - 19 mm",
+        "003": "15 mm",
+        "004": "11 - 13 mm",
+        "005": "9 - 10 mm",
+        "006": "Others",
+    },
+    "rear_display_window_protected_by_label": {
+        "001": "Security glass",
+        "002": "Laminated glass",
+        "003": "Others",
+    },
+    "rear_display_window_thickness_label": {
+        "001": "21 mm",
+        "002": "17 - 19 mm",
+        "003": "15 mm",
+        "004": "11 - 13 mm",
+        "005": "9 - 10 mm",
+        "006": "Others",
+    },
+
+    # -----------------------------------------------------------------------
+    # SHOP LIFTING
+    # -----------------------------------------------------------------------
+    "shop_lifting_label": {
+        "001": "Yes",
+        "002": "No",
+    },
+}
+
+
+# ===========================================================================
+# Fields that use plain integer string keys (no zero-padding).
+# For all others, raw codes are normalised to 3-digit zero-padded strings.
+# ===========================================================================
+_NO_PAD_FIELDS = frozenset({
+    "industry_id",
+    "businesstype_id",
+    "industry_id_label",
+    "businesstype_id_label",
+    "nature_of_business_label",
+})
+
+# Sentinel raw values that should always decode to "" (empty / no data)
+_EMPTY_SENTINELS = frozenset({None, "", -1, "-1", 0, "0", "nan", "NaN", "None"})
+
+
+# ===========================================================================
+# Legacy individual maps kept for backwards compatibility.
+# New code should use decode_field() / MAPPINGS directly.
+# ===========================================================================
+
 YES_NO_MAP = {
     "001": "Yes",
     "002": "No",
     "1": "Yes",
     "2": "No",
     "true": "Yes",
-    "false": "No"
+    "false": "No",
 }
 
 
@@ -721,136 +1242,104 @@ FIELD_MAPPINGS = {
 
 def decode_field(field_name: str, value) -> str:
     """
-    Decode a single field value using the routing table.
+    Decode a single field value using the canonical MAPPINGS dict.
 
-    Strategy:
-    1. If field is in PASSTHROUGH_FIELDS -> return as-is
-    2. If field is in FIELD_DECODE_TABLE -> use that map
-    3. Otherwise return as-is (direct value)
+    Rules:
+    - Empty sentinels (None, "", -1, "-1", 0, "null", "nan") → ""
+    - Fields in _NO_PAD_FIELDS use the raw string key unchanged.
+    - All other fields: try zero-pad to 3 digits, fall back to raw key.
+    - If no mapping found → return the raw string as-is (never throw).
 
     Args:
-        field_name: The exact field name (e.g. "premise_type_label")
-        value: The raw coded value (e.g. "001")
+        field_name: The field name as stored in the database (e.g. "grade_label").
+        value:      Raw value from the database (str, int, float, or None).
 
     Returns:
-        Human-readable decoded string
+        Human-readable label string, or "" for empty/unknown.
     """
-    if value is None or value == "" or not isinstance(value, (str, int, float, bool)):
-        return str(value) if value is not None else ""
+    # --- empty sentinel check ---
+    # Guard against pandas NaN (float nan)
+    try:
+        import math
+        if isinstance(value, float) and math.isnan(value):
+            return ""
+    except Exception:
+        pass
 
+    if value in _EMPTY_SENTINELS:
+        return ""
     value_str = str(value).strip()
+    if value_str.lower() in ("none", "nan", "null", ""):
+        return ""
 
-    # Passthrough fields - always return raw value
-    if field_name in PASSTHROUGH_FIELDS:
+    mapping = MAPPINGS.get(field_name)
+    if mapping is None:
+        # No mapping registered → pass through as-is
         return value_str
 
-    # Check explicit routing table
-    decode_map = FIELD_DECODE_TABLE.get(field_name)
-    if decode_map is not None:
-        decoded = decode_map.get(value_str)
-        if decoded is not None:
-            return decoded
-        # For business type / industry, show unknown code rather than raw number
-        if decode_map in (BUSINESS_TYPE_MAP, INDUSTRY_MAP):
-            if value_str.isdigit():
-                return f"Unknown ({value_str})"
-        # For Yes/No maps with non-standard values, return raw
-        return value_str
+    # No-pad fields (industry, businesstype, etc.)
+    if field_name in _NO_PAD_FIELDS:
+        result = mapping.get(value_str)
+        return result if result is not None else value_str
 
-    # No explicit mapping - return as-is
-    return value_str
+    # Standard 3-digit zero-padded lookup
+    try:
+        padded = str(int(value_str)).zfill(3)
+    except (ValueError, TypeError):
+        padded = value_str
+
+    result = mapping.get(padded)
+    if result is not None:
+        return result
+
+    # Try raw key as fallback (e.g. already-decoded or passthrough)
+    result = mapping.get(value_str)
+    return result if result is not None else value_str
 
 
-def decode_record(data, section: str = ""):
+def decode_all_fields(record: dict) -> dict:
+    """
+    Decode every key in *record* using decode_field().
+
+    Returns a new dict; values with no mapping are passed through unchanged.
+    Nested dicts and lists are handled recursively via decode_record().
+    """
+    return decode_record(record)
+
+
+def decode_record(data, section: str = "") -> object:
     """
     Recursively decode all fields in a record (dict or list).
+    Required by text_builder.py.
 
     Args:
-        data: Raw data (dict, list, or primitive)
-        section: Section name for context
+        data:    Raw data (dict, list, or primitive).
+        section: Section name (unused; kept for API compatibility).
 
     Returns:
-        Decoded data with human-readable values
+        Decoded data with human-readable values.
     """
-    # Handle list of dicts (e.g., safe section)
     if isinstance(data, list):
         return [
             decode_record(item, section) if isinstance(item, dict) else item
             for item in data
         ]
 
-    # Handle non-dict types
     if not isinstance(data, dict):
         return data
 
-    # Handle dict
-    decoded = {}
+    decoded: dict = {}
     for field_name, value in data.items():
         if isinstance(value, dict):
             decoded[field_name] = decode_record(value, section)
         elif isinstance(value, list):
             decoded[field_name] = [
-                decode_record(item, section) if isinstance(item, dict) else decode_field(field_name, item)
+                decode_record(item, section)
+                if isinstance(item, dict)
+                else decode_field(field_name, item)
                 for item in value
             ]
         else:
             decoded[field_name] = decode_field(field_name, value)
 
     return decoded
-
-
-def decode_dataframe(df, json_columns: Optional[List[str]] = None):
-    """
-    Decode all relevant columns in a DataFrame.
-
-    For JSON columns, parses and decodes the nested structures.
-    For regular columns, applies field-level decoding.
-
-    Args:
-        df: pandas DataFrame with raw coded values
-        json_columns: List of column names containing JSON strings
-
-    Returns:
-        DataFrame with decoded human-readable values
-    """
-    import pandas as pd
-    import json as _json
-
-    df = df.copy()
-
-    # Default JSON columns based on common patterns
-    if json_columns is None:
-        json_columns = [
-            col for col in df.columns
-            if any(kw in col.lower() for kw in ["json", "_data", "_info", "_details"])
-        ]
-
-    # Decode JSON columns
-    for col in json_columns:
-        if col not in df.columns:
-            continue
-
-        def parse_and_decode(val):
-            if pd.isna(val):
-                return val
-            try:
-                parsed = _json.loads(val) if isinstance(val, str) else val
-                if isinstance(parsed, dict):
-                    return decode_record(parsed, col)
-                elif isinstance(parsed, list):
-                    return [decode_record(item, col) if isinstance(item, dict) else item for item in parsed]
-                return parsed
-            except (_json.JSONDecodeError, TypeError):
-                return val
-
-        df[col] = df[col].apply(parse_and_decode)
-
-    # Decode regular columns
-    for col in df.columns:
-        if col in json_columns:
-            continue
-
-        # Apply field-level decoding
-        df[col] = df[col].apply(lambda val: decode_field(col, val) if pd.notna(val) else val)
-
-    return df

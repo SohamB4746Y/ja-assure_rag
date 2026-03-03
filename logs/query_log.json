@@ -1771,5 +1771,2183 @@
     "num_chunks_retrieved": 1,
     "top_similarity_score": 1.0,
     "answer_length": 68
+  },
+  {
+    "timestamp": "2026-02-23T00:09:23.475787",
+    "query": "What is the safe model of Rahul Mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-23T00:10:10.769317",
+    "query": "What type of door access does Aamir Khan use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-23T00:10:49.980038",
+    "query": "What is the claim history of Kunal Shah?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 77
+  },
+  {
+    "timestamp": "2026-02-23T01:02:48.747887",
+    "query": "What is the safe model of Rahul Mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-23T01:04:35.063349",
+    "query": "What is the safe model of Rahul Mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-23T01:05:04.136197",
+    "query": "What type of door access does Aamir Khan use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-23T01:05:33.278330",
+    "query": "What is the claim history of Kunal Shah?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 77
+  },
+  {
+    "timestamp": "2026-02-23T01:06:02.929869",
+    "query": "Does Naveen Iyer use armed guards during transit?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 83
+  },
+  {
+    "timestamp": "2026-02-23T01:06:32.721700",
+    "query": "How far is the nearest police station from Rakesh Pillai?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 77
+  },
+  {
+    "timestamp": "2026-02-23T01:07:02.187231",
+    "query": "What background checks does Ankit Verma do for employees?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 143
+  },
+  {
+    "timestamp": "2026-02-23T01:07:31.477191",
+    "query": "Does Pranav Joshi keep detailed records of stock movements?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 88
+  },
+  {
+    "timestamp": "2026-02-23T01:08:00.084662",
+    "query": "What type of CCTV backup does Farhan Ali use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 75
+  },
+  {
+    "timestamp": "2026-02-23T01:08:28.838589",
+    "query": "How long does Vikram Nair retain CCTV recordings?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 78
+  },
+  {
+    "timestamp": "2026-02-23T01:08:58.361446",
+    "query": "Does Ashwin Patel have a strong room?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 66
+  },
+  {
+    "timestamp": "2026-02-23T01:09:26.950998",
+    "query": "What is the safe grade for Irfan Malik?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 49
+  },
+  {
+    "timestamp": "2026-02-23T01:09:56.926592",
+    "query": "How often does Saad Rahman carry out stock checks?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 83
+  },
+  {
+    "timestamp": "2026-02-23T01:10:26.314168",
+    "query": "Does Suresh Kumar have a standard operating procedure?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 69
+  },
+  {
+    "timestamp": "2026-02-23T01:10:55.886139",
+    "query": "What is the nature of business of Somesh Das?",
+    "query_type": "refused",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.2756,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-23T01:57:19.747399",
+    "query": "Does Rohan Mehta have a display window?What is the safe model of Rahul Mehta?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-23T01:57:49.422678",
+    "query": "What type of door access does Aamir Khan use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 63
+  },
+  {
+    "timestamp": "2026-02-23T01:58:19.692677",
+    "query": "What is the claim history of Kunal Shah?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 77
+  },
+  {
+    "timestamp": "2026-02-23T01:58:49.479007",
+    "query": "Does Naveen Iyer use armed guards during transit?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 83
+  },
+  {
+    "timestamp": "2026-02-23T01:59:18.646033",
+    "query": "How far is the nearest police station from Rakesh Pillai?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 77
+  },
+  {
+    "timestamp": "2026-02-23T01:59:48.200398",
+    "query": "What background checks does Ankit Verma do for employees?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 143
+  },
+  {
+    "timestamp": "2026-02-23T02:00:19.154706",
+    "query": "Does Pranav Joshi keep detailed records of stock movements?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 88
+  },
+  {
+    "timestamp": "2026-02-23T02:00:49.661481",
+    "query": "What type of CCTV backup does Farhan Ali use?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 75
+  },
+  {
+    "timestamp": "2026-02-23T02:01:18.750512",
+    "query": "How long does Vikram Nair retain CCTV recordings?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 78
+  },
+  {
+    "timestamp": "2026-02-23T02:01:48.197207",
+    "query": "Does Ashwin Patel have a strong room?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 66
+  },
+  {
+    "timestamp": "2026-02-23T02:02:16.599579",
+    "query": "What is the safe grade for Irfan Malik?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 49
+  },
+  {
+    "timestamp": "2026-02-23T02:02:46.862078",
+    "query": "How often does Saad Rahman carry out stock checks?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 83
+  },
+  {
+    "timestamp": "2026-02-23T02:03:16.321390",
+    "query": "Does Suresh Kumar have a standard operating procedure?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 69
+  },
+  {
+    "timestamp": "2026-02-23T02:03:45.013348",
+    "query": "What is the nature of business of Somesh Das?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 76
+  },
+  {
+    "timestamp": "2026-02-23T02:06:16.016396",
+    "query": "Does Rohan Mehta have a display window?Does Rohan Mehta have a display window?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 71
+  },
+  {
+    "timestamp": "2026-02-23T02:07:06.582366",
+    "query": "How many proposals have a CCTV maintenance contract?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 8,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-23T02:07:06.635012",
+    "query": "How many proposals use armed guards during transit?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-23T02:07:06.650747",
+    "query": "Which businesses have shoplifting coverage and what are their names?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 568
+  },
+  {
+    "timestamp": "2026-02-23T02:07:38.293853",
+    "query": "How many proposals are located in Johor?",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 29
+  },
+  {
+    "timestamp": "2026-02-23T02:07:38.523188",
+    "query": "How many proposals have a strong room?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 10,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-23T02:08:08.664486",
+    "query": "Which businesses don't have an alarm system?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 14,
+    "top_similarity_score": 1.0,
+    "answer_length": 539
+  },
+  {
+    "timestamp": "2026-02-23T02:08:09.092094",
+    "query": "How many proposals use armoured vehicles?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 10,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-23T02:08:38.636530",
+    "query": "Which businesses are located in Kuala Lumpur?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 3,
+    "top_similarity_score": 1.0,
+    "answer_length": 142
+  },
+  {
+    "timestamp": "2026-02-23T02:08:38.742110",
+    "query": "How many proposals have a display window?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 5,
+    "top_similarity_score": 1.0,
+    "answer_length": 33
+  },
+  {
+    "timestamp": "2026-02-23T02:09:07.791656",
+    "query": "Which businesses have claims within the past 3 years?",
+    "query_type": "refused",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.4669,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-02-23T02:09:07.802432",
+    "query": "How many proposals keep detailed records of stock movements?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-23T02:09:36.651348",
+    "query": "Which businesses are located in Penang?",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 95
+  },
+  {
+    "timestamp": "2026-02-23T02:09:36.705712",
+    "query": "How many proposals have a standard operating procedure in place?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 34
+  },
+  {
+    "timestamp": "2026-02-23T02:40:19.339465",
+    "query": "Which businesses do background checks including financial screening?exit",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-23T02:41:16.306723",
+    "query": "what is the most common risk location in singapore?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 144
+  },
+  {
+    "timestamp": "2026-02-23T02:41:41.263956",
+    "query": "list companies in singapore with highest cash limits?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 144
+  },
+  {
+    "timestamp": "2026-02-23T02:42:03.699706",
+    "query": "what is the average property value insured per year?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 144
+  },
+  {
+    "timestamp": "2026-02-23T02:42:53.476970",
+    "query": "which proposals use gps trackers?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-27T17:08:09.772579",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-27T17:09:38.752950",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-27T17:10:26.165320",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-27T17:39:11.173060",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-27T21:46:08.924550",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-27T21:59:31.303060",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.534100",
+    "query": "1. Show top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.541826",
+    "query": "2.\tList policies in Malaysia with the highest insured value.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 484
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.545533",
+    "query": "3.\tWhat is the total premium collected from Malaysia this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.549817",
+    "query": "4.\tWhich proposals from Philippines include anti-theft devices?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.553953",
+    "query": "5.\tShow claim ratio by country for the last financial year.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.556550",
+    "query": "6.\tList companies in Malaysia with the highest number of active policies.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.559085",
+    "query": "7.\tWhat is the average claim amount per property in Malaysia ?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.561575",
+    "query": "8.\tWhich locations in Malaysia reported the most fire-related claims?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.563990",
+    "query": "9.\tShow policies expiring next month in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 311
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.567087",
+    "query": "10.\tList brokers generating the highest premium in Malaysia .",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.569407",
+    "query": "11.\tWhat percentage of proposals in Malaysia were approved without modification?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.572020",
+    "query": "12.\tIdentify high-value assets insured above $5M in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 348
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.574277",
+    "query": "13.\tShow year-over-year growth in insured property value in Malaysia.",
+    "query_type": "nonsensical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.576477",
+    "query": "14.\tWhich clients in Malaysia increased their coverage this year?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 339
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.578649",
+    "query": "15.\tList claims rejected due to non-disclosure in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.580833",
+    "query": "16.\tWhat is the average underwriting turnaround time by country?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 353
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.583591",
+    "query": "17.\tShow top industries insured in Malaysia by total sum insured.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 544
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.585965",
+    "query": "18.\tWhich Malaysia included GPS trackers in Indonesia?",
+    "query_type": "nonsensical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 263
+  },
+  {
+    "timestamp": "2026-02-27T22:14:29.588082",
+    "query": "19.\tList regions with the lowest claim frequency in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:15:41.686523",
+    "query": "20.\tWhat is the distribution of policy types across Southeast Asia?Show the top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 490
+  },
+  {
+    "timestamp": "2026-02-27T22:15:55.801196",
+    "query": "Show the top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:16:23.866502",
+    "query": "show top 10 high risk zones in malaysia based on claims frequency",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:17:10.604130",
+    "query": "List policies in Malaysia with the highest insured value.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 484
+  },
+  {
+    "timestamp": "2026-02-27T22:17:45.395564",
+    "query": "What is the total premium collected from Malaysia this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:18:12.634025",
+    "query": "Which proposals from the Philippines include anti-theft devices?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:18:47.802261",
+    "query": "Which proposals from the Philippines inc",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:19:43.658742",
+    "query": "which proposals from phillipines include anti theft devices?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 14,
+    "top_similarity_score": 1.0,
+    "answer_length": 539
+  },
+  {
+    "timestamp": "2026-02-27T22:20:25.119667",
+    "query": "Show the claim ratio by country for the last financial year.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:21:08.118524",
+    "query": "List companies in Malaysia with the highest number of acti",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 14,
+    "top_similarity_score": 1.0,
+    "answer_length": 539
+  },
+  {
+    "timestamp": "2026-02-27T22:21:14.705893",
+    "query": "List companies in Malaysia with the highest number of active policies.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.653283",
+    "query": "Show the top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.660484",
+    "query": "List policies in Malaysia with the highest insured value.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 484
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.664089",
+    "query": "What is the total premium collected from Malaysia this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.668332",
+    "query": "Which proposals from the Philippines include anti-theft devices?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.672487",
+    "query": "Show the claim ratio by country for the last financial year.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.675465",
+    "query": "List companies in Malaysia with the highest number of active policies.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.678278",
+    "query": "What is the average claim amount per property in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.681213",
+    "query": "Which locations in Malaysia reported the most fire-related claims?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.684165",
+    "query": "Show policies expiring next month in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 311
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.687701",
+    "query": "List brokers generating the highest premium in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.690306",
+    "query": "What percentage of proposals in Malaysia were approved without modification?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.692909",
+    "query": "Identify high-value assets insured above $5M in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 348
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.695334",
+    "query": "Show year-over-year growth in insured property value in Malaysia.",
+    "query_type": "nonsensical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.697717",
+    "query": "Which clients in Malaysia increased their coverage this year?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 339
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.700260",
+    "query": "List claims rejected due to non-disclosure in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.702956",
+    "query": "What is the average underwriting turnaround time by country?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 353
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.705477",
+    "query": "Show the top industries insured in Malaysia by total sum insured.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 544
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.707744",
+    "query": "Which proposals in Indonesia included GPS trackers?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:30:19.710061",
+    "query": "List regions with the lowest claim frequency in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:30:31.961644",
+    "query": "What is the distribution of policy types across Southeast Asia?exit",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 466
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.952737",
+    "query": "Show the top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.961732",
+    "query": "List policies in Malaysia with the highest insured value.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 484
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.965585",
+    "query": "What is the total premium collected from Malaysia this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.969865",
+    "query": "Which proposals from the Philippines include anti-theft devices?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.974410",
+    "query": "Show the claim ratio by country for the last financial year.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.977486",
+    "query": "List companies in Malaysia with the highest number of active policies.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.980521",
+    "query": "What is the average claim amount per property in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.983552",
+    "query": "Which locations in Malaysia reported the most fire-related claims?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.986447",
+    "query": "Show policies expiring next month in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 311
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.989893",
+    "query": "List brokers generating the highest premium in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.992635",
+    "query": "What percentage of proposals in Malaysia were approved without modification?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.995556",
+    "query": "Identify high-value assets insured above $5M in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 348
+  },
+  {
+    "timestamp": "2026-02-27T22:31:22.998183",
+    "query": "Show year-over-year growth in insured property value in Malaysia.",
+    "query_type": "nonsensical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-02-27T22:31:23.000829",
+    "query": "Which clients in Malaysia increased their coverage this year?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 339
+  },
+  {
+    "timestamp": "2026-02-27T22:31:23.003521",
+    "query": "List claims rejected due to non-disclosure in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:31:23.006043",
+    "query": "What is the average underwriting turnaround time by country?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 353
+  },
+  {
+    "timestamp": "2026-02-27T22:31:23.008590",
+    "query": "Show the top industries insured in Malaysia by total sum insured.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 544
+  },
+  {
+    "timestamp": "2026-02-27T22:31:23.010970",
+    "query": "Which proposals in Indonesia included GPS trackers?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:31:23.013357",
+    "query": "List regions with the lowest claim frequency in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:31:35.677276",
+    "query": "What is the distribution of policy types across Southeast Asia?exit",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 466
+  },
+  {
+    "timestamp": "2026-02-27T22:32:22.839954",
+    "query": "Show the top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:34:24.886953",
+    "query": "List policies in Malaysia with the highest insured value.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 484
+  },
+  {
+    "timestamp": "2026-02-27T22:34:34.428136",
+    "query": "What is the total premium collected from Malaysia this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:34:44.571091",
+    "query": "Which proposals from the Philippines include anti-theft devices?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:44:00.397994",
+    "query": "Which proposals from the Philippines include anti-theft devices?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:44:02.721415",
+    "query": "Which proposals from the Philippines include anti-theft devices?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:44:18.151398",
+    "query": "Which proposals from the Malaysia include anti-theft devices?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1040
+  },
+  {
+    "timestamp": "2026-02-27T22:44:55.475240",
+    "query": "Show the claim ratio by country for the last financial year.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:45:04.702426",
+    "query": "List companies in Malaysia with the highest number of active policies.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:45:12.526031",
+    "query": "What is the average claim amount per property in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:45:20.372026",
+    "query": "Which locations in Malaysia reported the most fire-related claims?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:45:48.731472",
+    "query": "Show policies expiring next month in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 311
+  },
+  {
+    "timestamp": "2026-02-27T22:45:56.178873",
+    "query": "List brokers generating the highest premium in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-27T22:46:03.942844",
+    "query": "What percentage of proposals in Malaysia were approved without modification?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-27T22:46:13.349134",
+    "query": "Identify high-value assets insured above $5M in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 348
+  },
+  {
+    "timestamp": "2026-02-27T22:46:22.239556",
+    "query": "Show year-over-year growth in insured property value in Malaysia.",
+    "query_type": "nonsensical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-02-27T22:46:28.156632",
+    "query": "Which clients in Malaysia increased their coverage this year?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 339
+  },
+  {
+    "timestamp": "2026-02-27T22:46:33.905705",
+    "query": "List claims rejected due to non-disclosure in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:46:39.124558",
+    "query": "What is the average underwriting turnaround time by country?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 353
+  },
+  {
+    "timestamp": "2026-02-27T22:46:45.873527",
+    "query": "Show the top industries insured in Malaysia by total sum insured.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 544
+  },
+  {
+    "timestamp": "2026-02-27T22:46:51.985571",
+    "query": "Which proposals in Indonesia included GPS trackers?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 331
+  },
+  {
+    "timestamp": "2026-02-27T22:46:57.982238",
+    "query": "List regions with the lowest claim frequency in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-27T22:47:05.560835",
+    "query": "What is the distribution of policy types across Southeast Asia?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 466
+  },
+  {
+    "timestamp": "2026-02-28T00:30:17.975448",
+    "query": "Show the top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-28T00:30:17.984980",
+    "query": "List policies in Malaysia with the highest insured value.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 576
+  },
+  {
+    "timestamp": "2026-02-28T00:30:17.989716",
+    "query": "What is the total premium collected from Malaysia this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-28T00:30:17.994087",
+    "query": "Which proposals in Malaysia include anti-theft devices?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1573
+  },
+  {
+    "timestamp": "2026-02-28T00:30:17.999236",
+    "query": "Show the claim ratio for Malaysia for the last financial year.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.002823",
+    "query": "List companies in Malaysia with the highest number of active policies.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.006265",
+    "query": "What is the average claim amount per property in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.009932",
+    "query": "Which locations in Malaysia reported the most fire-related claims?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.013059",
+    "query": "Show policies expiring next month in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 311
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.016142",
+    "query": "List brokers generating the highest premium in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.019137",
+    "query": "What percentage of proposals in Malaysia were approved without modification?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.022223",
+    "query": "Identify high-value assets insured above $5M in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 355
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.025561",
+    "query": "Show year-over-year growth in insured property value in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 339
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.028375",
+    "query": "Which clients in Malaysia increased their coverage this year?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 339
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.031258",
+    "query": "List claims rejected due to non-disclosure in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.033973",
+    "query": "What is the average underwriting turnaround time in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 336
+  },
+  {
+    "timestamp": "2026-02-28T00:30:18.036780",
+    "query": "Show the top industries insured in Malaysia by total sum insured.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 655
+  },
+  {
+    "timestamp": "2026-02-28T00:30:50.892876",
+    "query": "Which proposals in Malaysia included GPS trackers?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-02-28T00:30:50.902885",
+    "query": "List regions with the lowest claim frequency in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 332
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.687320",
+    "query": "Show top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1178
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.695105",
+    "query": "List policies in Malaysia with the highest insured value.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1373
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.702603",
+    "query": "What is the total premium collected from Malaysia this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.706569",
+    "query": "Which proposals from Malaysia include anti-theft devices?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1573
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.710354",
+    "query": "Show claim ratio in Malaysia for the last financial year.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 566
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.713896",
+    "query": "List companies in Malaysia with the highest number of active policies.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1858
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.717977",
+    "query": "What is the average claim amount per property in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 418
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.722221",
+    "query": "Which locations in Malaysia reported the most fire-related claims?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1178
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.725336",
+    "query": "Show policies expiring next month in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 370
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.728270",
+    "query": "List brokers generating the highest premium in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 312
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.731127",
+    "query": "What percentage of proposals in Malaysia were approved without modification?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 395
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.734880",
+    "query": "Identify high-value assets insured above $5M in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 391
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.737719",
+    "query": "Show year-over-year growth in insured property value in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 339
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.740479",
+    "query": "Which clients in Malaysia increased their coverage this year?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 339
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.743333",
+    "query": "List claims rejected due to non-disclosure in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 418
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.746067",
+    "query": "What is the average underwriting turnaround time in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 395
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.749492",
+    "query": "Show top industries insured in Malaysia by total sum insured.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 692
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.752435",
+    "query": "Which policies in Malaysia included GPS trackers?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1093
+  },
+  {
+    "timestamp": "2026-03-03T08:00:32.755318",
+    "query": "List regions with the lowest claim frequency in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1178
+  },
+  {
+    "timestamp": "2026-03-03T08:30:18.988040",
+    "query": "Which location has the highest claims?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-03-03T08:30:48.909189",
+    "query": "Which location has the fewest claims?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 15,
+    "top_similarity_score": 1.0,
+    "answer_length": 43
+  },
+  {
+    "timestamp": "2026-03-03T08:31:19.153256",
+    "query": "How many proposals have claims?",
+    "query_type": "analytical_specific",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-03-03T08:31:19.159775",
+    "query": "List all businesses in the database",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1662
+  },
+  {
+    "timestamp": "2026-03-03T08:31:19.165771",
+    "query": "What are the premium rates for each proposal?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-03T08:36:22.631842",
+    "query": "Which location has the highest claims?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 906
+  },
+  {
+    "timestamp": "2026-03-03T08:36:22.635776",
+    "query": "Which location has the fewest claims?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 922
+  },
+  {
+    "timestamp": "2026-03-03T08:36:22.638607",
+    "query": "How many proposals have claims?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 282
+  },
+  {
+    "timestamp": "2026-03-03T08:36:22.641416",
+    "query": "List all businesses in the database",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1662
+  },
+  {
+    "timestamp": "2026-03-03T08:36:22.644097",
+    "query": "What are the premium rates for each proposal?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-03T08:36:31.013539",
+    "query": "Which location has the highest claims?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 906
+  },
+  {
+    "timestamp": "2026-03-03T08:36:31.019178",
+    "query": "Which location has the fewest claims?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 922
+  },
+  {
+    "timestamp": "2026-03-03T08:36:31.022263",
+    "query": "How many proposals have claims?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 282
+  },
+  {
+    "timestamp": "2026-03-03T08:36:31.025347",
+    "query": "List all businesses in the database",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1662
+  },
+  {
+    "timestamp": "2026-03-03T08:36:31.028683",
+    "query": "What are the premium rates for each proposal?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-03T08:37:44.411941",
+    "query": "What is the distribution of policy types in Malaysia?exit",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 845
+  },
+  {
+    "timestamp": "2026-03-03T08:38:26.474377",
+    "query": "python main.py",
+    "query_type": "refused",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0823,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-03-03T16:05:05.856929",
+    "query": "Which businesses in Johor have armed guards during transit, a strong room,",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 258
+  },
+  {
+    "timestamp": "2026-03-03T16:06:05.093333",
+    "query": "and what are their insured values and CCTV backup types?exit",
+    "query_type": "semantic",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 5,
+    "top_similarity_score": 0.6139,
+    "answer_length": 39
+  },
+  {
+    "timestamp": "2026-03-03T16:14:12.376828",
+    "query": "Which businesses in Johor have armed guards during transit, a strong room, and what are their insured values and CCTV backup types?",
+    "query_type": "cross_search",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 258
+  },
+  {
+    "timestamp": "2026-03-03T16:38:58.159822",
+    "query": "Which businesses in Johor have armed guards during transit, a strong room, and what are their insured values and CCTV backup types?",
+    "query_type": "compound",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 536
+  },
+  {
+    "timestamp": "2026-03-03T16:38:58.164697",
+    "query": "What are the insured values and GPS tracker status of businesses in Perak?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 845
+  },
+  {
+    "timestamp": "2026-03-03T16:38:58.167846",
+    "query": "List policies in Malaysia with the highest insured value",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1157
+  },
+  {
+    "timestamp": "2026-03-03T16:38:58.170794",
+    "query": "How many proposals have GPS trackers?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 845
+  },
+  {
+    "timestamp": "2026-03-03T16:38:58.173731",
+    "query": "What types of businesses are in the database?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 627
+  },
+  {
+    "timestamp": "2026-03-03T16:40:56.587804",
+    "query": "Which businesses in Johor have armed guards during transit, a strong room, and what are their insured values and CCTV backup types?",
+    "query_type": "compound",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 536
+  },
+  {
+    "timestamp": "2026-03-03T16:40:56.597765",
+    "query": "What are the insured values and GPS tracker status of businesses in Perak?",
+    "query_type": "compound",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 371
+  },
+  {
+    "timestamp": "2026-03-03T16:40:56.604664",
+    "query": "List policies in Malaysia with the highest insured value",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1157
+  },
+  {
+    "timestamp": "2026-03-03T16:40:56.609922",
+    "query": "How many proposals have GPS trackers?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 845
+  },
+  {
+    "timestamp": "2026-03-03T16:40:56.615111",
+    "query": "What types of businesses are in the database?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 627
+  },
+  {
+    "timestamp": "2026-03-03T16:41:07.067487",
+    "query": "Which businesses in Johor have armed guards during transit, a strong room, and what are their insured values and CCTV backup types?",
+    "query_type": "compound",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 536
+  },
+  {
+    "timestamp": "2026-03-03T16:41:07.076035",
+    "query": "What are the insured values and GPS tracker status of businesses in Perak?",
+    "query_type": "compound",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 371
+  },
+  {
+    "timestamp": "2026-03-03T16:41:07.082629",
+    "query": "List policies in Malaysia with the highest insured value",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1157
+  },
+  {
+    "timestamp": "2026-03-03T16:41:07.087869",
+    "query": "How many proposals have GPS trackers?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 845
+  },
+  {
+    "timestamp": "2026-03-03T16:41:07.092432",
+    "query": "What types of businesses are in the database?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 627
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.829558",
+    "query": "Show top 10 high-risk zones in Malaysia based on claims frequency.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 949
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.838532",
+    "query": "List policies in Malaysia with the highest insured value.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1085
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.844744",
+    "query": "What is the total premium collected from Malaysia this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 375
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.849482",
+    "query": "Which proposals from Malaysia include anti-theft devices?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1254
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.853830",
+    "query": "Show claim ratio for Malaysia for the last financial year.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 346
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.858799",
+    "query": "List companies in Malaysia with the highest number of active policies.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1504
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.862992",
+    "query": "What is the average claim amount per property in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 338
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.866884",
+    "query": "Which locations in Malaysia reported the most fire-related claims?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1090
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.870394",
+    "query": "Show policies expiring next month in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 342
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.874197",
+    "query": "List brokers generating the highest premium in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 349
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.877618",
+    "query": "What percentage of proposals in Malaysia were approved without modification?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 310
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.881233",
+    "query": "Identify high-value assets insured above $5M in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 181
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.884476",
+    "query": "Show year-over-year growth in insured property value in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 350
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.887603",
+    "query": "Which clients in Malaysia increased their coverage this year?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 308
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.890966",
+    "query": "List claims rejected due to non-disclosure in Malaysia.",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 341
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.894079",
+    "query": "What is the average underwriting turnaround time in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 268
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.897333",
+    "query": "Show top industries insured in Malaysia by total sum insured.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 677
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.900603",
+    "query": "Which proposals in Malaysia included GPS trackers?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 815
+  },
+  {
+    "timestamp": "2026-03-03T19:02:33.904038",
+    "query": "List regions with the lowest claim frequency in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 965
   }
 ]

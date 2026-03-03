@@ -879,56 +879,40 @@ class PartialAnswerEngine:
     # Shared helper: filter for complete submissions only
     # ------------------------------------------------------------------
 
-    @staticmethod
-    def _get_complete_proposals_only(metadata: list) -> list:
+    def _get_complete_proposals_only(self, metadata: list) -> list:
         """
-        Return only chunks from proposals with is_complete_submission=True.
-
-        Falls back to checking if business_name exists in decoded_fields
-        when the is_complete_submission key is missing (backwards compat
-        with indexes built before the completeness validation was added).
+        Returns ONLY chunks from proposals with real submitted data.
+        Filters out incomplete/empty submissions like QT003 and QT004.
+        Uses is_complete_submission flag when present (new index).
+        Falls back to checking for a non-empty business_name_label when
+        the flag is absent (backwards compat with old index builds).
         """
-        complete: list = []
+        complete = []
         for chunk in metadata:
-            # New index: use the flag directly
             if "is_complete_submission" in chunk:
                 if chunk.get("is_complete_submission"):
                     complete.append(chunk)
             else:
-                # Backwards compatibility: check if business name exists
-                df = chunk.get("decoded_fields") or {}
-                fields = chunk.get("fields") or {}
-                has_name = (
-                    df.get("business_name_label") not in (None, "", "None")
-                    or fields.get("business_name_label") not in (None, "", "None")
+                df = chunk.get("decoded_fields", {}) or {}
+                fields = chunk.get("fields", {}) or {}
+                name = (
+                    df.get("business_name_label")
+                    or fields.get("business_name_label")
                 )
-                if has_name:
+                if name and str(name).strip() not in ("", "None", "null"):
                     complete.append(chunk)
         return complete
 
-    @staticmethod
-    def _get_incomplete_proposal_ids(metadata: list) -> list:
-        """Return sorted list of quote_ids for incomplete/empty submissions."""
-        all_qids: set = set()
-        complete_qids: set = set()
-        for chunk in metadata:
-            qid = chunk.get("quote_id")
-            if not qid:
-                continue
-            all_qids.add(qid)
-            if "is_complete_submission" in chunk:
-                if chunk.get("is_complete_submission"):
-                    complete_qids.add(qid)
-            else:
-                df = chunk.get("decoded_fields") or {}
-                fields = chunk.get("fields") or {}
-                has_name = (
-                    df.get("business_name_label") not in (None, "", "None")
-                    or fields.get("business_name_label") not in (None, "", "None")
-                )
-                if has_name:
-                    complete_qids.add(qid)
-        return sorted(all_qids - complete_qids)
+    def _get_incomplete_quote_ids(self, metadata: list) -> list:
+        """
+        Returns a sorted list of quote_ids that have no submitted data,
+        by comparing all quote_ids in metadata against those in the
+        complete-only subset.
+        """
+        all_qids = {c.get("quote_id") for c in metadata if c.get("quote_id")}
+        complete_chunks = self._get_complete_proposals_only(metadata)
+        complete_qids = {c.get("quote_id") for c in complete_chunks if c.get("quote_id")}
+        return sorted(list(all_qids - complete_qids))
 
     # ------------------------------------------------------------------
     # Dispatcher
@@ -1042,7 +1026,7 @@ class PartialAnswerEngine:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
 
         ranked = []
         seen: set = set()
@@ -1122,7 +1106,7 @@ class PartialAnswerEngine:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
 
         results = []
         seen: set = set()
@@ -1167,7 +1151,7 @@ class PartialAnswerEngine:
     def handle_group_by_industry(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
 
         # Step 1: Build industry + name maps from business_profile.
         name_map: dict = {}
@@ -1283,7 +1267,7 @@ class PartialAnswerEngine:
     def handle_security_feature_summary(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
         # Bug 1 fix: build name map from business_profile chunks
         name_map = self._build_business_name_map(complete_metadata)
 
@@ -1340,7 +1324,7 @@ class PartialAnswerEngine:
     def handle_business_type_distribution(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
         total = len(name_map)
 
@@ -1393,7 +1377,7 @@ class PartialAnswerEngine:
     def handle_claims_by_location(self, query_intent: str = "summary") -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
         # Step 1: Build location map from any chunk (risk_location is on all)
@@ -1524,7 +1508,7 @@ class PartialAnswerEngine:
     def handle_claim_rate(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
         has_claims: list = []
@@ -1601,7 +1585,7 @@ class PartialAnswerEngine:
     def handle_list_all_businesses(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
         # Build location map
@@ -1655,7 +1639,7 @@ class PartialAnswerEngine:
     def handle_gps_tracker_proposals(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
-        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
         # Build location map for display

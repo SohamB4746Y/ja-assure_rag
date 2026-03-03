@@ -939,3 +939,495 @@
 2026-02-20 21:17:12,766 - ja_assure_rag - INFO - Using LLM-assisted query understanding
 2026-02-20 21:17:44,387 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['stock_check_frequency_label'], Filter: None=None, Contains: Rahul Mehta
 2026-02-20 21:17:44,390 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 00:08:26,706 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-23 00:08:26,707 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-23 00:08:30,561 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-23 00:08:32,232 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-23 00:08:32,233 - ja_assure_rag - INFO - LLM client initialized
+2026-02-23 00:08:32,235 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-23 00:08:41,052 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 00:09:23,473 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['risky_individual_label'], Filter: None=None, Contains: Rahul Mehta
+2026-02-23 00:09:23,475 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 00:09:40,661 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 00:10:10,765 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['door_access_label'], Filter: None=None, Contains: Aamir Khan
+2026-02-23 00:10:10,769 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 00:10:20,467 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 00:10:49,976 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['claim_history_label'], Filter: None=None, Contains: Kunal Shah
+2026-02-23 00:10:49,979 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:01:55,805 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-23 01:01:55,805 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-23 01:01:59,446 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-23 01:01:59,639 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-23 01:01:59,639 - ja_assure_rag - INFO - LLM client initialized
+2026-02-23 01:01:59,642 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-23 01:02:16,234 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:02:48,744 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['safe_model_label'], Filter: None=None, Contains: Rahul Mehta
+2026-02-23 01:02:48,747 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:04:05,277 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:04:35,060 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Rahul Mehta
+2026-02-23 01:04:35,063 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:04:35,308 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:05:04,133 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Aamir Khan
+2026-02-23 01:05:04,136 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:05:04,357 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:05:33,274 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Kunal Shah
+2026-02-23 01:05:33,278 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:05:33,456 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:06:02,926 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Naveen Iyer
+2026-02-23 01:06:02,929 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:06:03,549 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:06:32,718 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Rakesh Pillai
+2026-02-23 01:06:32,721 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:06:33,117 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:07:02,184 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Ankit Verma
+2026-02-23 01:07:02,187 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:07:02,316 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:07:31,474 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Pranav Joshi
+2026-02-23 01:07:31,477 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:07:31,534 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:08:00,082 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Farhan Ali
+2026-02-23 01:08:00,084 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:08:00,139 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:08:28,835 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Vikram Nair
+2026-02-23 01:08:28,838 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:08:29,169 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:08:58,358 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: None, Filter: None=None, Contains: Ashwin Patel
+2026-02-23 01:08:58,361 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:08:58,450 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:09:26,948 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Irfan Malik
+2026-02-23 01:09:26,950 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:09:27,038 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:09:56,923 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['how_often_is_the_stock_check_carried_out_label'], Filter: None=None, Contains: Saad Rahman
+2026-02-23 01:09:56,926 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:09:56,986 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:10:26,310 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['standard_operating_procedure_label'], Filter: None=None, Contains: Suresh Kumar
+2026-02-23 01:10:26,314 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:10:26,378 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:10:55,540 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-23 01:10:55,544 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-02-23 01:10:55,544 - ja_assure_rag - INFO - Query classified as: semantic
+2026-02-23 01:10:55,885 - ja_assure_rag - INFO - No chunks above threshold - refusing to answer
+2026-02-23 01:56:48,245 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:57:19,743 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Rahul Mehta
+2026-02-23 01:57:19,747 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:57:19,997 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:57:49,419 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['nature_of_business_label'], Filter: None=None, Contains: Aamir Khan
+2026-02-23 01:57:49,422 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:57:49,662 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:58:19,689 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Kunal Shah
+2026-02-23 01:58:19,692 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:58:19,945 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:58:49,475 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Naveen Iyer
+2026-02-23 01:58:49,478 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:58:49,535 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:59:18,642 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Rakesh Pillai
+2026-02-23 01:59:18,645 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:59:18,719 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 01:59:48,197 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['background_checks_for_all_employees_label'], Filter: None=None, Contains: Ankit Verma
+2026-02-23 01:59:48,200 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 01:59:48,252 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:00:19,150 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['do_you_keep_detailed_records_of_stock_movements_label'], Filter: None=None, Contains: Pranav Joshi
+2026-02-23 02:00:19,154 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:00:19,406 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:00:49,658 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Farhan Ali
+2026-02-23 02:00:49,661 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:00:50,076 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:01:18,747 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Vikram Nair
+2026-02-23 02:01:18,750 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:01:18,956 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:01:48,194 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Ashwin Patel
+2026-02-23 02:01:48,197 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:01:48,330 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:02:16,596 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Irfan Malik
+2026-02-23 02:02:16,599 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:02:16,703 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:02:46,858 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['how_often_is_the_stock_check_carried_out_label'], Filter: None=None, Contains: Saad Rahman
+2026-02-23 02:02:46,861 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:02:46,967 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:03:16,318 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['standard_operating_procedure_label'], Filter: None=None, Contains: Suresh Kumar
+2026-02-23 02:03:16,321 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:03:16,368 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:03:45,010 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Somesh Das
+2026-02-23 02:03:45,013 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:05:45,695 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:06:16,012 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: Rohan Mehta
+2026-02-23 02:06:16,016 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-23 02:07:06,553 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:07:06,560 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['cctv_maintenance_contract_label'], Filter: cctv_maintenance_contract_label=001, Contains: None
+2026-02-23 02:07:06,582 - ja_assure_rag - INFO - Smart query executor handled - 8 results
+2026-02-23 02:07:06,630 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:07:06,632 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['do_you_use_armed_guards_during_transit_label'], Filter: do_you_use_armed_guards_during_transit_label=001, Contains: None
+2026-02-23 02:07:06,634 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-02-23 02:07:06,646 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:07:06,647 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['do_you_use_armed_guards_during_transit_label'], Filter: do_you_use_armed_guards_during_transit_label=001, Contains: None
+2026-02-23 02:07:06,650 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-02-23 02:07:07,030 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:07:38,284 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['risk_location'], Filter: None=None, Contains: None
+2026-02-23 02:07:38,288 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-02-23 02:07:38,289 - ja_assure_rag - INFO - Query classified as: analytical
+2026-02-23 02:07:38,289 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-02-23 02:07:38,293 - ja_assure_rag - INFO - Handled by cross-proposal value search
+2026-02-23 02:07:38,520 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:07:38,521 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['do_you_have_a_strong_room_label'], Filter: do_you_have_a_strong_room_label=001, Contains: None
+2026-02-23 02:07:38,523 - ja_assure_rag - INFO - Smart query executor handled - 10 results
+2026-02-23 02:07:38,533 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:08:08,661 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['do_you_have_alarm_label'], Filter: do_you_have_alarm_label=001, Contains: None
+2026-02-23 02:08:08,664 - ja_assure_rag - INFO - Smart query executor handled - 14 results
+2026-02-23 02:08:09,088 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:08:09,090 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['do_you_use_armoured_vehicle_label'], Filter: do_you_use_armoured_vehicle_label=001, Contains: None
+2026-02-23 02:08:09,092 - ja_assure_rag - INFO - Smart query executor handled - 10 results
+2026-02-23 02:08:09,103 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:08:38,630 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['risk_location'], Filter: None=None, Contains: Kuala Lumpur
+2026-02-23 02:08:38,636 - ja_assure_rag - INFO - Smart query executor handled - 3 results
+2026-02-23 02:08:38,737 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:08:38,740 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['do_you_have_display_window_label'], Filter: do_you_have_display_window_label=001, Contains: None
+2026-02-23 02:08:38,742 - ja_assure_rag - INFO - Smart query executor handled - 5 results
+2026-02-23 02:08:38,750 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:09:07,668 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['premise_type_label'], Filter: None=None, Contains: None
+2026-02-23 02:09:07,672 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-02-23 02:09:07,672 - ja_assure_rag - INFO - Query classified as: semantic
+2026-02-23 02:09:07,791 - ja_assure_rag - INFO - No chunks above threshold - refusing to answer
+2026-02-23 02:09:07,800 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:09:07,801 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['do_you_keep_detailed_records_of_stock_movements_label'], Filter: do_you_keep_detailed_records_of_stock_movements_label=001, Contains: None
+2026-02-23 02:09:07,802 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-02-23 02:09:07,810 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:09:36,644 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['premise_type_label'], Filter: None=None, Contains: None
+2026-02-23 02:09:36,648 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-02-23 02:09:36,648 - ja_assure_rag - INFO - Query classified as: semantic
+2026-02-23 02:09:36,651 - ja_assure_rag - INFO - Handled by cross-proposal value search
+2026-02-23 02:09:36,702 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:09:36,703 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['standard_operating_procedure_label'], Filter: standard_operating_procedure_label=001, Contains: None
+2026-02-23 02:09:36,705 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-02-23 02:39:46,213 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:40:19,336 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-23 02:40:19,339 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-02-23 02:40:45,152 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-23 02:40:45,153 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-23 02:40:49,034 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-23 02:40:49,219 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-23 02:40:49,219 - ja_assure_rag - INFO - LLM client initialized
+2026-02-23 02:40:49,222 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-23 02:41:16,304 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:41:16,306 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-02-23 02:41:41,261 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:41:41,263 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-02-23 02:42:03,697 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:42:03,699 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-02-23 02:42:23,418 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-23 02:42:53,473 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: None, Filter: None=None, Contains: None
+2026-02-23 02:42:53,476 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-02-26 18:54:35,617 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-26 18:54:35,617 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-26 18:54:40,407 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-26 18:54:40,636 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-26 18:54:40,637 - ja_assure_rag - INFO - LLM client initialized
+2026-02-26 18:54:40,640 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 17:07:03,353 - api - INFO - Starting JA Assure RAG API...
+2026-02-27 17:07:03,353 - api - INFO - Initializing system components...
+2026-02-27 17:07:03,416 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 17:07:03,416 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 17:07:03,874 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 17:07:05,626 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 17:07:05,626 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 17:07:05,631 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 17:07:05,631 - api - INFO - API startup complete. Ready to handle requests.
+2026-02-27 17:07:34,603 - api - INFO - Received query: What is the business name of MYJADEQT001?
+2026-02-27 17:07:35,515 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-27 17:08:09,771 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-27 17:08:09,772 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-27 17:08:09,776 - api - INFO - Generated answer (length: 44 chars)
+2026-02-27 17:09:08,252 - api - INFO - Starting JA Assure RAG API...
+2026-02-27 17:09:08,252 - api - INFO - Initializing system components...
+2026-02-27 17:09:08,294 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 17:09:08,294 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 17:09:08,641 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 17:09:08,882 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 17:09:08,883 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 17:09:08,885 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 17:09:08,885 - api - INFO - API startup complete. Ready to handle requests.
+2026-02-27 17:09:09,346 - api - INFO - Received query: What is the business name of MYJADEQT001?
+2026-02-27 17:09:09,412 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-27 17:09:38,751 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-27 17:09:38,752 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-27 17:09:38,762 - api - INFO - Generated answer (length: 44 chars)
+2026-02-27 17:09:56,074 - api - INFO - Starting JA Assure RAG API...
+2026-02-27 17:09:56,075 - api - INFO - Initializing system components...
+2026-02-27 17:09:56,101 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 17:09:56,101 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 17:09:56,421 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 17:09:56,566 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 17:09:56,566 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 17:09:56,568 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 17:09:56,568 - api - INFO - API startup complete. Ready to handle requests.
+2026-02-27 17:09:56,969 - api - INFO - Received query: What is the business name of MYJADEQT001?
+2026-02-27 17:09:57,039 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-27 17:10:26,162 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-27 17:10:26,165 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-27 17:10:26,173 - api - INFO - Generated answer (length: 44 chars)
+2026-02-27 17:38:38,303 - api - INFO - Starting JA Assure RAG API...
+2026-02-27 17:38:38,304 - api - INFO - Initializing system components...
+2026-02-27 17:38:38,328 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 17:38:38,328 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 17:38:38,553 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 17:38:38,676 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 17:38:38,676 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 17:38:38,677 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 17:38:38,678 - api - INFO - API startup complete. Ready to handle requests.
+2026-02-27 17:38:39,313 - api - INFO - Received query: What is the business name of MYJADEQT001?
+2026-02-27 17:38:39,375 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-27 17:39:11,171 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-27 17:39:11,172 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-27 17:39:11,182 - api - INFO - Generated answer (length: 44 chars)
+2026-02-27 21:45:36,045 - api - INFO - Starting JA Assure RAG API...
+2026-02-27 21:45:36,045 - api - INFO - Initializing system components...
+2026-02-27 21:45:36,075 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 21:45:36,075 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 21:45:36,340 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 21:45:36,469 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 21:45:36,469 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 21:45:36,471 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 21:45:36,471 - api - INFO - API startup complete. Ready to handle requests.
+2026-02-27 21:45:36,990 - api - INFO - Received query: What is the business name of MYJADEQT001?
+2026-02-27 21:45:37,060 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-27 21:46:08,922 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-27 21:46:08,924 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-27 21:46:08,932 - api - INFO - Generated answer (length: 44 chars)
+2026-02-27 21:58:58,497 - api - INFO - Starting JA Assure RAG API...
+2026-02-27 21:58:58,497 - api - INFO - Initializing system components...
+2026-02-27 21:58:58,538 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 21:58:58,538 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 21:58:58,828 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 21:58:58,989 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 21:58:58,989 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 21:58:58,991 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 21:58:58,992 - api - INFO - API startup complete. Ready to handle requests.
+2026-02-27 21:58:59,418 - api - INFO - Received query: What is the business name of MYJADEQT001?
+2026-02-27 21:58:59,468 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-27 21:59:31,300 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-27 21:59:31,302 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-02-27 21:59:31,311 - api - INFO - Generated answer (length: 44 chars)
+2026-02-27 22:14:09,735 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 22:14:09,735 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 22:14:13,833 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 22:14:14,048 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 22:14:14,048 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 22:14:14,050 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 22:19:10,589 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-27 22:19:43,657 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['alarm_label'], Filter: alarm_label=001, Contains: None
+2026-02-27 22:19:43,658 - ja_assure_rag - INFO - Smart query executor handled - 14 results
+2026-02-27 22:20:38,046 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-27 22:21:08,113 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['do_you_have_alarm_label'], Filter: do_you_have_alarm_label=001, Contains: None
+2026-02-27 22:21:08,118 - ja_assure_rag - INFO - Smart query executor handled - 14 results
+2026-02-27 22:30:46,518 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 22:30:46,518 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 22:30:51,705 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 22:30:51,834 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 22:30:51,835 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 22:30:51,836 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-27 22:32:08,530 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-27 22:32:08,530 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-27 22:32:13,667 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-27 22:32:13,768 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-27 22:32:13,769 - ja_assure_rag - INFO - LLM client initialized
+2026-02-27 22:32:13,770 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-28 00:29:35,305 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-02-28 00:29:35,305 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-02-28 00:29:39,284 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-02-28 00:29:39,417 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-02-28 00:29:39,417 - ja_assure_rag - INFO - LLM client initialized
+2026-02-28 00:29:39,419 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-02-28 00:30:18,109 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-02-28 00:30:50,889 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-02-28 00:30:50,892 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-03-03 07:57:15,125 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 07:57:15,125 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 07:57:20,840 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 07:57:21,097 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 07:57:21,097 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 07:57:21,100 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 08:26:55,898 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 08:26:55,898 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 08:27:01,556 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 08:27:01,556 - ja_assure_rag - INFO - Index not found, running ingestion...
+2026-03-03 08:27:01,556 - ja_assure_rag - INFO - Starting data ingestion...
+2026-03-03 08:27:01,692 - ja_assure_rag - INFO - Loaded 15 records from Excel
+2026-03-03 08:27:27,208 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 08:27:27,209 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 08:27:32,214 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 08:27:32,214 - ja_assure_rag - INFO - Index not found, running ingestion...
+2026-03-03 08:27:32,214 - ja_assure_rag - INFO - Starting data ingestion...
+2026-03-03 08:27:32,319 - ja_assure_rag - INFO - Loaded 15 records from Excel
+2026-03-03 08:27:32,321 - ja_assure_rag - INFO - Extracted 300 section chunks
+2026-03-03 08:27:32,323 - ja_assure_rag - INFO - Built 300 text chunks
+2026-03-03 08:27:32,323 - ja_assure_rag - INFO - Building FAISS index...
+2026-03-03 08:27:32,324 - embeddings.embedder - INFO - Starting batch embedding: 300 texts in 19 batches
+2026-03-03 08:27:34,013 - embeddings.embedder - INFO - Batch embedding complete: 300 embeddings generated
+2026-03-03 08:27:34,017 - ja_assure_rag - INFO - Index built: 300 vectors, 384 dimensions
+2026-03-03 08:27:34,057 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 08:27:34,057 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 08:27:34,061 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 08:29:43,356 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 08:29:43,356 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 08:29:43,785 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 08:29:43,917 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 08:29:43,917 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 08:29:43,921 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 08:29:44,251 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-03 08:30:18,984 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['stock_check_frequency'], Filter: None=None, Contains: 
+2026-03-03 08:30:18,987 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-03-03 08:30:19,740 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-03 08:30:48,905 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['claim_history_label'], Filter: None=None, Contains: None
+2026-03-03 08:30:48,909 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-03-03 08:30:49,543 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-03 08:31:19,141 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: ['director_house_coverage_label'], Filter: None=None, Contains: None
+2026-03-03 08:31:19,147 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-03 08:31:19,148 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-03 08:31:19,153 - ja_assure_rag - INFO - Handled by analytical query handler (specific)
+2026-03-03 08:36:22,073 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 08:36:22,073 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 08:36:22,415 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 08:36:22,628 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 08:36:22,628 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 08:36:22,630 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 08:36:30,744 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 08:36:30,744 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 08:36:30,895 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 08:36:31,010 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 08:36:31,010 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 08:36:31,012 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 08:37:52,716 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-03 08:38:26,206 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['nature_of_business_label'], Filter: None=None, Contains: None
+2026-03-03 08:38:26,210 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-03 08:38:26,210 - ja_assure_rag - INFO - Query classified as: semantic
+2026-03-03 08:38:26,474 - ja_assure_rag - INFO - No chunks above threshold - refusing to answer
+2026-03-03 15:55:31,835 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 15:55:31,835 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 15:55:37,022 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 15:55:37,226 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 15:55:37,905 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 15:55:37,907 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 15:55:37,914 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 16:03:06,799 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 16:03:06,799 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 16:03:07,267 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 16:03:07,399 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 16:03:08,256 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 16:03:08,258 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 16:03:08,273 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 16:05:05,119 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-03 16:05:05,846 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-03 16:05:05,848 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-03 16:05:05,852 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-03 16:05:05,852 - ja_assure_rag - INFO - Query classified as: semantic
+2026-03-03 16:05:05,856 - ja_assure_rag - INFO - Handled by cross-proposal value search
+2026-03-03 16:06:04,108 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-03 16:06:04,575 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-03 16:06:04,577 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-03 16:06:04,579 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-03 16:06:04,579 - ja_assure_rag - INFO - Query classified as: semantic
+2026-03-03 16:06:05,091 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-03 16:06:05,093 - ja_assure_rag - ERROR - LLM generation failed: Error code: 404 - {'message': 'Model llama-3.3-70b does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+2026-03-03 16:13:13,322 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 16:13:13,322 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 16:13:13,758 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 16:13:13,893 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 16:13:14,634 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 16:13:14,639 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 16:13:14,652 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 16:14:10,642 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-03 16:14:12,349 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 200 OK"
+2026-03-03 16:14:12,373 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-03 16:14:12,374 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-03 16:14:12,374 - ja_assure_rag - INFO - Query classified as: semantic
+2026-03-03 16:14:12,376 - ja_assure_rag - INFO - Handled by cross-proposal value search
+2026-03-03 16:38:30,451 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 16:38:30,451 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 16:38:31,043 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 16:38:31,043 - ja_assure_rag - INFO - Index not found, running ingestion...
+2026-03-03 16:38:31,043 - ja_assure_rag - INFO - Starting data ingestion...
+2026-03-03 16:38:31,148 - ja_assure_rag - INFO - Loaded 15 records from Excel
+2026-03-03 16:38:31,150 - ja_assure_rag - INFO - Extracted 300 section chunks
+2026-03-03 16:38:31,153 - ja_assure_rag - INFO - Built 300 text chunks
+2026-03-03 16:38:31,153 - ja_assure_rag - INFO - Building FAISS index...
+2026-03-03 16:38:31,154 - embeddings.embedder - INFO - Starting batch embedding: 300 texts in 19 batches
+2026-03-03 16:38:31,943 - embeddings.embedder - INFO - Batch embedding complete: 300 embeddings generated
+2026-03-03 16:38:31,946 - ja_assure_rag - INFO - Index built: 300 vectors, 384 dimensions
+2026-03-03 16:38:31,977 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 16:38:56,540 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 16:38:56,541 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 16:38:56,925 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 16:38:57,087 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 16:38:57,893 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 16:38:57,933 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 16:38:57,943 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 16:38:58,159 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-03 16:40:55,192 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 16:40:55,192 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 16:40:55,641 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 16:40:55,780 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 16:40:56,566 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 16:40:56,569 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 16:40:56,582 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 16:40:56,587 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-03 16:40:56,597 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-03 16:41:06,197 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 16:41:06,197 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 16:41:06,356 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 16:41:06,485 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 16:41:07,056 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 16:41:07,058 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 16:41:07,063 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 16:41:07,067 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-03 16:41:07,075 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-03 16:55:51,843 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 16:55:51,843 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 16:55:52,309 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 16:55:52,310 - ja_assure_rag - INFO - Index not found, running ingestion...
+2026-03-03 16:55:52,310 - ja_assure_rag - INFO - Starting data ingestion...
+2026-03-03 16:55:52,401 - ja_assure_rag - INFO - Loaded 15 records from Excel
+2026-03-03 16:55:52,403 - ja_assure_rag - INFO - Extracted 300 section chunks
+2026-03-03 16:55:52,405 - ja_assure_rag - INFO - Built 300 text chunks
+2026-03-03 16:55:52,405 - ja_assure_rag - INFO - Building FAISS index...
+2026-03-03 16:55:52,406 - embeddings.embedder - INFO - Starting batch embedding: 300 texts in 19 batches
+2026-03-03 16:55:53,198 - embeddings.embedder - INFO - Batch embedding complete: 300 embeddings generated
+2026-03-03 16:55:53,201 - ja_assure_rag - INFO - Index built: 300 vectors, 384 dimensions
+2026-03-03 16:55:53,238 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 16:55:53,991 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 16:55:53,992 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 16:55:53,996 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 18:56:47,974 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 18:56:47,975 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 18:56:48,412 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 18:56:48,413 - ja_assure_rag - INFO - Index not found, running ingestion...
+2026-03-03 18:56:48,413 - ja_assure_rag - INFO - Starting data ingestion...
+2026-03-03 18:56:48,509 - ja_assure_rag - INFO - Loaded 15 records from Excel
+2026-03-03 18:56:48,511 - ja_assure_rag - INFO - Extracted 300 section chunks
+2026-03-03 18:56:48,513 - ja_assure_rag - INFO - Built 300 text chunks
+2026-03-03 18:56:48,513 - ja_assure_rag - INFO - Building FAISS index...
+2026-03-03 18:56:48,514 - embeddings.embedder - INFO - Starting batch embedding: 300 texts in 19 batches
+2026-03-03 18:56:49,404 - embeddings.embedder - INFO - Batch embedding complete: 300 embeddings generated
+2026-03-03 18:56:49,405 - ja_assure_rag - INFO - Index built: 300 vectors, 384 dimensions
+2026-03-03 18:56:49,441 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 18:56:50,614 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 18:56:50,615 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 18:56:50,620 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-03 18:59:19,834 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 18:59:19,834 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 18:59:24,384 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 18:59:24,385 - ja_assure_rag - INFO - Index not found, running ingestion...
+2026-03-03 18:59:24,385 - ja_assure_rag - INFO - Starting data ingestion...
+2026-03-03 18:59:24,484 - ja_assure_rag - INFO - Loaded 15 records from Excel
+2026-03-03 18:59:24,486 - ja_assure_rag - INFO - Extracted 300 section chunks
+2026-03-03 18:59:24,489 - ja_assure_rag - INFO - Built 300 text chunks
+2026-03-03 18:59:24,489 - ja_assure_rag - INFO - Building FAISS index...
+2026-03-03 18:59:24,490 - embeddings.embedder - INFO - Starting batch embedding: 300 texts in 19 batches
+2026-03-03 18:59:25,337 - embeddings.embedder - INFO - Batch embedding complete: 300 embeddings generated
+2026-03-03 18:59:25,339 - ja_assure_rag - INFO - Index built: 300 vectors, 384 dimensions
+2026-03-03 18:59:25,374 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 19:02:14,255 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-03 19:02:14,255 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-03 19:02:14,851 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-03 19:02:15,010 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-03 19:02:15,502 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-03 19:02:15,503 - ja_assure_rag - INFO - LLM client initialized
+2026-03-03 19:02:15,516 - ja_assure_rag - INFO - Analytical engine initialized: 15 records

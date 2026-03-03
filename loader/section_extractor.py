@@ -27,82 +27,69 @@ SIMPLE_VALUE_COLUMNS = [
     ("shop_lifting", "shop_lifting_label"),
 ]
 
-# Key sections used to determine proposal completeness
-_COMPLETENESS_KEY_SECTIONS = [
-    "business_profile",
-    "sum_assured",
-    "cctv",
-    "alarm",
-    "transit_and_gaurds",
-    "claim_history",
-]
-
-_EMPTY_SENTINELS = {None, "", "-1", -1, "None", "nan"}
-
-
-def validate_proposal_completeness(row_data: dict, json_parser) -> dict:
+def validate_proposal_completeness(row_data: dict) -> dict:
     """
     Assess how complete a proposal submission is by checking key sections.
 
     Returns a dict with:
-    - is_complete: bool — True if the business submitted meaningful data
+    - is_complete_submission: bool — True if the business submitted meaningful data
     - completeness_score: float 0.0–1.0 — fraction of key sections populated
-    - missing_sections: list of section names with no data
     - submission_status: "complete" | "partial" | "empty"
+    - missing_sections: list of section names with no data
     """
+    KEY_SECTIONS = [
+        "business_profile", "sum_assured", "cctv", "alarm",
+        "transit_and_gaurds", "claim_history", "additional_details"
+    ]
+    import json
     populated = 0
     missing = []
-
-    for section in _COMPLETENESS_KEY_SECTIONS:
-        raw = row_data.get(section)
-        if raw is None:
+    for section in KEY_SECTIONS:
+        val = row_data.get(section)
+        if val is None:
             missing.append(section)
             continue
-        parsed = json_parser(raw)
-        if not parsed:
-            missing.append(section)
-            continue
-        # Check if any value in the parsed dict is non-empty
-        def _is_nonempty(v) -> bool:
-            """Return True if *v* carries real data (safe for unhashable types)."""
-            if isinstance(v, (list, dict)):
-                return bool(v)               # non-empty container → data exists
+        # Guard against pandas NaN (float NaN from empty Excel cells)
+        if isinstance(val, float):
             try:
-                if v in _EMPTY_SENTINELS:
-                    return False
-            except TypeError:
-                pass                          # unhashable edge-case → treat as data
-            return str(v).strip() not in ("", "None", "-1")
-
-        if isinstance(parsed, dict):
-            has_data = any(_is_nonempty(v) for v in parsed.values())
-        elif isinstance(parsed, list):
-            has_data = any(
-                isinstance(item, dict) and any(_is_nonempty(v) for v in item.values())
-                for item in parsed
-            )
-        else:
-            has_data = False
-
-        if has_data:
-            populated += 1
-        else:
+                import math
+                if math.isnan(val):
+                    missing.append(section)
+                    continue
+            except (TypeError, ValueError):
+                pass
+        try:
+            parsed = json.loads(str(val)) if isinstance(val, str) else val
+        except Exception:
             missing.append(section)
-
-    score = populated / len(_COMPLETENESS_KEY_SECTIONS) if _COMPLETENESS_KEY_SECTIONS else 0.0
-
+            continue
+        if isinstance(parsed, dict):
+            if any(v not in [None, "", -1, "-1", "null", 0] for v in parsed.values()):
+                populated += 1
+            else:
+                missing.append(section)
+        elif isinstance(parsed, list):
+            if len(parsed) > 0:
+                populated += 1
+            else:
+                missing.append(section)
+        else:
+            if parsed not in [None, "", -1, "-1", "null", 0]:
+                populated += 1
+            else:
+                missing.append(section)
+    score = populated / float(len(KEY_SECTIONS))
     if score == 0.0:
         status = "empty"
     elif score < 0.4:
         status = "partial"
     else:
         status = "complete"
-
     return {
-        "is_complete": score >= 0.4,
-        "completeness_score": round(score, 3),
-        "missing_sections": missing,
+        "is_complete_submission": score >= 0.4,
+        "completeness_score": round(score, 2),
         "submission_status": status,
+        "missing_sections": missing
     }
 
 
@@ -115,8 +102,8 @@ def extract_sections(row: dict, json_parser):
         "user_name": row.get("user_name"),
     }
 
-    # Validate completeness for this proposal row
-    completeness = validate_proposal_completeness(row, json_parser)
+    # Validate completeness for this proposal row (called once per row)
+    completeness = validate_proposal_completeness(row)
 
     # Extract JSON sections
     for section in SECTION_COLUMNS:
@@ -129,7 +116,7 @@ def extract_sections(row: dict, json_parser):
                 "metadata": {
                     **base_metadata,
                     "submission_status": completeness["submission_status"],
-                    "is_complete_submission": completeness["is_complete"],
+                    "is_complete_submission": completeness["is_complete_submission"],
                     "completeness_score": completeness["completeness_score"],
                 },
             })
@@ -145,7 +132,7 @@ def extract_sections(row: dict, json_parser):
                 "metadata": {
                     **base_metadata,
                     "submission_status": completeness["submission_status"],
-                    "is_complete_submission": completeness["is_complete"],
+                    "is_complete_submission": completeness["is_complete_submission"],
                     "completeness_score": completeness["completeness_score"],
                 },
             })

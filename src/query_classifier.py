@@ -213,6 +213,9 @@ class QueryClassification:
     out_of_scope_reason: Optional[str] = None
     partial_handler: Optional[str] = None
     available_alternative: Optional[str] = None
+    answer_is_sufficient: bool = True      # True = don't append scope noise
+    scope_gap_description: Optional[str] = None  # Specific gap note if any
+    query_intent: Optional[str] = None     # "ranking_desc", "ranking_asc", "peril_specific", etc.
 
 
 class QueryClassifier:
@@ -283,8 +286,7 @@ class QueryClassifier:
             "southeast asia", "asean",
         ],
         "risk_analytics": [
-            "risk ranking",
-            "risk score", "risk distribution", "risk map",
+            "risk ranking", "risk score", "risk distribution", "risk map",
         ],
     }
 
@@ -292,13 +294,20 @@ class QueryClassifier:
         # --- Claim / location handlers (TYPE 1, 3, 9) ---
         {
             "triggers": [
-                "high-risk zone", "risk zone",
+                "high-risk zone", "high-risk zones", "risk zone",
                 "claim frequency by", "claim frequency in",
                 "locations with claims", "fire-related claim",
-                "fire-related claims", "fire claim",
+                "fire-related claims", "fire claim", "fire claims",
                 "which locations reported", "regions with lowest",
                 "regions with highest", "claim history by region",
                 "claim history by area", "claim history by location",
+                "locations with most claims", "areas with claims",
+                "highest claims", "fewest claims", "most claims",
+                "lowest claims", "claims by location", "claims by region",
+                "claims by area", "claims by city", "claims by state",
+                "location has the highest", "location has the most",
+                "location has the fewest", "location has the lowest",
+                "claims per location", "claims per region",
             ],
             "handler": "claims_by_location",
             "description": "Can show claim history grouped by location",
@@ -308,6 +317,8 @@ class QueryClassifier:
                 "claim ratio", "claim rate", "percentage with claims",
                 "how many have claims", "claims percentage",
                 "claim occurrence", "claim frequency",
+                "proposals have claims", "proposals with claims",
+                "how many claims", "number of claims",
             ],
             "handler": "claim_rate",
             "description": "Can show claim occurrence rate across proposals",
@@ -413,8 +424,9 @@ class QueryClassifier:
         ),
         "risk_analytics": (
             "Actuarial risk scores and risk-ranking models "
-            "are not available. You can ask about claim history by region "
-            "or security features per proposal instead."
+            "are not available. You can ask: 'Show claim history by region', "
+            "'Which locations have claims?', or 'What security features do "
+            "proposals have?' instead."
         ),
         "regional_scope": (
             "Only Malaysian proposals exist in this database. "
@@ -434,6 +446,9 @@ class QueryClassifier:
         """
         q = query.lower()
 
+        # 0 — detect query intent (ranking direction, peril-specific, etc.)
+        query_intent = self._detect_query_intent(q)
+
         # 1 — detect nonsensical / self-contradictory queries
         if self._is_nonsensical(q):
             return QueryClassification(
@@ -441,6 +456,7 @@ class QueryClassifier:
                 out_of_scope_reason="Query appears malformed or self-contradictory",
                 available_alternative=self._suggest_alternative(q),
                 confidence=0.8,
+                query_intent=query_intent,
             )
 
         # 2 — collect triggered out-of-scope domains (one per domain)
@@ -478,18 +494,24 @@ class QueryClassifier:
                 out_of_scope_reason=self._explain_scope(triggered_domains, q),
                 available_alternative=self._suggest_alternative(q),
                 confidence=0.95,
+                query_intent=query_intent,
             )
 
         # Rule B: other OOS domain + partial handler → PARTIALLY_ANSWERABLE
+        #         The handler CAN answer — set answer_is_sufficient based on
+        #         whether the OOS domain is peripheral or central.
         if triggered_domains and partial_handler:
+            # Handlers for claim_amounts + claims_by_location → the handler
+            # answers the available part; the OOS note is baked into the handler
+            # output (e.g. "fire cause data not captured").
             return QueryClassification(
                 classification="PARTIALLY_ANSWERABLE",
-                out_of_scope_reason=(
-                    f"Data not available: {', '.join(triggered_domains)}"
-                ),
+                out_of_scope_reason=self._explain_scope(triggered_domains, q),
                 partial_handler=partial_handler,
                 available_alternative=self._suggest_alternative(q),
                 confidence=0.85,
+                answer_is_sufficient=True,
+                query_intent=query_intent,
             )
 
         # Rule C: OOS domain with no handler → OUT_OF_SCOPE
@@ -499,6 +521,7 @@ class QueryClassifier:
                 out_of_scope_reason=self._explain_scope(triggered_domains, q),
                 available_alternative=self._suggest_alternative(q),
                 confidence=0.9,
+                query_intent=query_intent,
             )
 
         # Rule D: partial handler with NO OOS domain → PARTIALLY_ANSWERABLE
@@ -510,11 +533,14 @@ class QueryClassifier:
                 partial_handler=partial_handler,
                 available_alternative=self._suggest_alternative(q),
                 confidence=0.85,
+                answer_is_sufficient=True,
+                query_intent=query_intent,
             )
 
         return QueryClassification(
             classification="ANSWERABLE",
             confidence=0.9,
+            query_intent=query_intent,
         )
 
     # ------------------------------------------------------------------
@@ -533,6 +559,32 @@ class QueryClassifier:
         if len(trigger) >= 8 or " " in trigger:
             return trigger in q
         return bool(re.search(r"\b" + re.escape(trigger) + r"\b", q))
+
+    @staticmethod
+    def _detect_query_intent(q: str) -> str:
+        """
+        Detect the semantic intent of the query for handlers that need
+        to vary their output (e.g. claims_by_location ranking direction).
+        """
+        if any(w in q for w in [
+            "fire", "flood", "theft", "burglary", "robbery", "peril", "cause",
+        ]):
+            return "peril_specific"
+        if any(w in q for w in [
+            "highest", "most", "worst", "high-risk", "top ",
+        ]):
+            return "ranking_desc"
+        if any(w in q for w in [
+            "lowest", "least", "safest", "fewest", "minimum",
+        ]):
+            return "ranking_asc"
+        if any(w in q for w in [
+            "distribution", "breakdown", "types", "percentage", "percent",
+        ]):
+            return "distribution"
+        if any(w in q for w in ["list", "show all", "which"]):
+            return "list"
+        return "summary"
 
     def _is_nonsensical(self, q: str) -> bool:
         """
@@ -564,25 +616,164 @@ class QueryClassifier:
 
         return False
 
-    def _explain_scope(self, triggered_domains: List[str], _q: str) -> str:
+    def _explain_scope(self, triggered_domains: List[str], q: str) -> str:
+        """Return a query-specific explanation of why data is out of scope."""
         domain = triggered_domains[0] if triggered_domains else "unknown"
+
+        # Specific explanations keyed by (domain, keyword-in-query)
+        _SPECIFIC: dict = {
+            ("premium", "quarter"): (
+                "Premium amounts and payment transactions are not recorded in the "
+                "proposal database. Proposals capture what businesses want to insure "
+                "(insured values, security measures) but not the financial terms agreed."
+            ),
+            ("premium", "broker"): (
+                "Broker information and premium generation data are not captured in "
+                "proposal records. The database only contains direct business proposal "
+                "details submitted by the insured parties."
+            ),
+            ("claim_amounts", "average"): (
+                "Claim payout amounts are not stored in proposal records. "
+                "The database captures only whether a claim was made within the "
+                "past 3 years (Yes/No), not the value of those claims."
+            ),
+            ("claim_amounts", "fire"): (
+                "Claim cause details — fire, flood, theft, robbery — are not "
+                "recorded in proposal records. Only claim occurrence (within 3 years "
+                "or not) is tracked."
+            ),
+            ("claim_amounts", "reject"): (
+                "Claims processing data including rejection reasons, adjuster notes, "
+                "and non-disclosure findings are not part of the proposal database. "
+                "Proposals are submitted before a claim occurs."
+            ),
+            ("claim_amounts", "non-disclosure"): (
+                "Claims processing data including rejection reasons, adjuster notes, "
+                "and non-disclosure findings are not part of the proposal database. "
+                "Proposals are submitted before a claim occurs."
+            ),
+            ("policy_lifecycle", "expir"): (
+                "Policy expiry and renewal dates are not captured in proposal records. "
+                "Proposals record the submission date (created_at) but policy duration "
+                "and renewal terms are managed separately."
+            ),
+            ("policy_lifecycle", "approv"): (
+                "Underwriting decisions, approval statuses, and modification histories "
+                "are not stored in the proposal database. Only the submitted proposal "
+                "details are available."
+            ),
+            ("policy_lifecycle", "underwriting"): (
+                "Underwriting workflow data — turnaround times, review stages, "
+                "decision timelines — is not captured in proposal records."
+            ),
+            ("policy_lifecycle", "turnaround"): (
+                "Underwriting workflow data — turnaround times, review stages, "
+                "decision timelines — is not captured in proposal records."
+            ),
+            ("policy_lifecycle", "modif"): (
+                "Underwriting decisions, approval statuses, and modification histories "
+                "are not stored in the proposal database. Only the submitted proposal "
+                "details are available."
+            ),
+            ("temporal", "year-over-year"): (
+                "Year-over-year comparison requires historical data across multiple "
+                "time periods. This database contains a single snapshot of the "
+                "current proposals — there is no prior year data to compare against."
+            ),
+            ("temporal", "yoy"): (
+                "Year-over-year comparison requires historical data across multiple "
+                "time periods. This database contains a single snapshot of the "
+                "current proposals — there is no prior year data to compare against."
+            ),
+            ("temporal", "growth"): (
+                "Year-over-year comparison requires historical data across multiple "
+                "time periods. This database contains a single snapshot of the "
+                "current proposals — there is no prior year data to compare against."
+            ),
+            ("temporal", "increased"): (
+                "Coverage change history is not tracked. Each proposal represents "
+                "the current submission only. Previous versions or amendments are "
+                "not stored."
+            ),
+            ("temporal", "changed"): (
+                "Coverage change history is not tracked. Each proposal represents "
+                "the current submission only. Previous versions or amendments are "
+                "not stored."
+            ),
+            ("temporal", "trend"): (
+                "Only the current snapshot of proposal data exists. "
+                "Historical comparisons and trend analysis are not possible."
+            ),
+        }
+
+        # Find the most specific match
+        for (dom, keyword), explanation in _SPECIFIC.items():
+            if dom == domain and keyword in q:
+                return explanation
+
+        # Domain-level fallbacks
         return self._OUT_OF_SCOPE_EXPLANATIONS.get(
             domain,
             "This type of data is not captured in the proposal database.",
         )
 
     def _suggest_alternative(self, q: str) -> str:  # noqa: C901
+        """Context-aware alternative suggestions."""
+        if any(w in q for w in ["premium", "collected", "revenue"]):
+            return (
+                "'Which proposals have the highest insured value?' or "
+                "'List all proposals ranked by sum insured'"
+            )
+        if any(w in q for w in ["claim amount", "average claim", "claim value"]):
+            return (
+                "'Which businesses have had claims in the past 3 years?' or "
+                "'Show claim history by region'"
+            )
+        if any(w in q for w in ["fire", "flood", "theft cause", "claim cause"]):
+            return (
+                "'Show claim history by region' or "
+                "'What is the claim ratio across all proposals?'"
+            )
+        if any(w in q for w in ["reject", "non-disclosure", "declined"]):
+            return (
+                "'Show claim history by region' or "
+                "'What is the overall claim rate across proposals?'"
+            )
+        if any(w in q for w in ["expir", "renew", "next month"]):
+            return (
+                "'When was each proposal created?' or "
+                "'List all proposals with their submission dates'"
+            )
+        if any(w in q for w in ["broker", "agent", "intermediary"]):
+            return (
+                "'List all businesses with their contact details' or "
+                "'Which proposals have the highest insured value?'"
+            )
+        if any(w in q for w in ["approv", "modif", "underwriting", "turnaround"]):
+            return (
+                "'List all proposals in the database' or "
+                "'Show proposals by business type'"
+            )
+        if any(w in q for w in ["year-over-year", "yoy", "growth", "trend", "historical"]):
+            return (
+                "'Show top industries by total sum insured' or "
+                "'List policies by insured value'"
+            )
+        if any(w in q for w in ["increas", "coverage change", "this year"]):
+            return (
+                "'Which proposals have the highest insured value?' or "
+                "'Show industries by total sum insured'"
+            )
         if "claim" in q:
             return (
-                "You can ask: 'What is the claim rate across all proposals?', "
-                "'Show claim history by region', or 'What is the claim history "
-                "of [business name]?'"
+                "'What is the claim rate across all proposals?', "
+                "'Show claim history by region', 'Which regions have the lowest "
+                "claim frequency?', or 'What is the claim history of [business name]?'"
             )
         if "premium" in q:
             return (
-                "You can ask about insured values: 'Which proposals have the "
-                "highest sum assured?' or 'What is the stock value insured for "
-                "[business name]?'"
+                "'Which proposals have the highest insured value?' or "
+                "'What is the stock value insured for [business name]?'"
             )
         if "country" in q or any(
             c in q for c in ["philippines", "indonesia", "singapore", "thailand"]
@@ -594,29 +785,21 @@ class QueryClassifier:
             )
         if "industry" in q or "sector" in q:
             return (
-                "You can ask: 'What type of business does [name] run?' or "
-                "'Which businesses are jewellers?'"
-            )
-        if "expir" in q or "renew" in q:
-            return (
-                "Expiry dates are not tracked. You can ask: 'What is the "
-                "proposal creation date for [business name]?'"
-            )
-        if "broker" in q:
-            return (
-                "Broker data is not available. You can ask about business "
-                "contacts: 'What is the contact number for [business name]?'"
+                "'Show policy type distribution', "
+                "'What are the top industries by total sum insured?', or "
+                "'What type of business does [name] run?'"
             )
         if "risk zone" in q or "high risk" in q:
             return (
-                "Risk zone analytics are not available. You can ask: 'Which "
-                "proposals have had claims?' or 'Which businesses have no alarm "
-                "system?'"
+                "'Show claim history by region', "
+                "'Which locations have the highest claim frequency?', or "
+                "'What regions have the lowest claim rate?'"
             )
         if "gps" in q:
             return (
-                "You can ask: 'Which businesses use GPS trackers in transit?' "
-                "or 'Does [business name] have GPS trackers?'"
+                "'Which proposals have GPS trackers installed?', "
+                "'List all businesses with GPS in transit vehicles', or "
+                "'Does [business name] have GPS trackers?'"
             )
         if "southeast asia" in q or "asean" in q:
             return (
@@ -624,8 +807,8 @@ class QueryClassifier:
                 "nature_of_business distribution across all 15 proposals."
             )
         return (
-            "You can ask about specific proposals, security features, "
-            "locations, or business details available in the 15 proposal records."
+            "'List all proposals' or "
+            "'Show proposals by business type and insured value'"
         )
 
 
@@ -693,10 +876,66 @@ class PartialAnswerEngine:
         return name_map
 
     # ------------------------------------------------------------------
+    # Shared helper: filter for complete submissions only
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _get_complete_proposals_only(metadata: list) -> list:
+        """
+        Return only chunks from proposals with is_complete_submission=True.
+
+        Falls back to checking if business_name exists in decoded_fields
+        when the is_complete_submission key is missing (backwards compat
+        with indexes built before the completeness validation was added).
+        """
+        complete: list = []
+        for chunk in metadata:
+            # New index: use the flag directly
+            if "is_complete_submission" in chunk:
+                if chunk.get("is_complete_submission"):
+                    complete.append(chunk)
+            else:
+                # Backwards compatibility: check if business name exists
+                df = chunk.get("decoded_fields") or {}
+                fields = chunk.get("fields") or {}
+                has_name = (
+                    df.get("business_name_label") not in (None, "", "None")
+                    or fields.get("business_name_label") not in (None, "", "None")
+                )
+                if has_name:
+                    complete.append(chunk)
+        return complete
+
+    @staticmethod
+    def _get_incomplete_proposal_ids(metadata: list) -> list:
+        """Return sorted list of quote_ids for incomplete/empty submissions."""
+        all_qids: set = set()
+        complete_qids: set = set()
+        for chunk in metadata:
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+            all_qids.add(qid)
+            if "is_complete_submission" in chunk:
+                if chunk.get("is_complete_submission"):
+                    complete_qids.add(qid)
+            else:
+                df = chunk.get("decoded_fields") or {}
+                fields = chunk.get("fields") or {}
+                has_name = (
+                    df.get("business_name_label") not in (None, "", "None")
+                    or fields.get("business_name_label") not in (None, "", "None")
+                )
+                if has_name:
+                    complete_qids.add(qid)
+        return sorted(all_qids - complete_qids)
+
+    # ------------------------------------------------------------------
     # Dispatcher
     # ------------------------------------------------------------------
 
-    def dispatch(self, handler: str, query: str) -> str:
+    def dispatch(self, handler: str, query: str,
+                 query_intent: str = "summary") -> str:
         """Route to the correct partial handler by name."""
         _map = {
             "rank_by_sum_assured":        lambda: self.handle_rank_by_sum_assured(),
@@ -704,7 +943,8 @@ class PartialAnswerEngine:
             "group_by_industry":          lambda: self.handle_group_by_industry(),
             "security_feature_summary":   lambda: self.handle_security_feature_summary(),
             "business_type_distribution": lambda: self.handle_business_type_distribution(),
-            "claims_by_location":         lambda: self.handle_claims_by_location(),
+            "claims_by_location":         lambda: self.handle_claims_by_location(
+                                                      query_intent=query_intent),
             "claim_rate":                 lambda: self.handle_claim_rate(),
             "list_all_businesses":        lambda: self.handle_list_all_businesses(),
             "gps_tracker_proposals":      lambda: self.handle_gps_tracker_proposals(),
@@ -800,11 +1040,13 @@ class PartialAnswerEngine:
 
     def handle_rank_by_sum_assured(self, top_n: int = 15) -> str:
         metadata = self.metadata
-        name_map = self._build_business_name_map(metadata)
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
 
         ranked = []
         seen: set = set()
-        for chunk in metadata:
+        for chunk in complete_metadata:
             if chunk.get("section") != "sum_assured":
                 continue
             qid = chunk.get("quote_id")
@@ -820,10 +1062,6 @@ class PartialAnswerEngine:
             business_name = name_map.get(qid, qid)
             ranked.append((business_name, qid, value, label))
 
-        total_proposals = len(
-            {c.get("quote_id") for c in metadata if c.get("quote_id")}
-        )
-
         if not ranked:
             return (
                 "No insured value data found across proposals. "
@@ -837,11 +1075,16 @@ class PartialAnswerEngine:
                 f"{i}. {name} ({qid}): RM {value:,.0f} ({label})"
             )
 
-        missing = total_proposals - len(ranked)
+        missing = len(name_map) - len(ranked)
         if missing > 0:
             lines.append(
-                f"\nNote: {missing} proposal(s) did not submit "
-                f"insured value data."
+                f"\nNote: {missing} proposal(s) with data did not submit "
+                f"insured value information."
+            )
+        if incomplete_qids:
+            lines.append(
+                f"Note: {len(incomplete_qids)} proposal(s) "
+                f"({', '.join(incomplete_qids)}) have no data submitted."
             )
         return "\n".join(lines)
 
@@ -877,11 +1120,13 @@ class PartialAnswerEngine:
             )
 
         metadata = self.metadata
-        name_map = self._build_business_name_map(metadata)
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
 
         results = []
         seen: set = set()
-        for chunk in metadata:
+        for chunk in complete_metadata:
             if chunk.get("section") != "sum_assured":
                 continue
             qid = chunk.get("quote_id")
@@ -896,16 +1141,23 @@ class PartialAnswerEngine:
                 results.append((business_name, qid, value, label))
                 seen.add(qid)
 
+        lines = []
         if not results:
-            return (
+            lines.append(
                 f"No proposals found with insured value "
                 f"above RM {threshold:,.0f}."
             )
+        else:
+            results.sort(key=lambda x: x[2], reverse=True)
+            lines.append(f"Proposals with insured value above RM {threshold:,.0f}:")
+            for name, qid, val, label in results:
+                lines.append(f"- {name} ({qid}): RM {val:,.0f} ({label})")
 
-        results.sort(key=lambda x: x[2], reverse=True)
-        lines = [f"Proposals with insured value above RM {threshold:,.0f}:"]
-        for name, qid, val, label in results:
-            lines.append(f"- {name} ({qid}): RM {val:,.0f} ({label})")
+        if incomplete_qids:
+            lines.append(
+                f"\nNote: {len(incomplete_qids)} proposal(s) "
+                f"({', '.join(incomplete_qids)}) have no data submitted."
+            )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
@@ -914,11 +1166,13 @@ class PartialAnswerEngine:
 
     def handle_group_by_industry(self) -> str:
         metadata = self.metadata
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
 
         # Step 1: Build industry + name maps from business_profile.
         name_map: dict = {}
         industry_map: dict = {}
-        for chunk in metadata:
+        for chunk in complete_metadata:
             if chunk.get("section") != "business_profile":
                 continue
             qid = chunk.get("quote_id")
@@ -946,7 +1200,7 @@ class PartialAnswerEngine:
 
         # Step 2: Build value map from sum_assured using multi-field logic.
         value_map: dict = {}
-        for chunk in metadata:
+        for chunk in complete_metadata:
             if chunk.get("section") != "sum_assured":
                 continue
             qid = chunk.get("quote_id")
@@ -961,38 +1215,45 @@ class PartialAnswerEngine:
             return "Industry data not available."
 
         # Step 3: Group by industry using both maps.
-        industry_data: dict = defaultdict(
-            lambda: {"count": 0, "total_value": 0.0, "has_value_count": 0}
+        industry_groups: dict = defaultdict(
+            lambda: {"count": 0, "total_value": 0.0, "businesses": []}
         )
         for qid in industry_map:
             ind = industry_map[qid]
             stock = value_map.get(qid, 0.0)
-            industry_data[ind]["count"] += 1
-            industry_data[ind]["total_value"] += stock
-            if stock > 0:
-                industry_data[ind]["has_value_count"] += 1
+            industry_groups[ind]["count"] += 1
+            industry_groups[ind]["total_value"] += stock
+            industry_groups[ind]["businesses"].append(name_map.get(qid, qid))
 
         # Step 4: Sort by total value descending, then count.
         sorted_industries = sorted(
-            industry_data.items(),
+            industry_groups.items(),
             key=lambda x: (x[1]["total_value"], x[1]["count"]),
             reverse=True,
         )
 
-        lines = ["Industries represented in proposal database:"]
+        lines = ["Industries by total insured value:"]
         for industry, data in sorted_industries:
             count = data["count"]
             total = data["total_value"]
-            has_val = data["has_value_count"]
+            biz_list = ", ".join(data["businesses"])
             if total > 0:
-                value_str = (
-                    f"Total insured: RM {total:,.0f} "
-                    f"({has_val}/{count} proposals have value data)"
+                lines.append(
+                    f"\n- {industry}: {count} proposal(s) "
+                    f"\u2014 RM {total:,.0f} total"
                 )
             else:
-                value_str = "Insured values not submitted in proposals"
-            lines.append(f"- {industry}: {count} proposal(s) \u2014 {value_str}")
+                lines.append(
+                    f"\n- {industry}: {count} proposal(s) "
+                    f"\u2014 Insured values not submitted"
+                )
+            lines.append(f"  Businesses: {biz_list}")
 
+        if incomplete_qids:
+            lines.append(
+                f"\nNote: {len(incomplete_qids)} proposal(s) "
+                f"({', '.join(incomplete_qids)}) have no data submitted."
+            )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
@@ -1021,12 +1282,14 @@ class PartialAnswerEngine:
 
     def handle_security_feature_summary(self) -> str:
         metadata = self.metadata
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
         # Bug 1 fix: build name map from business_profile chunks
-        name_map = self._build_business_name_map(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
 
         # Build security feature map: quote_id → {section: bool}
         security_map: dict = defaultdict(dict)
-        for chunk in metadata:
+        for chunk in complete_metadata:
             section = chunk.get("section", "")
             if section not in self._SECURITY_SECTION_FIELDS:
                 continue
@@ -1062,6 +1325,12 @@ class PartialAnswerEngine:
                 lines.append(
                     f"- {name} ({qid}): No security feature data submitted"
                 )
+
+        if incomplete_qids:
+            lines.append(
+                f"\nNote: {len(incomplete_qids)} proposal(s) "
+                f"({', '.join(incomplete_qids)}) have no data submitted."
+            )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
@@ -1070,13 +1339,15 @@ class PartialAnswerEngine:
 
     def handle_business_type_distribution(self) -> str:
         metadata = self.metadata
-        name_map = self._build_business_name_map(metadata)
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
         total = len(name_map)
 
         # Build type → list of business names
         type_businesses: dict = defaultdict(list)
         seen: set = set()
-        for chunk in metadata:
+        for chunk in complete_metadata:
             if chunk.get("section") != "business_profile":
                 continue
             qid = chunk.get("quote_id")
@@ -1096,7 +1367,7 @@ class PartialAnswerEngine:
             type_businesses.items(), key=lambda x: len(x[1]), reverse=True
         )
         lines = [
-            f"Policy type distribution across {total} proposals in Malaysia:"
+            f"Policy type distribution across {total} proposals with data:"
         ]
         for btype, businesses in sorted_types:
             count = len(businesses)
@@ -1107,20 +1378,28 @@ class PartialAnswerEngine:
                 f"\n- {btype}: {count} proposal(s) ({pct}%)"
             )
             lines.append(f"  {label}: {biz_str}")
+
+        if incomplete_qids:
+            lines.append(
+                f"\nNote: {len(incomplete_qids)} proposal(s) "
+                f"({', '.join(incomplete_qids)}) have no data submitted."
+            )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
     # Handler: claim history grouped by location (TYPE 1 + 9)
     # ------------------------------------------------------------------
 
-    def handle_claims_by_location(self) -> str:
+    def handle_claims_by_location(self, query_intent: str = "summary") -> str:
         metadata = self.metadata
-        name_map = self._build_business_name_map(metadata)
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
 
         # Step 1: Build location map from any chunk (risk_location is on all)
         location_map: dict = {}  # quote_id → state
         seen_loc: set = set()
-        for chunk in metadata:
+        for chunk in complete_metadata:
             qid = chunk.get("quote_id")
             if not qid or qid in seen_loc:
                 continue
@@ -1130,7 +1409,7 @@ class PartialAnswerEngine:
 
         # Step 2: Build claim map from claim_history section
         claim_map: dict = {}  # quote_id → decoded claim label
-        for chunk in metadata:
+        for chunk in complete_metadata:
             if chunk.get("section") != "claim_history":
                 continue
             qid = chunk.get("quote_id")
@@ -1160,11 +1439,27 @@ class PartialAnswerEngine:
             else:
                 state_data[state]["no_data"] += 1
 
-        sorted_states = sorted(
-            state_data.items(),
-            key=lambda x: (x[1]["with_claims"], x[1]["proposals"]),
-            reverse=True,
-        )
+        # Step 4: Sort based on query_intent
+        if query_intent == "ranking_asc":
+            sorted_states = sorted(
+                state_data.items(),
+                key=lambda x: (x[1]["with_claims"], x[1]["proposals"]),
+            )
+            header = "Regions ranked by claim frequency (lowest first — safest regions):"
+        elif query_intent == "ranking_desc":
+            sorted_states = sorted(
+                state_data.items(),
+                key=lambda x: (x[1]["with_claims"], x[1]["proposals"]),
+                reverse=True,
+            )
+            header = "Regions ranked by claim frequency (highest first):"
+        else:
+            sorted_states = sorted(
+                state_data.items(),
+                key=lambda x: x[1]["proposals"],
+                reverse=True,
+            )
+            header = "Claim history by region across all proposals:"
 
         total_with_data = sum(
             d["with_claims"] + d["no_claims"] for d in state_data.values()
@@ -1172,11 +1467,23 @@ class PartialAnswerEngine:
         total_claims = sum(d["with_claims"] for d in state_data.values())
         total_no_data = sum(d["no_data"] for d in state_data.values())
 
-        lines = ["Claim history by region across all proposals:"]
+        # Step 5: Handle peril-specific queries (fire, theft, etc.)
+        lines: List[str] = []
+        if query_intent == "peril_specific":
+            lines.append(
+                "Note: Claim cause details (fire, theft, flood, etc.) are not "
+                "captured in proposal records. Only whether a claim occurred "
+                "within the past 3 years is recorded."
+            )
+            lines.append("")
+            lines.append("General claim history by region:")
+        else:
+            lines.append(header)
+
         lines.append("")
-        header = f"{'State':<25} {'Proposals':>10} {'With Claims':>13} {'No Claims':>12}"
-        lines.append(header)
-        lines.append("-" * len(header))
+        col_header = f"{'State':<25} {'Proposals':>10} {'With Claims':>13} {'No Claims':>12}"
+        lines.append(col_header)
+        lines.append("-" * len(col_header))
         for state, data in sorted_states:
             lines.append(
                 f"{state:<25} {data['proposals']:>10} "
@@ -1184,10 +1491,14 @@ class PartialAnswerEngine:
             )
         lines.append("")
 
+        lines.append(
+            f"Total: {total_with_data + total_no_data} proposals across "
+            f"{len(state_data)} regions."
+        )
+
         if total_claims == 0:
             lines.append(
-                f"Note: All {total_with_data} proposals with available data "
-                f"show no claims in the past 3 years."
+                "All regions show 0 claims in the past 3 years."
             )
         else:
             lines.append(
@@ -1198,6 +1509,12 @@ class PartialAnswerEngine:
             lines.append(
                 f"{total_no_data} proposal(s) have no claim data submitted."
             )
+        if incomplete_qids:
+            lines.append(
+                f"\nNote: {len(incomplete_qids)} proposal(s) "
+                f"({', '.join(incomplete_qids)}) have no data submitted "
+                f"and are excluded from this analysis."
+            )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
@@ -1206,18 +1523,22 @@ class PartialAnswerEngine:
 
     def handle_claim_rate(self) -> str:
         metadata = self.metadata
-        name_map = self._build_business_name_map(metadata)
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
 
         has_claims: list = []
         no_claims: list = []
         no_data: list = []
 
-        for chunk in metadata:
+        seen_claim: set = set()
+        for chunk in complete_metadata:
             if chunk.get("section") != "claim_history":
                 continue
             qid = chunk.get("quote_id")
-            if not qid:
+            if not qid or qid in seen_claim:
                 continue
+            seen_claim.add(qid)
             df = chunk.get("decoded_fields") or {}
             label = (df.get("claim_history_label") or "").lower()
             name = name_map.get(qid, qid)
@@ -1229,19 +1550,14 @@ class PartialAnswerEngine:
             else:
                 no_data.append(name)
 
-        # Also find proposals with NO claim_history chunk at all
-        seen_in_claims = {
-            c.get("quote_id") for c in metadata
-            if c.get("section") == "claim_history"
+        # Also find complete proposals with NO claim_history chunk at all
+        complete_qids = {
+            c.get("quote_id") for c in complete_metadata if c.get("quote_id")
         }
-        all_qids = {
-            c.get("quote_id") for c in metadata if c.get("quote_id")
-        }
-        for qid in all_qids - seen_in_claims:
+        for qid in complete_qids - seen_claim:
             no_data.append(name_map.get(qid, qid))
 
         total_with_data = len(has_claims) + len(no_claims)
-        total_all = total_with_data + len(no_data)
 
         lines = ["Claim occurrence rate across all proposals:"]
 
@@ -1265,6 +1581,11 @@ class PartialAnswerEngine:
                 f"- No claim data submitted: {len(no_data)} proposals "
                 f"({no_data_str})"
             )
+        if incomplete_qids:
+            lines.append(
+                f"- Incomplete submissions excluded: {len(incomplete_qids)} "
+                f"({', '.join(incomplete_qids)})"
+            )
 
         lines.append("")
         lines.append(
@@ -1279,13 +1600,15 @@ class PartialAnswerEngine:
 
     def handle_list_all_businesses(self) -> str:
         metadata = self.metadata
-        name_map = self._build_business_name_map(metadata)
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
 
         # Build location map
         location_map: dict = {}
         industry_map: dict = {}
         seen: set = set()
-        for chunk in metadata:
+        for chunk in complete_metadata:
             qid = chunk.get("quote_id")
             if not qid or qid in seen:
                 continue
@@ -1305,19 +1628,24 @@ class PartialAnswerEngine:
             return "No proposal data found."
 
         lines = [
-            f"All {total} businesses in the proposal database:"
+            f"All {total} businesses with submitted data in the proposal database:"
         ]
         for i, qid in enumerate(sorted(name_map.keys()), 1):
             name = name_map[qid]
             loc = location_map.get(qid, "")
             ind = industry_map.get(qid, "")
             lines.append(
-                f"{i:>2}. {name} ({qid}) — {ind}, {loc}"
+                f"{i:>2}. {name} ({qid}) \u2014 {ind}, {loc}"
             )
         lines.append("")
         lines.append(
             "Each business has exactly one proposal record in the database."
         )
+        if incomplete_qids:
+            lines.append(
+                f"\nNote: {len(incomplete_qids)} proposal(s) "
+                f"({', '.join(incomplete_qids)}) have no data submitted."
+            )
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
@@ -1326,12 +1654,14 @@ class PartialAnswerEngine:
 
     def handle_gps_tracker_proposals(self) -> str:
         metadata = self.metadata
-        name_map = self._build_business_name_map(metadata)
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        incomplete_qids = self._get_incomplete_proposal_ids(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
 
         # Build location map for display
         loc_map: dict = {}
         seen_loc: set = set()
-        for chunk in metadata:
+        for chunk in complete_metadata:
             qid = chunk.get("quote_id")
             if not qid or qid in seen_loc:
                 continue
@@ -1349,7 +1679,7 @@ class PartialAnswerEngine:
         seen_transit = set()
         all_qids = set(name_map.keys())
 
-        for chunk in metadata:
+        for chunk in complete_metadata:
             if chunk.get("section") != "transit_and_gaurds":
                 continue
             qid = chunk.get("quote_id")
@@ -1371,7 +1701,7 @@ class PartialAnswerEngine:
             else:
                 gps_no_data.append((name, qid, city))
 
-        # Proposals without transit_and_gaurds chunk at all
+        # Complete proposals without transit_and_gaurds chunk at all
         for qid in all_qids - seen_transit:
             name = name_map.get(qid, qid)
             city = loc_map.get(qid, "")
@@ -1405,6 +1735,12 @@ class PartialAnswerEngine:
             no_data_ids = ", ".join(qid for _, qid, _ in gps_no_data)
             lines.append(
                 f"No transit data submitted: {no_data_ids}"
+            )
+
+        if incomplete_qids:
+            lines.append(
+                f"\nNote: {len(incomplete_qids)} proposal(s) "
+                f"({', '.join(incomplete_qids)}) have no data submitted."
             )
 
         return "\n".join(lines)

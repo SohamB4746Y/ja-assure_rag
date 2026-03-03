@@ -716,7 +716,8 @@ def handle_query(
 
     if scope.classification == "PARTIALLY_ANSWERABLE":
         partial_answer = _partial_engine.dispatch(
-            scope.partial_handler or "", query
+            scope.partial_handler or "", query,
+            query_intent=scope.query_intent or "summary"
         )
         answer = format_classified_response(scope, partial_answer)
         log_query(query, "partially_answerable", None, 0, 0.0, answer)

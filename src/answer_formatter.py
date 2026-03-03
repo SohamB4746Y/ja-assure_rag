@@ -242,7 +242,9 @@ def format_classified_response(
 
     - OUT_OF_SCOPE   → explain the gap; suggest an answerable alternative.
     - NONSENSICAL    → flag the ambiguity; suggest clarification.
-    - PARTIALLY_ANSWERABLE → present what we *can* answer, then note the gap.
+    - PARTIALLY_ANSWERABLE → present what we *can* answer.
+        If answer_is_sufficient=True  → return the answer cleanly (no scope noise).
+        If answer_is_sufficient=False → append a specific gap note.
     - ANSWERABLE     → return None (let the existing pipeline handle it).
 
     Never returns raw numeric codes (001 / 002 etc.).
@@ -251,37 +253,46 @@ def format_classified_response(
 
     if c == "OUT_OF_SCOPE":
         lines = [
-            "This question is outside the scope of the proposal database.",
+            "This information is not available in the proposal database.",
             "",
-            f"Reason: {classification.out_of_scope_reason}",
+            classification.out_of_scope_reason or "",
         ]
         if classification.available_alternative:
-            lines += ["", f"What you can ask instead: {classification.available_alternative}"]
+            lines += ["", f"You can ask: {classification.available_alternative}"]
         return "\n".join(lines)
 
     if c == "NONSENSICAL":
         lines = [
             "I could not interpret this question clearly.",
-            "",
-            f"Issue: {classification.out_of_scope_reason}",
         ]
+        if classification.out_of_scope_reason:
+            lines += ["", classification.out_of_scope_reason]
         if classification.available_alternative:
-            lines += ["", f"Did you mean to ask: {classification.available_alternative}"]
+            lines += ["", f"Did you mean: {classification.available_alternative}"]
         return "\n".join(lines)
 
     if c == "PARTIALLY_ANSWERABLE":
-        lines = []
-        if partial_answer:
-            lines.append(partial_answer)
-            lines.append("")
-        lines.append(
-            "Note: Some aspects of this question are outside the database scope."
-        )
-        if classification.out_of_scope_reason:
-            lines.append(classification.out_of_scope_reason)
-        if classification.available_alternative:
-            lines += ["", f"Additional options: {classification.available_alternative}"]
-        return "\n".join(lines)
+        # No partial answer produced — fall back to OUT_OF_SCOPE style
+        if not partial_answer:
+            return format_classified_response(
+                QueryClassification(
+                    classification="OUT_OF_SCOPE",
+                    confidence=0.5,
+                    out_of_scope_reason=classification.out_of_scope_reason,
+                    available_alternative=classification.available_alternative,
+                )
+            )
+
+        # If the handler's answer is self-sufficient, return it cleanly
+        # with NO "outside scope" noise appended.
+        if classification.answer_is_sufficient:
+            return partial_answer
+
+        # Only add a specific scope gap note when genuinely incomplete
+        result = partial_answer
+        if classification.scope_gap_description:
+            result += f"\n\nNote: {classification.scope_gap_description}"
+        return result
 
     # ANSWERABLE — existing pipeline handles it
     return None

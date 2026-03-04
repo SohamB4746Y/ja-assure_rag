@@ -1,6 +1,9 @@
 # Virtual Environment
 venv/
 .env/
+.env
+.env.local
+.env.*.local
 
 # Python cache
 __pycache__/
@@ -17,3 +20,12 @@ index/metadata.pkl
 
 # HuggingFace cache (optional)
 .cache/
+
+# Sensitive shell scripts
+run_cerebras.sh
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

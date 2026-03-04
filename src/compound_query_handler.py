@@ -18,7 +18,6 @@ from __future__ import annotations
 import re
 from typing import List, Dict, Optional, Tuple
 
-
 class CompoundQueryHandler:
 
     # Maps natural language phrases to (section, field_name) tuples.
@@ -136,10 +135,7 @@ class CompoundQueryHandler:
         self._value_map = self._build_value_map()
         self._complete_qids = self._build_complete_set()
 
-    # ------------------------------------------------------------------
     # Index-building helpers (run once at init)
-    # ------------------------------------------------------------------
-
     def _build_location_map(self) -> Dict[str, str]:
         """quote_id -> full risk_location string."""
         loc_map: Dict[str, str] = {}
@@ -225,10 +221,7 @@ class CompoundQueryHandler:
                     complete.add(qid)
         return complete
 
-    # ------------------------------------------------------------------
     # Primary value extraction (same logic as PartialAnswerEngine)
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _safe_float(raw) -> float:
         if raw is None or str(raw).strip() in ("", "None", "-1", "0", "nan",
@@ -267,10 +260,7 @@ class CompoundQueryHandler:
 
         return (0.0, "")
 
-    # ------------------------------------------------------------------
     # Query component extraction
-    # ------------------------------------------------------------------
-
     def _extract_location_filter(self, q: str) -> Optional[str]:
         """Extract location name from query using regex + known locations."""
         # First try regex-based extraction: "in <location>"
@@ -315,10 +305,7 @@ class CompoundQueryHandler:
                     break
         return requested
 
-    # ------------------------------------------------------------------
     # Proposal filtering
-    # ------------------------------------------------------------------
-
     def _filter_by_location(self, location: str) -> List[str]:
         """Return quote_ids whose risk_location contains *location*."""
         matched: List[str] = []
@@ -351,10 +338,7 @@ class CompoundQueryHandler:
                 filtered.append(qid)
         return filtered
 
-    # ------------------------------------------------------------------
     # Field value accessors
-    # ------------------------------------------------------------------
-
     def _get_field_value(self, qid: str, section: str, field: str) -> str:
         """Get a decoded field value for a specific proposal."""
         if field == "__PRIMARY_VALUE__":
@@ -382,10 +366,7 @@ class CompoundQueryHandler:
         parts = [p.strip() for p in loc.split(",") if p.strip()]
         return parts[0] if parts else "Unknown"
 
-    # ------------------------------------------------------------------
     # Public API
-    # ------------------------------------------------------------------
-
     def is_compound_query(self, query: str) -> bool:
         """
         Detect if *query* is a compound multi-field request.

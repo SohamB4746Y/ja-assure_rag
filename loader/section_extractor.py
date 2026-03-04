@@ -87,7 +87,6 @@ def validate_proposal_completeness(row_data: dict) -> dict:
         "missing_sections": missing
     }
 
-
 def extract_sections(row: dict, json_parser):
     sections = []
 

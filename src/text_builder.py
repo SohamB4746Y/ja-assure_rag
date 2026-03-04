@@ -1,7 +1,6 @@
 from src.schemas import SECTION_SCHEMAS
 from src.mappings import FIELD_MAPPINGS, decode_record
 
-
 def build_section_text(chunk: dict) -> str:
     """Build searchable text for one section chunk.
 

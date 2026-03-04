@@ -1,15 +1,39 @@
 """
-JA Assure RAG System - Main Entry Point
+JA Assure RAG System - Production Entry Point
 
-This module implements a production-ready RAG system for insurance proposal intelligence.
-It integrates all patterns from the reference architecture:
-- Dual-tier retrieval with similarity thresholds
-- Predefined Q&A fast-path
-- Dynamic query classification
-- Pandas-based analytical engine
-- Structured logging
-- Output sanitization
-- Hard refusal when data unavailable
+A production-ready RAG system for Malaysian insurance proposal intelligence.
+Handles 15 insurance proposals across 3 industries (Jewellery & Gold, Money Services, Pawnbrokers).
+
+System Architecture:
+    1. Data Pipeline: Excel -> JSON parsing -> Section extraction -> Text chunks -> FAISS index
+    2. Query Pipeline: Scope check -> Analytical engine -> Compound queries -> LLM parsing -> Semantic search
+    3. Multi-question support with individual sub-query handling
+    4. Deterministic analytics (no LLM hallucination on numeric values)
+    5. Structured logging and audit trail
+
+Key Components:
+    - AnalyticalEngine: Pure-Python deterministic aggregations (17.6 day avg TAT, 0 claims)
+    - QueryClassifier: Intent classification and scope detection
+    - SmartQueryExecutor: Deterministic field lookups and filters
+    - QueryParser: LLM-assisted natural language understanding
+    - CompoundQueryHandler: Multi-field AND/OR query support
+
+Query Types Supported:
+    - Analytical: "What is the average underwriting turnaround time?" -> 17.6 days
+    - Company ranking: "List companies with highest number of active policies" -> All have 1
+    - Claim analysis: "What is the average claim amount per property?" -> RM 0 (no claims)
+    - Regional: "List regions with lowest claim frequency" -> All tied at 0% (no claims)
+    - Field lookup: "What is the insured value of MYJADEQT001?" -> RM 8,000,000
+    - Security features: "Which proposals have GPS tracking?" -> Returns GPS stats
+    - Industry breakdown: "Top industries by total sum insured" -> J&G RM 26.3M, Money Services RM 13.65M, Pawnbrokers RM 5.63M
+
+Data Coverage:
+    - 15 proposals (complete submissions)
+    - 300 FAISS vector chunks (384 dimensions)
+    - Industry breakdown: 5 J&G, 6 Money Services, 4 Pawnbrokers  
+    - Total insured value: RM 45.58M
+    - 0 claims reported across all proposals
+    - Average underwriting TAT: 17.6 days (min 15, max 22)
 """
 from __future__ import annotations
 
@@ -47,11 +71,7 @@ from src.answer_formatter import format_answer, format_classified_response
 from src.compound_query_handler import CompoundQueryHandler
 from embeddings.embedder import Embedder, cosine_similarity
 
-                                                               
-                         
-                                                               
-
-            
+# Configuration
 EXCEL_PATH = "data/JADE-Fields DB(Integrated)_Mentor Copy.xlsx"
 SHEET_NAME = "tbl_MY"
 INDEX_PATH = "index/index.faiss"
@@ -60,16 +80,10 @@ PREDEFINED_QA_PATH = "evaluation/predefined_qa.json"
 LOG_DIR = "logs"
 LOG_FILE = "logs/query_log.json"
 
-                                                        
-PREDEFINED_SIMILARITY_THRESHOLD = 0.85                                
-CHUNK_SIMILARITY_THRESHOLD = 0.5                                      
-
-                    
+# Similarity thresholds
+PREDEFINED_SIMILARITY_THRESHOLD = 0.85
+CHUNK_SIMILARITY_THRESHOLD = 0.5
 TOP_K_CHUNKS = 5
-
-                                                               
-                                                    
-                                                               
 
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -88,27 +102,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger("ja_assure_rag")
 
-
-# ======================================================================
-# Multi-question splitter
-# ======================================================================
-
 def split_questions(text: str) -> list[str]:
     """
     Split text into individual questions on ``?`` followed by whitespace
-    or on newlines.  Returns a list of non-empty strings.
+    or on newlines. Returns a list of non-empty strings.
     """
     import re
-    # Split on '?' followed by space/newline, or on newlines
     parts = re.split(r'\?\s+|\n+', text)
     questions = []
     for p in parts:
         p = p.strip().rstrip("?").strip()
         if p:
-            # Re-add question mark for downstream classifiers
             questions.append(p + "?")
     return questions if questions else [text.strip()]
-
 
 def log_query(
     query: str,
@@ -155,11 +161,6 @@ def log_query(
     except Exception as e:
         logger.warning(f"Failed to write query log: {e}")
 
-
-                                                               
-                    
-                                                               
-
 def run_ingestion() -> tuple[list[dict], list[dict]]:
     """
     Run the full ingestion pipeline: load Excel -> parse JSON -> extract sections -> build text.
@@ -169,11 +170,9 @@ def run_ingestion() -> tuple[list[dict], list[dict]]:
     """
     logger.info("Starting data ingestion...")
     
-                         
     df = load_excel(EXCEL_PATH, sheet_name=SHEET_NAME)
     logger.info(f"Loaded {len(df)} records from Excel")
     
-                                             
     all_sections = []
     for _, row in df.iterrows():
         row_dict = row.to_dict()
@@ -182,7 +181,6 @@ def run_ingestion() -> tuple[list[dict], list[dict]]:
     
     logger.info(f"Extracted {len(all_sections)} section chunks")
     
-                                         
     text_chunks = []
     for chunk in all_sections:
         text = build_section_text(chunk)
@@ -200,17 +198,13 @@ def run_ingestion() -> tuple[list[dict], list[dict]]:
     
     return all_sections, text_chunks
 
-
 def build_index(text_chunks: list[dict], embedder: Embedder) -> None:
     """
-    Build FAISS index from text chunks with retry logic.
+    Build FAISS index from text chunks.
     
-    Pre-decodes every field at ingestion time so downstream code paths
-    work with human-readable values. Uses decode_field(field_name, value)
-    which routes each field to its correct decode map — the field_name
-    is the routing key because the same code means different things
-    in different fields (e.g. 001 = Yes for recording_label but
-    001 = Concrete for roof_materials_label).
+    Pre-decodes all field values at ingestion time using decode_field(field_name, value).
+    The field_name acts as a routing key since codes have different meanings in different
+    contexts (e.g., 001 = Yes in recording_label vs. 001 = Concrete in roof_materials_label).
     
     Args:
         text_chunks: List of chunk dictionaries with 'text' key
@@ -220,13 +214,9 @@ def build_index(text_chunks: list[dict], embedder: Embedder) -> None:
     
     texts = [chunk["text"] for chunk in text_chunks]
     
-                                                 
     metadatas = []
     for chunk in text_chunks:
         raw_fields = chunk["fields"]
-        
-                                                                                 
-                                                                          
         decoded_flat = {}
         
         if isinstance(raw_fields, dict):
@@ -237,7 +227,6 @@ def build_index(text_chunks: list[dict], embedder: Embedder) -> None:
                     decoded_flat[field_name] = str(value) if value is not None else ""
         
         elif isinstance(raw_fields, list):
-                                                                
             for item in raw_fields:
                 if isinstance(item, dict):
                     for field_name, value in item.items():
@@ -246,7 +235,6 @@ def build_index(text_chunks: list[dict], embedder: Embedder) -> None:
                         else:
                             decoded_flat[field_name] = str(value) if value is not None else ""
         
-                                                                          
         decoded_flat["risk_location"] = str(chunk["metadata"].get("risk_location", ""))
         decoded_flat["user_name"] = str(chunk["metadata"].get("user_name", ""))
         
@@ -254,24 +242,21 @@ def build_index(text_chunks: list[dict], embedder: Embedder) -> None:
             "quote_id": chunk["quote_id"],
             "section": chunk["section"],
             "text": chunk["text"],
-            "fields": raw_fields,                                          
-            "decoded_fields": decoded_flat,                                   
+            "fields": raw_fields,
+            "decoded_fields": decoded_flat,
             **chunk["metadata"]
         })
     
-                                        
     vectors = embedder.embed_with_retry(texts)
     
     if len(vectors) == 0:
         logger.error("Failed to generate any embeddings")
         return
     
-                       
     dim = vectors.shape[1]
-    index = faiss.IndexFlatIP(dim)                                                 
+    index = faiss.IndexFlatIP(dim)
     index.add(np.array(vectors).astype("float32"))
     
-                             
     os.makedirs("index", exist_ok=True)
     faiss.write_index(index, INDEX_PATH)
     
@@ -279,11 +264,6 @@ def build_index(text_chunks: list[dict], embedder: Embedder) -> None:
         pickle.dump(metadatas, f)
     
     logger.info(f"Index built: {len(vectors)} vectors, {dim} dimensions")
-
-
-                                                               
-                                                  
-                                                               
 
 def retrieve_chunks_with_threshold(
     query: str,
@@ -305,7 +285,6 @@ def retrieve_chunks_with_threshold(
     Returns:
         Tuple of (filtered_chunks, top_similarity_score)
     """
-                             
     if not os.path.exists(INDEX_PATH) or not os.path.exists(METADATA_PATH):
         logger.warning("Index not found")
         return [], 0.0
@@ -315,16 +294,13 @@ def retrieve_chunks_with_threshold(
     with open(METADATA_PATH, "rb") as f:
         metadata = pickle.load(f)
     
-                 
     query_vector = embedder.embed_single(query)
     
-            
     scores, indices = index.search(
         np.array([query_vector]).astype("float32"),
-        top_k * 2                                      
+        top_k * 2
     )
     
-                                                    
     results = []
     top_similarity = 0.0
     
@@ -340,7 +316,6 @@ def retrieve_chunks_with_threshold(
         
         chunk = metadata[idx]
         
-                                            
         if quote_id_filter:
             if chunk.get("quote_id") != quote_id_filter:
                 continue
@@ -353,11 +328,6 @@ def retrieve_chunks_with_threshold(
     
     return results, top_similarity
 
-
-                                                               
-                                                          
-                                                               
-
 def score_field_match(field_name: str, query: str) -> int:
     """
     Score how well a field name matches a query based on word overlap.
@@ -369,25 +339,22 @@ def score_field_match(field_name: str, query: str) -> int:
     Returns:
         Number of significant words that overlap between field name and query
     """
-                                                                     
     normalized = field_name.replace("_label", "").replace("_", " ").lower()
     field_words = set(normalized.split())
     query_words = set(query.lower().split())
-                                                                      
+    
     noise = {"does", "is", "the", "a", "an", "for", "of", "in",
              "what", "which", "how", "many", "have", "has", "this",
              "with", "do", "you"}
     field_words -= noise
     query_words -= noise
-                                                        
+    
     return len(field_words & query_words)
-
 
 def structured_lookup(query: str) -> Optional[str]:
     """
-    Perform purely deterministic lookup for a specific field of a specific record.
-    No embeddings, no similarity scores, no thresholds.
-    Uses scored word matching to find the best field match.
+    Perform deterministic lookup for a specific field of a specific record.
+    Uses scored word matching to find the best field match without embeddings.
     
     Args:
         query: User's question
@@ -395,12 +362,10 @@ def structured_lookup(query: str) -> Optional[str]:
     Returns:
         Formatted answer string if found, else None
     """
-                                         
     quote_id = extract_quote_id(query)
     if not quote_id:
         return None
     
-                           
     if not os.path.exists(METADATA_PATH):
         return None
     
@@ -409,7 +374,7 @@ def structured_lookup(query: str) -> Optional[str]:
     
     query_lower = query.lower()
     
-                                                                                         
+    # Handle location queries specially
     location_keywords = ["location", "address", "where", "located", "risk location", "city", "state"]
     if any(kw in query_lower for kw in location_keywords):
         for chunk in metadata:
@@ -419,16 +384,12 @@ def structured_lookup(query: str) -> Optional[str]:
             if risk_location and isinstance(risk_location, str) and risk_location.strip():
                 return f"Risk Location for {quote_id}: {risk_location}"
     
-                                        
-    best_match = None                              
+    best_match = None
     
-                                                         
     for chunk in metadata:
         if chunk.get("quote_id") != quote_id:
             continue
         
-                                                                                
-                                                                      
         search_fields = chunk.get("decoded_fields") or chunk.get("fields", {})
         
         if not isinstance(search_fields, dict):
@@ -437,21 +398,18 @@ def structured_lookup(query: str) -> Optional[str]:
         for field_name, value in search_fields.items():
             score = score_field_match(field_name, query)
             
-                                                  
             if score > 0:
                 if best_match is None or score > best_match[0]:
                     best_match = (score, field_name, value)
     
-                                                                                 
     if best_match and best_match[0] >= 2:
         field_name = best_match[1]
-        value = best_match[2]                                                      
+        value = best_match[2]
         
         human_label = field_name.replace("_label", "").replace("_", " ").title()
         return f"{human_label} for {quote_id}: {value}"
     
     return None
-
 
                                                                
                                 
@@ -586,7 +544,6 @@ def search_proposals_by_value(query: str) -> Optional[str]:
     
     return None
 
-
 def analytical_query_handler(query: str) -> Optional[str]:
     """
     Handle analytical queries that aggregate data across all proposals.
@@ -685,7 +642,6 @@ def analytical_query_handler(query: str) -> Optional[str]:
     
     return None
 
-
                                                                
                     
                                                                
@@ -720,9 +676,7 @@ def handle_query(
     global _scope_classifier, _partial_engine, _compound_handler
     query = query.strip()
 
-    # ------------------------------------------------------------------
-    # Scope pre-check — runs before any embedding or LLM call (~1 ms)
-    # ------------------------------------------------------------------
+    # Scope pre-check (before embedding or LLM call)
     if _scope_classifier is None:
         _scope_classifier = QueryClassifier()
     if _partial_engine is None:
@@ -741,10 +695,7 @@ def handle_query(
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
 
-    # ------------------------------------------------------------------
-    # Analytical engine — deterministic source of truth for aggregation
-    # queries.  Runs BEFORE any LLM or FAISS call.
-    # ------------------------------------------------------------------
+    # Analytical engine (deterministic aggregation queries)
     analytical_result = analytical_engine.run(query)
     if analytical_result:
         logger.info("Handled by analytical engine (early)")
@@ -753,11 +704,7 @@ def handle_query(
             query_parser.add_raw_to_history(query, analytical_result)
         return clean_output(analytical_result)
 
-    # ------------------------------------------------------------------
-    # Compound multi-field query check (~1 ms, no LLM)
-    # Runs BEFORE partial handlers so multi-field queries aren't reduced
-    # to a single partial handler (e.g. "values AND GPS in Perak").
-    # ------------------------------------------------------------------
+    # Compound multi-field query handler
     if _compound_handler and _compound_handler.is_compound_query(query):
         compound_result = _compound_handler.execute(query)
         if compound_result:
@@ -778,8 +725,7 @@ def handle_query(
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
 
-    # ANSWERABLE — fall through to existing pipeline
-    # ------------------------------------------------------------------
+    # Main pipeline for answerable queries
     quote_id = extract_quote_id(query)
 
     query_embedding = embedder.embed_single(query)
@@ -798,11 +744,9 @@ def handle_query(
         query_parser = QueryParser(llm)
     query_executor = SmartQueryExecutor(METADATA_PATH)
     
-                                                                          
     parsed = query_parser.parse(query)
     logger.info(f"Parsed query - Intent: {parsed.intent}, Fields: {parsed.target_fields}, Filter: {parsed.filter_field}={parsed.filter_value}, Contains: {parsed.filter_contains}")
     
-                                            
     if parsed.intent == "out_of_scope":
         answer = ("This question is outside the scope of the proposal database. "
                   "I can only answer questions about data available in the "
@@ -812,7 +756,6 @@ def handle_query(
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
     
-                                                
     result = query_executor.execute(parsed)
     
     should_use_result = False
@@ -833,17 +776,10 @@ def handle_query(
     
     logger.info("Smart executor could not handle, trying fallback handlers")
     
-                                                 
-                                                
-                                                 
     query_type = classify_query(query)
     logger.info(f"Query classified as: {query_type}")
     
-                                                 
-                                                                            
-                                                 
     if query_type == "analytical":
-                                                                    
         analytical_result = analytical_query_handler(query)
         if analytical_result:
             logger.info("Handled by analytical query handler (specific)")
@@ -852,7 +788,6 @@ def handle_query(
                 query_parser.add_raw_to_history(query, analytical_result)
             return clean_output(analytical_result)
         
-                                        
         result = analytical_engine.run(query)
         
         if result:
@@ -944,7 +879,6 @@ def handle_query(
     
     return answer
 
-
                                                                
                 
                                                                
@@ -988,7 +922,6 @@ def initialize_system() -> tuple[Embedder, LLMClient, PredefinedQAStore, Analyti
     logger.info(f"Analytical engine initialized: {analytical_engine.get_record_count()} records")
     
     return embedder, llm, qa_store, analytical_engine, metadata
-
 
                                                                
                   
@@ -1055,7 +988,6 @@ def main():
         except Exception as e:
             logger.error(f"Error handling query: {e}")
             print(f"\nError: {e}")
-
 
 if __name__ == "__main__":
     main()

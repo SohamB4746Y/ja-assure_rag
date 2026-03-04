@@ -1,9 +1,30 @@
-import json
-import re
-import math
-import logging
+"""
+JSON Cleaner: Robust Parser for Excel-Embedded JSON
 
-logger = logging.getLogger("ja_assure_rag.json_cleaner")
+This module handles the parsing of JSON data embedded in Excel cells, which often
+contains formatting issues like smart quotes, leading BOM characters, trailing commas,
+and NaN float values.
+
+Parse Strategy:
+    1. Defensive sanitization (smart quotes -> ASCII, strip BOM, remove control chars)
+    2. Direct json.loads() attempt
+    3. Fallback with trailing comma removal
+    4. Never raises exceptions - always returns None on parse failures
+
+Common Issues Handled:
+    - Smart quotes (U+201C, U+201D) from Excel copy-paste
+    - Byte order mark (BOM) prefix
+    - Single quotes instead of double quotes
+    - Trailing commas before closing braces/brackets
+    - NaN float values (returns None)
+    - Control characters in strings
+
+Usage:
+    >>> from loader.json_cleaner import parse_json_cell
+    >>> data = parse_json_cell(excel_cell_value)
+    >>> if data:  # None if parse failed
+    ...     process(data)
+"""
 
 SMART_QUOTES = {
     "\u201c": '"',

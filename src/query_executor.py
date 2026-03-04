@@ -25,7 +25,6 @@ from dataclasses import dataclass
 
 from src.query_parser import ParsedQuery
 
-
 # ---- Section keyword mapping for field-match disambiguation ----
 SECTION_KEYWORDS = {
     "backup": ["cctv"],
@@ -59,7 +58,6 @@ SECTION_KEYWORDS = {
     "fidelity": ["add_on_coverage"],
 }
 
-
 @dataclass
 class QueryResult:
     """Result of executing a parsed query."""
@@ -68,7 +66,6 @@ class QueryResult:
     count: int
     summary: str
     details: list[str]
-
 
 class SmartQueryExecutor:
     """
@@ -97,10 +94,7 @@ class SmartQueryExecutor:
             with open(self.metadata_path, "rb") as f:
                 self.metadata = pickle.load(f)
     
-    # ------------------------------------------------------------------
     # Empty / null value helper
-    # ------------------------------------------------------------------
-    
     def _is_empty_value(self, value) -> bool:
         """Return True if *value* represents missing / null / empty data."""
         if value is None:
@@ -108,10 +102,7 @@ class SmartQueryExecutor:
         val_str = str(value).strip().lower()
         return val_str in {"none", "null", "", "-1", "nan", "0", "n/a"}
     
-    # ------------------------------------------------------------------
     # Field matching helper
-    # ------------------------------------------------------------------
-    
     def _field_match_score(self, requested_field: str, actual_field: str,
                             chunk_section: str = "", query: str = "") -> int:
         """
@@ -199,10 +190,7 @@ class SmartQueryExecutor:
         
         return search_fields
     
-    # ------------------------------------------------------------------
     # Main routing
-    # ------------------------------------------------------------------
-    
     def execute(self, parsed: ParsedQuery) -> QueryResult:
         """
         Execute a parsed query and return results.
@@ -233,10 +221,7 @@ class SmartQueryExecutor:
             # Try general search
             return self._execute_general(parsed)
     
-    # ------------------------------------------------------------------
     # Lookup by quote_id
-    # ------------------------------------------------------------------
-    
     def _execute_lookup(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a lookup query for a specific quote ID."""
         quote_id = parsed.quote_id
@@ -327,10 +312,7 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # ------------------------------------------------------------------
     # Entity detection helpers
-    # ------------------------------------------------------------------
-    
     def _should_entity_lookup(self, parsed: ParsedQuery) -> bool:
         """
         Detect if a query should be routed to entity lookup even though the LLM
@@ -399,10 +381,7 @@ class SmartQueryExecutor:
         
         return None
     
-    # ------------------------------------------------------------------
     # Entity lookup (by person/business name)
-    # ------------------------------------------------------------------
-    
     def _execute_entity_lookup(self, parsed: ParsedQuery) -> QueryResult:
         """
         Execute a lookup query by entity name (person or business) without a quote_id.
@@ -549,10 +528,7 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # ------------------------------------------------------------------
     # Count
-    # ------------------------------------------------------------------
-    
     def _execute_count(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a count query."""
         matching_quotes = set()
@@ -705,10 +681,7 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # ------------------------------------------------------------------
     # List
-    # ------------------------------------------------------------------
-    
     def _execute_list(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a list query."""
         result = self._execute_count(parsed)
@@ -723,10 +696,7 @@ class SmartQueryExecutor:
         
         return result
     
-    # ------------------------------------------------------------------
     # Compare (highest/lowest)
-    # ------------------------------------------------------------------
-    
     def _execute_compare(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a comparison query (highest/lowest)."""
         values_with_data = []
@@ -780,10 +750,7 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # ------------------------------------------------------------------
     # General search
-    # ------------------------------------------------------------------
-    
     def _execute_general(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a general search query using decoded fields."""
         matching_data = []
@@ -843,10 +810,7 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # ------------------------------------------------------------------
     # Helpers
-    # ------------------------------------------------------------------
-    
     def _get_field_value(self, chunk: dict, field_pattern: str) -> str:
         """Get a decoded field value from a chunk by pattern matching."""
         # Check decoded_fields first (already human-readable)

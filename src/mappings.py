@@ -1,26 +1,38 @@
 """
 Complete Decoder Mappings for JA Assure RAG System
 
-Every coded field in the database is mapped here to its human-readable value.
-decode_field() normalises raw codes to 3-digit zero-padded strings before
-lookup, except for industry_id and businesstype_id which use plain integer keys.
+This module provides the canonical mapping from database codes to human-readable labels.
+All coded fields in the insurance proposal database are decoded here to ensure consistency
+across the entire system.
+
+Code Format:
+    - Most fields use zero-padded 3-digit codes: "001", "002", "010", etc.
+    - Industry and business type IDs use plain string integers: "1", "6", "13", etc.
+    - The decode_field() function normalizes codes before lookup
+
+Usage:
+    >>> decode_field("recording_label", "001")
+    'Yes'
+    >>> decode_field("roof_materials_label", "001")
+    'Concrete'
+    >>> decode_field("industry_id", "6")
+    'Money Services'
+
+Note:
+    - industry_id and businesstype_id use plain integer keys in MAPPINGS
+    - All other fields use zero-padded 3-digit string keys
+    - nature_of_business_label is NOT mapped (uses different ID system, passes through raw)
 """
 from __future__ import annotations
 from typing import Optional, List
 
-
-# ===========================================================================
 # CANONICAL MAPPINGS
 # Each key is a field_name; each value is a dict of raw_code -> label.
 # industry_id and businesstype_id use plain string integer keys ("1", "13").
 # All other fields use zero-padded 3-digit keys ("001", "010", etc.).
-# ===========================================================================
-
 MAPPINGS: dict = {
 
-    # -----------------------------------------------------------------------
     # INDUSTRY
-    # -----------------------------------------------------------------------
     "industry_id": {
         "1":  "Jewellery & Gold",
         "2":  "Diamond & Precious Stones",
@@ -29,9 +41,7 @@ MAPPINGS: dict = {
         "13": "Pawnbrokers",
     },
 
-    # -----------------------------------------------------------------------
     # BUSINESS TYPE (Malaysia)
-    # -----------------------------------------------------------------------
     "businesstype_id": {
         "1":  "Jewellery Retailer",
         "2":  "Jewellery & Gold Manufacturer",
@@ -68,9 +78,7 @@ MAPPINGS: dict = {
     # NOTE: nature_of_business_label is NOT mapped here.
     # It uses a different ID system from businesstype_id and should pass through.
 
-    # -----------------------------------------------------------------------
     # PHYSICAL SETUP
-    # -----------------------------------------------------------------------
     "premise_type_label": {
         "001": "In a office building",
         "002": "In a shopping centre",
@@ -96,9 +104,7 @@ MAPPINGS: dict = {
         "004": "Wood",
     },
 
-    # -----------------------------------------------------------------------
     # CCTV
-    # -----------------------------------------------------------------------
     "recording_label": {
         "001": "Yes",
         "002": "No",
@@ -132,9 +138,7 @@ MAPPINGS: dict = {
         "009": "More than 1 year",
     },
 
-    # -----------------------------------------------------------------------
     # DOOR ACCESS
-    # -----------------------------------------------------------------------
     "door_access_label": {
         "001": "Combinations",
         "002": "Finger print",
@@ -184,9 +188,7 @@ MAPPINGS: dict = {
         "003": "Others",
     },
 
-    # -----------------------------------------------------------------------
     # ALARM
-    # -----------------------------------------------------------------------
     "do_you_have_alarm_label": {
         "001": "Yes",
         "002": "No",
@@ -218,9 +220,7 @@ MAPPINGS: dict = {
         "002": "No",
     },
 
-    # -----------------------------------------------------------------------
     # SAFE
-    # -----------------------------------------------------------------------
     "safe_time_locking_label": {
         "001": "Yes",
         "002": "No",
@@ -249,9 +249,7 @@ MAPPINGS: dict = {
         "002": "No",
     },
 
-    # -----------------------------------------------------------------------
     # STRONG ROOM
-    # -----------------------------------------------------------------------
     "do_you_have_a_strong_room_label": {
         "001": "Yes",
         "002": "No",
@@ -261,9 +259,7 @@ MAPPINGS: dict = {
         "002": "No",
     },
 
-    # -----------------------------------------------------------------------
     # DISPLAY SHOWCASES
-    # -----------------------------------------------------------------------
     "do_you_have_wall_showcase_label": {
         "001": "Yes",
         "002": "No",
@@ -282,9 +278,7 @@ MAPPINGS: dict = {
         "003": "Others",
     },
 
-    # -----------------------------------------------------------------------
     # DISPLAY COUNTERS
-    # -----------------------------------------------------------------------
     "do_you_have_counter_showcase_label": {
         "001": "Yes",
         "002": "No",
@@ -313,9 +307,7 @@ MAPPINGS: dict = {
         "005": "Others",
     },
 
-    # -----------------------------------------------------------------------
     # COUNTER SHOWCASE (counter_show_case section)
-    # -----------------------------------------------------------------------
     "thickness_of_counters_label": {
         "001": "19 - 21 mm",
         "002": "15 - 17 mm",
@@ -334,9 +326,7 @@ MAPPINGS: dict = {
         "007": "Others",
     },
 
-    # -----------------------------------------------------------------------
     # TRANSIT AND GUARDS
-    # -----------------------------------------------------------------------
     "usage_of_jaguar_transit_label": {
         "001": "Yes",
         "002": "No",
@@ -362,9 +352,7 @@ MAPPINGS: dict = {
         "002": "No",
     },
 
-    # -----------------------------------------------------------------------
     # RECORDS KEEPING
-    # -----------------------------------------------------------------------
     "records_maintained_in_label": {
         "001": "Online",
         "002": "Offline",
@@ -374,9 +362,7 @@ MAPPINGS: dict = {
         "002": "No",
     },
 
-    # -----------------------------------------------------------------------
     # ADDITIONAL DETAILS
-    # -----------------------------------------------------------------------
     "three_piece_rule_label": {
         "001": "Yes",
         "002": "No",
@@ -406,9 +392,7 @@ MAPPINGS: dict = {
         "005": "More than 6 months",
     },
 
-    # -----------------------------------------------------------------------
     # ADD-ON COVERAGE
-    # -----------------------------------------------------------------------
     "director_house_question_label": {
         "001": "Yes",
         "002": "No",
@@ -457,17 +441,13 @@ MAPPINGS: dict = {
         "009": "All others",
     },
 
-    # -----------------------------------------------------------------------
     # CLAIM HISTORY
-    # -----------------------------------------------------------------------
     "claim_history_label": {
         "001": "No claim within 3 years",
         "002": "Claims within the past 3 years",
     },
 
-    # -----------------------------------------------------------------------
     # DISPLAY WINDOW
-    # -----------------------------------------------------------------------
     "do_you_have_display_window_label": {
         "001": "Yes",
         "002": "No",
@@ -499,20 +479,15 @@ MAPPINGS: dict = {
         "006": "Others",
     },
 
-    # -----------------------------------------------------------------------
     # SHOP LIFTING
-    # -----------------------------------------------------------------------
     "shop_lifting_label": {
         "001": "Yes",
         "002": "No",
     },
 }
 
-
-# ===========================================================================
 # Fields that use plain integer string keys (no zero-padding).
 # For all others, raw codes are normalised to 3-digit zero-padded strings.
-# ===========================================================================
 _NO_PAD_FIELDS = frozenset({
     "industry_id",
     "businesstype_id",
@@ -523,12 +498,8 @@ _NO_PAD_FIELDS = frozenset({
 # Sentinel raw values that should always decode to "" (empty / no data)
 _EMPTY_SENTINELS = frozenset({None, "", -1, "-1", 0, "0", "nan", "NaN", "None"})
 
-
-# ===========================================================================
 # Legacy individual maps kept for backwards compatibility.
 # New code should use decode_field() / MAPPINGS directly.
-# ===========================================================================
-
 YES_NO_MAP = {
     "001": "Yes",
     "002": "No",
@@ -538,11 +509,7 @@ YES_NO_MAP = {
     "false": "No",
 }
 
-
-# ===========================================================================
 # BUSINESS IDENTITY MAPS
-# ===========================================================================
-
 # industry_id -> Static values from folder structure
 INDUSTRY_MAP = {
     "1": "Jewellery & Gold",
@@ -567,11 +534,7 @@ BUSINESS_TYPE_MAP = {
     "35": "Precious Stones Dealers"
 }
 
-
-# ===========================================================================
 # PHYSICAL SETUP MAPS
-# ===========================================================================
-
 PREMISE_TYPE_MAP = {
     "001": "Office building",
     "002": "Shopping centre",
@@ -587,11 +550,7 @@ MATERIAL_MAP = {
     "004": "Wood"
 }
 
-
-# ===========================================================================
 # CCTV MAPS
-# ===========================================================================
-
 CCTV_BACKUP_MAP = {
     "001": "Real-time backup - remote",
     "002": "Real-time backup - on site only",
@@ -619,11 +578,7 @@ CCTV_RETENTION_MAP = {
     "009": "More than 1 year"
 }
 
-
-# ===========================================================================
 # DOOR ACCESS MAPS
-# ===========================================================================
-
 DOOR_ACCESS_MAP = {
     "001": "Combinations",
     "002": "Finger print",
@@ -656,11 +611,7 @@ ROLLER_SHUTTER_MAP = {
     "003": "Others"
 }
 
-
-# ===========================================================================
 # ALARM MAPS
-# ===========================================================================
-
 ALARM_CONNECTION_MAP = {
     "001": "Security company",
     "002": "Landlord security",
@@ -681,11 +632,7 @@ ALARM_TYPE_MAP = {
     "010": "Others"
 }
 
-
-# ===========================================================================
 # SAFE MAPS
-# ===========================================================================
-
 SAFE_GRADE_MAP = {
     "001": "Ungraded",
     "002": "Grade I",
@@ -703,11 +650,7 @@ KEY_COMBINATION_MAP = {
     "003": "Both"
 }
 
-
-# ===========================================================================
 # DISPLAY SHOWCASES / COUNTERS / WINDOWS MAPS
-# ===========================================================================
-
 # wall_showcase_thickness_label, display_window_thickness_label,
 # rear_display_window_thickness_label
 SHOWCASE_THICKNESS_MAP = {
@@ -767,11 +710,7 @@ REAR_COUNTER_PROTECTION_MAP = {
     "005": "Others"
 }
 
-
-# ===========================================================================
 # ADDITIONAL DETAILS MAPS
-# ===========================================================================
-
 POLICE_DISTANCE_MAP = {
     "001": "Less than 2 Km",
     "002": "Within 2-5 Kms",
@@ -800,21 +739,13 @@ RECORDS_MAP = {
     "002": "Offline"
 }
 
-
-# ===========================================================================
 # CLAIMS MAPS
-# ===========================================================================
-
 CLAIM_STATUS_MAP = {
     "001": "No claim within 3 years",
     "002": "Claims within the past 3 years"
 }
 
-
-# ===========================================================================
 # ADD-ON COVERAGE MAPS
-# ===========================================================================
-
 DESTINATION_AIRPORT_MAP = {
     "001": "Bangkok airport",
     "002": "Hong Kong airport",
@@ -832,12 +763,8 @@ EXHIBITION_INSURANCE_MAP = {
     "002": "Exhibition site risk including transit to/from by professional carrier"
 }
 
-
-# ===========================================================================
 # FIELD -> MAP ROUTING TABLE
 # Maps every coded field name to its exact decoder map.
-# ===========================================================================
-
 # Fields that are "Add the Value directly" - never decode these
 PASSTHROUGH_FIELDS = {
     "premise_type_others_label",
@@ -1018,11 +945,7 @@ FIELD_DECODE_TABLE: dict[str, dict] = {
     "shop_lifting_label": YES_NO_MAP,
 }
 
-
-# ===========================================================================
 # HUMAN-READABLE FIELD LABELS (section -> field -> display name)
-# ===========================================================================
-
 FIELD_MAPPINGS = {
     "business_profile": {
         "business_name_label": "Business Name",
@@ -1224,11 +1147,7 @@ FIELD_MAPPINGS = {
     }
 }
 
-
-# ===========================================================================
 # CORE DECODE FUNCTION
-# ===========================================================================
-
 def decode_field(field_name: str, value) -> str:
     """
     Decode a single field value using the canonical MAPPINGS dict.
@@ -1285,7 +1204,6 @@ def decode_field(field_name: str, value) -> str:
     result = mapping.get(value_str)
     return result if result is not None else value_str
 
-
 def decode_all_fields(raw_fields: dict) -> dict:
     """
     Decode every key in *raw_fields* using decode_field().
@@ -1295,7 +1213,6 @@ def decode_all_fields(raw_fields: dict) -> dict:
     if not isinstance(raw_fields, dict):
         return {}
     return {k: decode_field(k, v) for k, v in raw_fields.items()}
-
 
 def decode_record(data, section: str = "") -> object:
     """

@@ -68,7 +68,6 @@ QUOTE_ID_PATTERN = re.compile(r"MYJADEQT\d+", re.IGNORECASE)
 
 QueryType = Literal["predefined", "analytical", "structured", "semantic"]
 
-
 def classify_query(query: str) -> QueryType:
     """
     Classify a query into one of four types based on linguistic patterns.
@@ -111,7 +110,6 @@ def classify_query(query: str) -> QueryType:
     # Default to semantic retrieval
     return "semantic"
 
-
 def extract_quote_id(query: str) -> Optional[str]:
     """
     Extract a quote ID from the query if present.
@@ -124,7 +122,6 @@ def extract_quote_id(query: str) -> Optional[str]:
     """
     match = QUOTE_ID_PATTERN.search(query)
     return match.group(0).upper() if match else None
-
 
 def extract_field_keywords(query: str) -> List[str]:
     """
@@ -160,7 +157,6 @@ def extract_field_keywords(query: str) -> List[str]:
 
     return keywords
 
-
 def is_counting_query(query: str) -> bool:
     """
     Check if the query is asking for a count.
@@ -174,7 +170,6 @@ def is_counting_query(query: str) -> bool:
     query_lower = query.lower()
     counting_signals = ["how many", "count", "total", "number of"]
     return any(signal in query_lower for signal in counting_signals)
-
 
 def is_listing_query(query: str) -> bool:
     """
@@ -190,19 +185,14 @@ def is_listing_query(query: str) -> bool:
     listing_signals = ["list all", "which proposals", "which records", "show all"]
     return any(signal in query_lower for signal in listing_signals)
 
-
-# ======================================================================
 # Scope-aware query classification
 # QueryClassifier  — pure keyword engine, < 5 ms, no LLM
 # PartialAnswerEngine — data-driven handlers, reads from metadata pickle
 # QueryClassification — dataclass returned by QueryClassifier.classify()
-# ======================================================================
-
 import os
 import pickle
 from dataclasses import dataclass
 from collections import defaultdict
-
 
 @dataclass
 class QueryClassification:
@@ -216,7 +206,6 @@ class QueryClassification:
     answer_is_sufficient: bool = True      # True = don't append scope noise
     scope_gap_description: Optional[str] = None  # Specific gap note if any
     query_intent: Optional[str] = None     # "ranking_desc", "ranking_asc", "peril_specific", etc.
-
 
 class QueryClassifier:
     """
@@ -435,10 +424,7 @@ class QueryClassifier:
         ),
     }
 
-    # ------------------------------------------------------------------
     # Public API
-    # ------------------------------------------------------------------
-
     def classify(self, query: str) -> QueryClassification:
         """
         Classify *query* into ANSWERABLE, PARTIALLY_ANSWERABLE,
@@ -543,10 +529,7 @@ class QueryClassifier:
             query_intent=query_intent,
         )
 
-    # ------------------------------------------------------------------
     # Private helpers
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _trigger_matches(trigger: str, q: str) -> bool:
         """
@@ -811,9 +794,6 @@ class QueryClassifier:
             "'Show proposals by business type and insured value'"
         )
 
-
-# ----------------------------------------------------------------------
-
 class PartialAnswerEngine:
     """
     Executes data-driven partial answers for PARTIALLY_ANSWERABLE queries.
@@ -825,10 +805,7 @@ class PartialAnswerEngine:
         self._path = metadata_path
         self._metadata: Optional[List[dict]] = None
 
-    # ------------------------------------------------------------------
     # Lazy metadata access
-    # ------------------------------------------------------------------
-
     @property
     def metadata(self) -> List[dict]:
         if self._metadata is None:
@@ -839,10 +816,7 @@ class PartialAnswerEngine:
                 self._metadata = []
         return self._metadata
 
-    # ------------------------------------------------------------------
     # Shared helper: quote_id → business_name map
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _build_business_name_map(metadata: list) -> dict:
         """
@@ -875,10 +849,7 @@ class PartialAnswerEngine:
                 name_map[qid] = qid
         return name_map
 
-    # ------------------------------------------------------------------
     # Shared helper: filter for complete submissions only
-    # ------------------------------------------------------------------
-
     def _get_complete_proposals_only(self, metadata: list) -> list:
         """
         Returns ALL chunks — all 15 proposals have full data submitted.
@@ -893,10 +864,7 @@ class PartialAnswerEngine:
         """
         return []
 
-    # ------------------------------------------------------------------
     # Dispatcher
-    # ------------------------------------------------------------------
-
     def dispatch(self, handler: str, query: str,
                  query_intent: str = "summary") -> str:
         """Route to the correct partial handler by name."""
@@ -915,10 +883,7 @@ class PartialAnswerEngine:
         fn = _map.get(handler)
         return fn() if fn else "Partial data handler not available."
 
-    # ------------------------------------------------------------------
     # Shared helper: extract primary insured value from sum_assured fields
-    # ------------------------------------------------------------------
-
     _EMPTY_VALUES = {None, "", "None", -1, "-1", 0, "0", "nan", "N/A", "n/a"}
 
     @classmethod
@@ -970,10 +935,7 @@ class PartialAnswerEngine:
 
         return (0.0, None)
 
-    # ------------------------------------------------------------------
     # Shared helper: extract state from risk_location string
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _extract_state(risk_location: str) -> str:
         """
@@ -997,10 +959,7 @@ class PartialAnswerEngine:
         # Special case: "Kuala Lumpur" is both city and state (federal territory)
         return state if state else "Unknown"
 
-    # ------------------------------------------------------------------
     # Handler: rank proposals by total insured value (multi-field)
-    # ------------------------------------------------------------------
-
     def handle_rank_by_sum_assured(self, top_n: int = 15) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1051,10 +1010,7 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # ------------------------------------------------------------------
     # Handler: filter proposals by a numeric threshold (multi-field)
-    # ------------------------------------------------------------------
-
     def handle_filter_by_threshold(self, query: str) -> str:
         # Parse threshold — handle $5M, RM 5M, 5 million, 5,000,000
         _patterns = [
@@ -1123,10 +1079,7 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # ------------------------------------------------------------------
     # Handler: group proposals by industry (Bug 4 fix — two-map approach)
-    # ------------------------------------------------------------------
-
     def handle_group_by_industry(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1219,10 +1172,7 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # ------------------------------------------------------------------
     # Handler: security feature summary (anti-theft handler fix)
-    # ------------------------------------------------------------------
-
     # Maps section name → the primary Yes/No field to check in that section.
     # alarm / cctv / armoured vehicle / strong room are the four key
     # anti-theft indicators that each live in their own section chunk.
@@ -1296,10 +1246,7 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # ------------------------------------------------------------------
     # Handler: distribution of business types (two-map fix for correct counts)
-    # ------------------------------------------------------------------
-
     def handle_business_type_distribution(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1349,10 +1296,7 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # ------------------------------------------------------------------
     # Handler: claim history grouped by location (TYPE 1 + 9)
-    # ------------------------------------------------------------------
-
     def handle_claims_by_location(self, query_intent: str = "summary") -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1480,10 +1424,7 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # ------------------------------------------------------------------
     # Handler: claim occurrence rate / ratio (TYPE 3)
-    # ------------------------------------------------------------------
-
     def handle_claim_rate(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1557,10 +1498,7 @@ class PartialAnswerEngine:
         )
         return "\n".join(lines)
 
-    # ------------------------------------------------------------------
     # Handler: list all businesses / proposals (TYPE 4)
-    # ------------------------------------------------------------------
-
     def handle_list_all_businesses(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1611,10 +1549,7 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # ------------------------------------------------------------------
     # Handler: GPS tracker proposals (TYPE 5)
-    # ------------------------------------------------------------------
-
     def handle_gps_tracker_proposals(self) -> str:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)

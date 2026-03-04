@@ -1,8 +1,27 @@
 """
-Smart Answer Formatter
+Smart Answer Formatter: Natural Language Response Generation
 
-This module uses the LLM to format query results into natural language answers.
-The data is already retrieved accurately - this just formats it nicely.
+This module formats query results into natural language answers using the LLM.
+The data is already retrieved accurately by the analytical engine or query executor;
+this module only handles presentation.
+
+Key Principles:
+    1. Data comes from deterministic sources (analytical engine, metadata lookups)
+    2. LLM is used ONLY for formatting, never for data extraction
+    3. Zero values are valid results (e.g., 0 claims, 0% rate) and should not be treated as "not available"
+    4. Empty sentinels (None, "", "nan", "-1", "N/A") indicate truly missing data
+    5. Output fields are matched intelligently using field name similarity scoring
+
+Intent-Specific Formatting:
+    - count: Return count with optional names if explicitly requested
+    - lookup: Return field values, filtered by output_fields if specified
+    - list: Return items with bullet points, max 15 shown
+    - compare: Return summary comparison
+    - out_of_scope: Explain limitation and suggest alternatives
+
+Empty Value Handling:
+    - NOT empty: 0, "0", False, [] (valid analytical results)
+    - Empty: None, "", "None", "nan", "-1", "N/A"
 """
 from __future__ import annotations
 
@@ -10,7 +29,6 @@ from src.llm_client import LLMClient
 from src.query_parser import ParsedQuery
 from src.query_executor import QueryResult
 from src.query_classifier import QueryClassification
-
 
 FORMAT_PROMPT = """You are formatting a database query result into a natural language answer.
 
@@ -37,7 +55,6 @@ Write a natural, helpful response to the user's question using ONLY the data abo
 # ---- sentinel values that should be treated as "no data" ----
 _EMPTY_SENTINELS = {None, "", "None", "nan", "-1", "N/A"}
 
-
 def _field_match_score(requested: str, actual: str) -> int:
     """Score how well *requested* field name matches *actual* field name."""
     req = requested.lower().replace("_label", "").replace("_", " ")
@@ -53,7 +70,6 @@ def _field_match_score(requested: str, actual: str) -> int:
         return 0
     overlap = len(req_words & act_words)
     return overlap * 10 if overlap > 0 else 0
-
 
 def _is_empty(value) -> bool:
     """Return True if *value* should be treated as missing/empty."""
@@ -76,7 +92,6 @@ def _is_empty(value) -> bool:
         except Exception:
             pass
     return False
-
 
 def _filter_result(parsed: ParsedQuery, result: QueryResult) -> QueryResult:
     """
@@ -130,7 +145,6 @@ def _filter_result(parsed: ParsedQuery, result: QueryResult) -> QueryResult:
         summary=result.summary,
         details=filtered_details,
     )
-
 
 def format_answer(
     llm: LLMClient,
@@ -231,7 +245,6 @@ def format_answer(
         if result.details:
             return result.summary + "\n" + "\n".join(f"- {d}" for d in result.details[:10])
         return result.summary
-
 
 def format_classified_response(
     classification: QueryClassification,

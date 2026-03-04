@@ -1,11 +1,25 @@
 """
-AnalyticalEngine -- deterministic, pure-Python analytics over the 15 proposals.
+AnalyticalEngine: Deterministic, Pure-Python Analytics
 
-Every numeric / aggregate answer comes from this engine.  The LLM is NEVER
-consulted for data values; it is only used downstream to format the output.
+This module provides the single source of truth for all numeric and aggregate
+queries over the 15 insurance proposals. No LLMs are consulted for data values;
+they are only used downstream for formatting output into natural language.
 
-The engine is initialised with the FAISS metadata list (one dict per chunk)
-and collapses it into ``self.records`` -- one dict per unique ``quote_id``.
+Architecture:
+    - Ingests FAISS metadata chunks at initialization
+    - Collapses chunks into one record per unique quote_id (15 records total)
+    - Industry is derived from which sum_assured field is populated
+    - All methods return structured data (dicts/lists) formatted by private helpers
+    - The run() dispatcher routes queries to appropriate methods via pattern matching
+
+Key Methods:
+    - get_company_policy_counts(): Companies ranked by policy count
+    - get_average_claim_amount(): Avg claim amount across proposals with claims
+    - get_average_underwriting_tat(): Avg days from payment to creation (17.6 days)
+    - get_regions_by_claim_frequency(): Regions ranked by claim rate
+    - get_top_insured_policies(): Top N proposals by insured value
+    - get_industry_totals(): Totals and averages by industry
+    - get_claim_stats_by_region(): Claim counts by state
 """
 from __future__ import annotations
 
@@ -21,7 +35,6 @@ logger = logging.getLogger("ja_assure_rag.analytical_engine")
 _YES = frozenset({"001", "1", "yes", "true"})
 _NO = frozenset({"002", "2", "no", "false"})
 
-
 def _yn(raw) -> str:
     """Normalise a yes/no raw value."""
     if raw is None:
@@ -32,7 +45,6 @@ def _yn(raw) -> str:
     if s in _NO:
         return "No"
     return str(raw).strip()
-
 
 def _safe_float(val) -> float:
     """Best-effort conversion to float; returns 0.0 on failure."""
@@ -46,7 +58,6 @@ def _safe_float(val) -> float:
     except (ValueError, TypeError):
         return 0.0
 
-
 def _extract_state(risk_location: str) -> str:
     if not risk_location:
         return "Unknown"
@@ -57,13 +68,11 @@ def _extract_state(risk_location: str) -> str:
         return parts[-1]
     return parts[0]
 
-
 def _extract_city(risk_location: str) -> str:
     if not risk_location:
         return "Unknown"
     parts = [p.strip() for p in risk_location.split(",")]
     return parts[0] if parts else "Unknown"
-
 
 def _parse_date(raw) -> Optional[datetime]:
     """Best-effort parse of a date value from Excel/metadata."""
@@ -81,16 +90,24 @@ def _parse_date(raw) -> Optional[datetime]:
             continue
     return None
 
-
-# ======================================================================
 # Main class
-# ======================================================================
-
 
 class AnalyticalEngine:
     """
-    Deterministic analytics over the proposal dataset.
-    ``self.records`` -- list of dicts, one per unique quote_id (length 15).
+    Deterministic analytics engine for insurance proposal data.
+    
+    Processes 15 Malaysian insurance proposals from FAISS metadata. Each proposal
+    is collapsed from multiple section chunks into a single record with all relevant
+    fields extracted and normalized.
+    
+    Attributes:
+        metadata (list[dict]): Raw FAISS metadata chunks (one per section)
+        records (list[dict]): Processed proposal records (one per quote_id, length 15)
+    
+    Industry Classification:
+        - Jewellery & Gold: maximum_stock_in_premises > 0
+        - Money Services: maximum_stock_foreign_currency > 0
+        - Pawnbrokers: value_of_pledged_stock or value_of_cash_in_premise > 0
     """
 
     def __init__(self, decoded_df=None, metadata: list[dict] = None):
@@ -98,10 +115,7 @@ class AnalyticalEngine:
         self.records: List[Dict[str, Any]] = []
         self._build_records()
 
-    # ------------------------------------------------------------------
     # Internal: collapse per-chunk metadata into per-proposal records
-    # ------------------------------------------------------------------
-
     def _build_records(self) -> None:
         """Collapse metadata chunks into one record per quote_id."""
         proposals: Dict[str, Dict[str, Any]] = {}
@@ -265,20 +279,14 @@ class AnalyticalEngine:
             "AnalyticalEngine: loaded %d proposal records", len(self.records)
         )
 
-    # ------------------------------------------------------------------
     # Public helpers
-    # ------------------------------------------------------------------
-
     def get_record_count(self) -> int:
         return len(self.records)
 
     def get_unique_quote_ids(self) -> List[str]:
         return [r["quote_id"] for r in self.records]
 
-    # ==================================================================
     # 1. Top insured policies
-    # ==================================================================
-
     def get_top_insured_policies(self, limit: int = 15) -> List[Dict]:
         """Return proposals sorted by insured_value descending."""
         ranked = sorted(
@@ -298,10 +306,7 @@ class AnalyticalEngine:
             )
         return results
 
-    # ==================================================================
     # 2. Industry totals
-    # ==================================================================
-
     def get_industry_totals(self) -> List[Dict]:
         """Group by industry -> count, total insured, average insured."""
         groups: Dict[str, Dict] = {}
@@ -318,10 +323,7 @@ class AnalyticalEngine:
             g["total"] = round(g["total"], 2)
         return sorted(groups.values(), key=lambda g: g["total"], reverse=True)
 
-    # ==================================================================
     # 3. Claim statistics by region
-    # ==================================================================
-
     def get_claim_stats_by_region(self) -> List[Dict]:
         """For each state: proposals with claims, proposals without."""
         regions: Dict[str, Dict] = {}
@@ -342,10 +344,7 @@ class AnalyticalEngine:
             regions[state]["proposals"].append(r["quote_id"])
         return sorted(regions.values(), key=lambda g: g["state"])
 
-    # ==================================================================
     # 4. Policies above threshold
-    # ==================================================================
-
     def get_policies_above_threshold(self, threshold_rm: float) -> List[Dict]:
         """Return proposals where insured_value > threshold_rm."""
         results = []
@@ -365,10 +364,7 @@ class AnalyticalEngine:
                 )
         return results
 
-    # ==================================================================
     # 5. Security features
-    # ==================================================================
-
     def get_security_features(self) -> List[Dict]:
         """For each proposal, return all security feature flags."""
         results = []
@@ -390,10 +386,7 @@ class AnalyticalEngine:
             )
         return results
 
-    # ==================================================================
     # 6. GPS statistics
-    # ==================================================================
-
     def get_gps_stats(self) -> Dict:
         """Count proposals with/without GPS trackers."""
         with_vehicle, without_vehicle = [], []
@@ -416,18 +409,12 @@ class AnalyticalEngine:
             "missing_bags_gps": without_bags,
         }
 
-    # ==================================================================
     # 7. Policy type distribution
-    # ==================================================================
-
     def get_policy_type_distribution(self) -> List[Dict]:
         """Alias for industry_totals."""
         return self.get_industry_totals()
 
-    # ==================================================================
     # 8. Claim ratio
-    # ==================================================================
-
     def get_claim_ratio(self) -> Dict:
         """Claim ratio -- not computable without premium data."""
         has_claims = sum(
@@ -443,10 +430,7 @@ class AnalyticalEngine:
             "reason": "Premium amounts are not recorded in the proposal database.",
         }
 
-    # ==================================================================
     # 9. Company policy counts
-    # ==================================================================
-
     def get_company_policy_counts(self) -> List[Dict]:
         """Count policies per company (business_name), sorted descending."""
         counts: Dict[str, int] = {}
@@ -459,10 +443,7 @@ class AnalyticalEngine:
         ]
         return sorted(results, key=lambda x: x["count"], reverse=True)
 
-    # ==================================================================
     # 10. Average claim amount
-    # ==================================================================
-
     def get_average_claim_amount(self) -> Dict:
         """Average claim amount across proposals that have claims."""
         total_amount = 0.0
@@ -487,10 +468,7 @@ class AnalyticalEngine:
             "details": all_amounts,
         }
 
-    # ==================================================================
     # 11. Average underwriting turnaround time
-    # ==================================================================
-
     def get_average_underwriting_tat(self) -> Dict:
         """Average days between is_paid_on_date and created_at."""
         durations = []
@@ -518,10 +496,7 @@ class AnalyticalEngine:
             "details": details,
         }
 
-    # ==================================================================
     # 12. Regions by claim frequency
-    # ==================================================================
-
     def get_regions_by_claim_frequency(self, ascending: bool = True) -> List[Dict]:
         """Rank regions (states) by claim frequency — ascending for lowest first."""
         regions: Dict[str, Dict] = {}
@@ -539,10 +514,7 @@ class AnalyticalEngine:
             )
         return sorted(regions.values(), key=lambda x: x["claim_rate"], reverse=not ascending)
 
-    # ==================================================================
     # 13. Not-available detector
-    # ==================================================================
-
     _NOT_AVAILABLE_FIELDS = {
         "premium",
         "broker",
@@ -570,10 +542,7 @@ class AnalyticalEngine:
                 )
         return None
 
-    # ==================================================================
     # 10. Master dispatcher (called from main pipeline)
-    # ==================================================================
-
     def run(self, query: str) -> Optional[str]:
         """
         Try to answer an analytical query deterministically.
@@ -781,10 +750,7 @@ class AnalyticalEngine:
 
         return None
 
-    # ------------------------------------------------------------------
     # Formatting helpers
-    # ------------------------------------------------------------------
-
     def _fmt_top_insured(self, data: List[Dict]) -> str:
         lines = [
             f"Policies ranked by insured value (highest first) "
@@ -958,16 +924,11 @@ class AnalyticalEngine:
             )
         return "\n".join(lines)
 
-
-# ======================================================================
 # Module-level helpers
-# ======================================================================
-
 
 def _matches(query: str, patterns: List[str]) -> bool:
     """Return True if query contains any of the trigger patterns."""
     return any(p in query for p in patterns)
-
 
 def _extract_limit(query: str) -> Optional[int]:
     """Extract 'top N' or 'first N' from query."""

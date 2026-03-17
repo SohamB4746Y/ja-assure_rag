@@ -770,17 +770,8 @@ def handle_query(
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
 
-                                                           
-    analytical_result = analytical_engine.run(query)
-    if analytical_result:
-        logger.info("Handled by analytical engine (early)")
-        log_query(query, "analytical", None, 0, 1.0, analytical_result)
-        if query_parser:
-            query_parser.add_raw_to_history(query, analytical_result)
-        return clean_output(analytical_result)
 
-                                                                
-                                                                                      
+
     if scope.classification == "PARTIALLY_ANSWERABLE":
         partial_answer = _partial_engine.dispatch(
             scope.partial_handler or "", query,
@@ -791,6 +782,15 @@ def handle_query(
         if query_parser:
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
+
+
+    analytical_result = analytical_engine.run(query)
+    if analytical_result:
+        logger.info("Handled by analytical engine (early)")
+        log_query(query, "analytical", None, 0, 1.0, analytical_result)
+        if query_parser:
+            query_parser.add_raw_to_history(query, analytical_result)
+        return clean_output(analytical_result)
 
                                         
     if _compound_handler and _compound_handler.is_compound_query(query):

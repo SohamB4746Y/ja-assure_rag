@@ -2527,3 +2527,48 @@
 2026-03-17 17:21:04,782 - api - INFO - Generated answer (length: 79 chars)
 2026-03-17 17:21:04,783 - api - INFO - Received query: What is the total revenue generated from Malaysia proposals this quarter?
 2026-03-17 17:21:04,788 - api - INFO - Generated answer (length: 246 chars)
+2026-03-17 20:14:52,432 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 20:14:52,432 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 20:14:56,960 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 20:14:57,405 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 20:15:03,191 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 20:15:03,224 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 20:15:03,228 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 20:15:03,229 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 20:15:03,239 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 20:15:03,254 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 20:15:03,299 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 20:15:03,322 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 20:15:03,384 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 21:50:17,395 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 21:50:17,398 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 21:50:21,903 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 21:50:22,717 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 21:50:23,973 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 21:50:23,975 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 21:50:23,978 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 21:50:23,978 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 21:50:36,139 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 21:50:36,143 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 21:50:40,605 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 21:50:40,772 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 21:50:41,341 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 21:50:41,343 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 21:50:41,405 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 21:50:41,418 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 21:51:25,127 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 21:51:25,133 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 21:51:29,497 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 21:51:29,761 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 21:51:30,234 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 21:51:30,236 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 21:51:30,241 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 21:51:30,242 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 21:55:26,538 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 21:55:26,544 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 21:55:31,777 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 21:55:31,955 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 21:55:32,463 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 21:55:32,465 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 21:55:32,469 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 21:55:32,469 - ja_assure_rag - INFO - Analytical engine initialized: 15 records

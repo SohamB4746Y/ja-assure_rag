@@ -1,12 +1,4 @@
-"""Validator module.
-
-Provides the core logic for validator.
-"""
-
 def validate_sum_assured(sum_assured: dict) -> bool:
-    """
-    Ensures only ONE sum insured type is present per record.
-    """
     keys = [
         "maximum_stock_in_premises_label",
         "maximum_stock_foreign_currency_in_premise_label",

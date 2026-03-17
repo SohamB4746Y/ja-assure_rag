@@ -1,8 +1,3 @@
-"""Schemas module.
-
-Provides the core logic for schemas.
-"""
-
 SECTION_SCHEMAS = {
     "business_profile": {
         "title": "Business Profile",

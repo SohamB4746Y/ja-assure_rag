@@ -4,6 +4,23 @@ FastAPI REST API for JA Assure RAG System
 Exposes the existing RAG system via HTTP endpoints without modifying core logic.
 """
 import os
+from pathlib import Path
+
+# Load .env file if it exists
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / '.env')
+except ImportError:
+    # If python-dotenv is not installed, try manual loading
+    env_path = Path(__file__).parent / '.env'
+    if env_path.exists():
+        with open(env_path) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    key, value = line.split('=', 1)
+                    os.environ[key.strip()] = value.strip()
+
 import logging
 from typing import Optional
 

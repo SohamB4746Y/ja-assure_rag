@@ -517,7 +517,6 @@ class AnalyticalEngine:
     # 13. Not-available detector
     _NOT_AVAILABLE_FIELDS = {
         "premium",
-        "broker",
         "expiry",
         "renewal",
         "rejected",
@@ -526,6 +525,8 @@ class AnalyticalEngine:
         "fire-related",
         "peril cause",
         "peril type",
+        "insurance broker",
+        "reinsurance broker",
     }
 
     def is_field_available(self, query: str) -> Optional[str]:
@@ -554,6 +555,22 @@ class AnalyticalEngine:
         na = self.is_field_available(query)
         if na:
             return na
+
+        # Explicit claim guard: dataset has zero-claim records only.
+        claim_guard_signals = [
+            "claim frequency",
+            "claim ranking",
+            "rank claims",
+            "claim history",
+            "claims by region",
+            "claims across",
+            "highest claims",
+            "lowest claims",
+            "most claims",
+            "fewest claims",
+        ]
+        if "claim" in q and any(signal in q for signal in claim_guard_signals):
+            return "All 15 proposals report zero claims. No claim frequency comparison is possible."
 
         # Top / highest insured
         if _matches(
@@ -743,10 +760,12 @@ class AnalyticalEngine:
         if "how many" in q and any(
             kw in q for kw in ["proposal", "polic", "record"]
         ):
-            return (
-                f"There are {self.get_record_count()} proposal records "
-                "in the system."
-            )
+            # Don't intercept "per state" / "by state" queries
+            if not any(kw in q for kw in ["per state", "by state", "each state"]):
+                return (
+                    f"There are {self.get_record_count()} proposal records "
+                    "in the system."
+                )
 
         return None
 

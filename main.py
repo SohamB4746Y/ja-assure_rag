@@ -38,11 +38,27 @@ Data Coverage:
 from __future__ import annotations
 
 import os
+from pathlib import Path
+
+# Load .env file if it exists
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / '.env')
+except ImportError:
+    # If python-dotenv is not installed, try manual loading
+    env_path = Path(__file__).parent / '.env'
+    if env_path.exists():
+        with open(env_path) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    key, value = line.split('=', 1)
+                    os.environ[key.strip()] = value.strip()
+
 import json
 import pickle
 import logging
 from datetime import datetime
-from pathlib import Path
 from typing import Optional
 
 import faiss
@@ -69,6 +85,7 @@ from src.query_parser import QueryParser, ParsedQuery
 from src.query_executor import SmartQueryExecutor, QueryResult
 from src.answer_formatter import format_answer, format_classified_response
 from src.compound_query_handler import CompoundQueryHandler
+from src.flattened_context import build_flattened_proposal_context
 from embeddings.embedder import Embedder, cosine_similarity
 
 # Configuration
@@ -91,6 +108,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 _scope_classifier: Optional[QueryClassifier] = None
 _partial_engine: Optional[PartialAnswerEngine] = None
 _compound_handler: Optional[CompoundQueryHandler] = None
+_flattened_context_cache: dict[str, str] = {}
 
 logging.basicConfig(
     level=logging.INFO,
@@ -327,6 +345,24 @@ def retrieve_chunks_with_threshold(
             break
     
     return results, top_similarity
+
+
+def get_flattened_context(quote_id_filter: Optional[str] = None) -> str:
+    """Return cached flattened proposal context for prompt grounding."""
+    cache_key = quote_id_filter or "__all__"
+    cached = _flattened_context_cache.get(cache_key)
+    if cached:
+        return cached
+
+    if not os.path.exists(METADATA_PATH):
+        return ""
+
+    with open(METADATA_PATH, "rb") as f:
+        metadata = pickle.load(f)
+
+    flattened = build_flattened_proposal_context(metadata, quote_id_filter=quote_id_filter)
+    _flattened_context_cache[cache_key] = flattened
+    return flattened
 
 def score_field_match(field_name: str, query: str) -> int:
     """
@@ -704,16 +740,8 @@ def handle_query(
             query_parser.add_raw_to_history(query, analytical_result)
         return clean_output(analytical_result)
 
-    # Compound multi-field query handler
-    if _compound_handler and _compound_handler.is_compound_query(query):
-        compound_result = _compound_handler.execute(query)
-        if compound_result:
-            logger.info("Handled by compound query handler")
-            log_query(query, "compound", None, 0, 1.0, compound_result)
-            if query_parser:
-                query_parser.add_raw_to_history(query, compound_result)
-            return clean_output(compound_result)
-
+    # Partial answer handlers (deterministic, specific patterns)
+    # Must run before compound handler so specific business-type filters take priority
     if scope.classification == "PARTIALLY_ANSWERABLE":
         partial_answer = _partial_engine.dispatch(
             scope.partial_handler or "", query,
@@ -724,6 +752,16 @@ def handle_query(
         if query_parser:
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
+
+    # Compound multi-field query handler
+    if _compound_handler and _compound_handler.is_compound_query(query):
+        compound_result = _compound_handler.execute(query)
+        if compound_result:
+            logger.info("Handled by compound query handler")
+            log_query(query, "compound", None, 0, 1.0, compound_result)
+            if query_parser:
+                query_parser.add_raw_to_history(query, compound_result)
+            return clean_output(compound_result)
 
     # Main pipeline for answerable queries
     quote_id = extract_quote_id(query)
@@ -856,20 +894,20 @@ def handle_query(
             history_lines.append(f"Assistant: {turn['answer_preview']}")
         history_context = "\n".join(history_lines) + "\n\n"
     
-    prompt = build_prompt(
-        context=history_context + "\n\n".join([c["text"] for c in chunks]),
-        question=query
+    flattened_context = get_flattened_context(quote_id_filter=quote_id)
+    retrieved_snippets = "\n\n".join([c["text"] for c in chunks])
+    combined_context = (
+        history_context
+        + flattened_context
+        + "\n\nRetrieved Evidence Snippets:\n"
+        + retrieved_snippets
     )
+
+    prompt = build_prompt(context=combined_context, question=query)
     
-                                                 
-                             
-                                                 
-    try:
-        raw_answer = llm.generate(prompt)
-        answer = clean_output(raw_answer)                                  
-    except Exception as e:
-        logger.error(f"LLM generation failed: {e}")
-        answer = get_refusal_message()
+    # Try LLM generation - let exceptions propagate to surface real errors
+    raw_answer = llm.generate(prompt)
+    answer = clean_output(raw_answer)
     
     log_query(query, "semantic", quote_id, len(chunks), top_similarity, answer)
     
@@ -915,6 +953,7 @@ def initialize_system() -> tuple[Embedder, LLMClient, PredefinedQAStore, Analyti
     
                            
     llm = LLMClient()
+    print(f"Model: {llm.model}")
     logger.info("LLM client initialized")
     
                                   
@@ -962,6 +1001,7 @@ def main():
                 analytical_engine = AnalyticalEngine(metadata=metadata)
                 # Reset lazy singletons so they reload fresh metadata
                 _partial_engine = None
+                _flattened_context_cache.clear()
                 _compound_handler = None
                 
                 print("Index rebuilt successfully.")

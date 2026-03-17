@@ -1431,3 +1431,745 @@
 2026-03-03 19:02:15,502 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
 2026-03-03 19:02:15,503 - ja_assure_rag - INFO - LLM client initialized
 2026-03-03 19:02:15,516 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-13 01:03:02,932 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-13 01:03:02,932 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-13 01:03:12,910 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-13 01:03:12,910 - ja_assure_rag - INFO - Index not found, running ingestion...
+2026-03-13 01:03:12,910 - ja_assure_rag - INFO - Starting data ingestion...
+2026-03-13 01:03:13,092 - ja_assure_rag - INFO - Loaded 15 records from Excel
+2026-03-13 01:03:38,173 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-13 01:03:38,173 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-13 01:03:42,771 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-13 01:03:42,772 - ja_assure_rag - INFO - Index not found, running ingestion...
+2026-03-13 01:03:42,772 - ja_assure_rag - INFO - Starting data ingestion...
+2026-03-13 01:03:42,959 - ja_assure_rag - INFO - Loaded 15 records from Excel
+2026-03-13 01:03:42,962 - ja_assure_rag - INFO - Extracted 300 section chunks
+2026-03-13 01:03:42,966 - ja_assure_rag - INFO - Built 300 text chunks
+2026-03-13 01:03:42,966 - ja_assure_rag - INFO - Building FAISS index...
+2026-03-13 01:03:42,967 - embeddings.embedder - INFO - Starting batch embedding: 300 texts in 19 batches
+2026-03-13 01:03:46,994 - embeddings.embedder - INFO - Batch embedding complete: 300 embeddings generated
+2026-03-13 01:03:46,997 - ja_assure_rag - INFO - Index built: 300 vectors, 384 dimensions
+2026-03-13 01:03:47,363 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-13 01:17:08,652 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-13 01:17:08,652 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-13 01:17:13,347 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-13 01:17:13,596 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-13 01:17:14,268 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-13 01:17:14,270 - ja_assure_rag - INFO - LLM client initialized
+2026-03-13 01:17:14,274 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-13 01:17:14,274 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-13 01:21:10,470 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-13 01:21:10,470 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-13 01:21:14,986 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-13 01:21:15,262 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-13 01:21:15,684 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-13 01:21:15,687 - ja_assure_rag - INFO - LLM client initialized
+2026-03-13 01:21:15,691 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-13 01:21:15,691 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-13 01:22:21,730 - api - INFO - Starting JA Assure RAG API...
+2026-03-13 01:22:21,730 - api - INFO - Initializing system components...
+2026-03-13 01:22:21,757 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-13 01:22:21,758 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-13 01:22:26,077 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-13 01:22:26,282 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-13 01:22:27,010 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-13 01:22:27,013 - ja_assure_rag - INFO - LLM client initialized
+2026-03-13 01:22:27,016 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-13 01:22:27,017 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-13 01:22:27,017 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-13 01:23:13,413 - api - INFO - Received query: What is the total sum insured?
+2026-03-13 01:23:15,080 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-13 01:23:15,728 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-13 01:23:15,731 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-03-13 01:23:15,737 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-13 01:23:15,737 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-13 01:23:15,740 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-13 01:23:15,772 - ja_assure_rag - INFO - No chunks above threshold - refusing to answer
+2026-03-13 01:23:15,778 - api - INFO - Generated answer (length: 39 chars)
+2026-03-13 01:24:12,255 - api - INFO - Received query: what is the total premium collected from Malaysia this quarter?
+2026-03-13 01:24:12,270 - api - INFO - Generated answer (length: 375 chars)
+2026-03-13 01:30:04,551 - api - INFO - Received query: Identify high-value assets insured above $5M in Malaysia.
+2026-03-13 01:30:04,553 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-13 01:30:04,562 - api - INFO - Generated answer (length: 175 chars)
+2026-03-13 01:32:21,255 - api - INFO - Received query: What is the average underwriting turnaround time in Malaysia?
+2026-03-13 01:32:21,262 - api - INFO - Generated answer (length: 268 chars)
+2026-03-13 01:43:44,544 - api - INFO - Received query: Which proposals in Malaysia included GPS trackers?
+2026-03-13 01:43:44,546 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-13 01:43:44,551 - api - INFO - Generated answer (length: 201 chars)
+2026-03-16 21:30:38,580 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-16 21:30:38,580 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-16 21:30:43,099 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-16 21:30:43,453 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-16 21:30:44,100 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-16 21:30:44,101 - ja_assure_rag - INFO - LLM client initialized
+2026-03-16 21:30:44,103 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-16 21:30:44,104 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-16 21:31:07,732 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-16 21:31:43,007 - api - INFO - Starting JA Assure RAG API...
+2026-03-16 21:31:43,008 - api - INFO - Initializing system components...
+2026-03-16 21:31:43,035 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-16 21:31:43,035 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-16 21:31:47,298 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-16 21:31:47,530 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-16 21:31:48,115 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-16 21:31:48,115 - ja_assure_rag - INFO - LLM client initialized
+2026-03-16 21:31:48,116 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-16 21:31:48,116 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-16 21:31:48,116 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-16 21:33:10,999 - api - INFO - Received query: What is the business name of MYJADEQT001?
+2026-03-16 21:33:11,697 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-16 21:33:12,209 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-16 21:33:12,210 - ja_assure_rag - INFO - Parsed query - Intent: lookup, Fields: [], Filter: None=None, Contains: None
+2026-03-16 21:33:12,210 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-16 21:33:12,210 - ja_assure_rag - INFO - Query classified as: structured
+2026-03-16 21:33:12,211 - ja_assure_rag - INFO - Handled by structured lookup (deterministic)
+2026-03-16 21:33:12,216 - api - INFO - Generated answer (length: 43 chars)
+2026-03-16 21:34:12,038 - api - INFO - Received query: Which proposals in Malaysia included GPS trackers?
+2026-03-16 21:34:12,041 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-16 21:34:12,047 - api - INFO - Generated answer (length: 201 chars)
+2026-03-16 21:38:29,813 - api - INFO - Received query: List regions with the lowest claim frequency in Malaysia.
+2026-03-16 21:38:29,816 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-16 21:38:29,822 - api - INFO - Generated answer (length: 666 chars)
+2026-03-16 21:40:28,726 - api - INFO - Received query: What is the distribution of policy types in Malaysia?
+2026-03-16 21:40:28,736 - api - INFO - Generated answer (length: 505 chars)
+2026-03-16 21:46:41,966 - api - INFO - Received query: Which high-value proposals (above RM 3M) have weak security setups — specifically those lacking either an alarm system, a strong room, or GPS trackers in vehicles?
+2026-03-16 21:46:41,971 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-16 21:46:41,981 - api - INFO - Generated answer (length: 1120 chars)
+2026-03-16 21:49:57,403 - api - INFO - Received query: Among jewellers in Malaysia, which ones have the strongest combined security profile — having alarms, strong rooms, CCTV with maintenance contracts, and GPS in both bags and vehicles?
+2026-03-16 21:49:57,406 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-16 21:49:57,411 - api - INFO - Generated answer (length: 1284 chars)
+2026-03-16 21:52:30,827 - api - INFO - Received query: Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?
+2026-03-16 21:52:31,553 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-16 21:52:32,216 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-16 21:52:32,217 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-16 21:52:32,218 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-16 21:52:32,218 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-16 21:52:32,219 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-16 21:52:32,690 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-16 21:52:32,690 - ja_assure_rag - ERROR - LLM generation failed: Error code: 404 - {'message': 'Model llama-3.3-70b does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+2026-03-16 21:52:32,694 - api - INFO - Generated answer (length: 39 chars)
+2026-03-16 21:53:28,565 - api - INFO - Received query: What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?
+2026-03-16 21:53:28,961 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-16 21:53:28,965 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-03-16 21:53:28,971 - api - INFO - Generated answer (length: 144 chars)
+2026-03-17 00:03:08,281 - api - INFO - Received query: What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?
+2026-03-17 00:03:08,650 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:03:08,658 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:03:08,668 - api - INFO - Generated answer (length: 144 chars)
+2026-03-17 00:04:20,194 - api - INFO - Received query: Which states in Malaysia have more than one proposal, and what is the total insured value per state?
+2026-03-17 00:04:20,216 - api - INFO - Generated answer (length: 116 chars)
+2026-03-17 00:05:09,683 - api - INFO - Received query: Compare the average insured stock value between jewellers and money changers in Malaysia.
+2026-03-17 00:05:10,437 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:05:10,443 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:05:10,452 - api - INFO - Generated answer (length: 144 chars)
+2026-03-17 00:06:48,350 - api - INFO - Received query: Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit — and what are their total insured transit values?
+2026-03-17 00:06:48,353 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 00:06:48,358 - api - INFO - Generated answer (length: 1576 chars)
+2026-03-17 00:09:51,824 - api - INFO - Received query: Which proposals conduct background checks on all employees AND perform stock checks most frequently? Do these overlap with the highest insured value proposals?
+2026-03-17 00:09:52,357 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:09:53,101 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:09:53,101 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:09:53,103 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:09:53,103 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:09:53,104 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:09:53,124 - ja_assure_rag - INFO - No chunks above threshold - refusing to answer
+2026-03-17 00:09:53,130 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 00:09:53,135 - api - INFO - Generated answer (length: 1356 chars)
+2026-03-17 00:10:26,945 - api - INFO - Received query: Which proposals conduct background checks on all employees AND perform stock checks most frequently? Do these overlap with the highest insured value proposals?
+2026-03-17 00:10:27,525 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:10:28,145 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:10:28,146 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:10:28,148 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:10:28,148 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:10:28,150 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:10:28,174 - ja_assure_rag - INFO - No chunks above threshold - refusing to answer
+2026-03-17 00:10:28,179 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 00:10:28,184 - api - INFO - Generated answer (length: 1356 chars)
+2026-03-17 00:11:36,862 - api - INFO - Received query: Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?
+2026-03-17 00:11:37,277 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:11:37,283 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['fidelity_guarantee_insurance_add_coverage_label'], Filter: fidelity_guarantee_insurance_add_coverage_label=Yes, Contains: None
+2026-03-17 00:11:37,291 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-03-17 00:11:37,321 - api - INFO - Generated answer (length: 566 chars)
+2026-03-17 00:26:27,275 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:26:27,275 - api - INFO - Initializing system components...
+2026-03-17 00:26:27,386 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:26:27,386 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:26:31,717 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:26:32,285 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:26:32,948 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:26:32,988 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:26:32,990 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:26:32,990 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:26:32,990 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:28:01,071 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:28:01,071 - api - INFO - Initializing system components...
+2026-03-17 00:28:01,114 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:28:01,114 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:28:05,209 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:28:05,350 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:28:05,890 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:28:05,933 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:28:05,935 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:28:05,935 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:28:05,935 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:28:07,934 - api - INFO - Received query: Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?
+2026-03-17 00:28:08,027 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:28:08,028 - ja_assure_rag - INFO - Parsed query - Intent: count, Fields: ['fidelity_guarantee_insurance_add_coverage_label'], Filter: fidelity_guarantee_insurance_add_coverage_label=Yes, Contains: None
+2026-03-17 00:28:08,029 - ja_assure_rag - INFO - Smart query executor handled - 15 results
+2026-03-17 00:28:08,034 - api - INFO - Generated answer (length: 566 chars)
+2026-03-17 00:29:09,640 - api - INFO - Received query: Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?
+2026-03-17 00:29:09,902 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:29:10,572 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:29:10,574 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:29:10,575 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:29:10,575 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:29:10,577 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:29:10,877 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:29:10,914 - ja_assure_rag - ERROR - LLM generation failed: Error code: 404 - {'message': 'Model llama-3.3-70b does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+2026-03-17 00:29:10,919 - api - INFO - Generated answer (length: 39 chars)
+2026-03-17 00:31:17,657 - api - INFO - Received query: What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?
+2026-03-17 00:31:18,030 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:31:18,033 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:31:18,041 - api - INFO - Generated answer (length: 144 chars)
+2026-03-17 00:31:40,871 - api - INFO - Received query: Which states in Malaysia have more than one proposal, and what is the total insured value per state?
+2026-03-17 00:31:40,878 - api - INFO - Generated answer (length: 116 chars)
+2026-03-17 00:32:06,808 - api - INFO - Received query: Compare the average insured stock value between jewellers and money changers in Malaysia.
+2026-03-17 00:32:07,188 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:32:07,201 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:32:07,216 - api - INFO - Generated answer (length: 144 chars)
+2026-03-17 00:33:08,119 - api - INFO - Received query: Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit — and what are their total insured transit values?
+2026-03-17 00:33:08,120 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 00:33:08,126 - api - INFO - Generated answer (length: 1576 chars)
+2026-03-17 00:33:36,463 - api - INFO - Received query: Which proposals conduct background checks on all employees AND perform stock checks most frequently?
+2026-03-17 00:33:36,827 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:33:37,439 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:33:37,440 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:33:37,441 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:33:37,441 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:33:37,443 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:33:37,479 - ja_assure_rag - INFO - No chunks above threshold - refusing to answer
+2026-03-17 00:33:37,488 - api - INFO - Generated answer (length: 39 chars)
+2026-03-17 00:34:05,611 - api - INFO - Received query: Which proposals do NOT have an alarm system, and what are their total insured values?
+2026-03-17 00:34:05,948 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:34:06,447 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:34:06,448 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:34:06,450 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:34:06,450 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:34:06,452 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:34:06,800 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:34:06,801 - ja_assure_rag - ERROR - LLM generation failed: Error code: 404 - {'message': 'Model llama-3.3-70b does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+2026-03-17 00:34:06,805 - api - INFO - Generated answer (length: 39 chars)
+2026-03-17 00:34:32,951 - api - INFO - Received query: List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.
+2026-03-17 00:34:32,952 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 00:34:32,961 - api - INFO - Generated answer (length: 201 chars)
+2026-03-17 00:34:58,661 - api - INFO - Received query: Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?
+2026-03-17 00:34:58,667 - api - INFO - Generated answer (length: 235 chars)
+2026-03-17 00:35:23,864 - api - INFO - Received query: What is the total director's house coverage value across all proposals that have it enabled?
+2026-03-17 00:35:23,877 - api - INFO - Generated answer (length: 1200 chars)
+2026-03-17 00:35:49,828 - api - INFO - Received query: Which money changers have a CCTV maintenance contract and armed guards at the premise?
+2026-03-17 00:35:49,830 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 00:35:49,834 - api - INFO - Generated answer (length: 1935 chars)
+2026-03-17 00:36:12,093 - api - INFO - Received query: Which proposals have a safe of Grade 4 but no strong room — and what are their insured values?
+2026-03-17 00:36:12,094 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 00:36:12,105 - api - INFO - Generated answer (length: 1512 chars)
+2026-03-17 00:36:41,212 - api - INFO - Received query: Rank all business types by their average total insured value. Which type carries the most risk per proposal?
+2026-03-17 00:36:41,219 - api - INFO - Generated answer (length: 1106 chars)
+2026-03-17 00:37:05,946 - api - INFO - Received query: Which proposals have the highest fidelity guarantee amount per staff member covered?
+2026-03-17 00:37:07,078 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:37:07,680 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:37:07,681 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:37:07,682 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:37:07,682 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:37:07,683 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:37:07,698 - ja_assure_rag - INFO - No chunks above threshold - refusing to answer
+2026-03-17 00:37:07,702 - api - INFO - Generated answer (length: 39 chars)
+2026-03-17 00:37:31,267 - api - INFO - Received query: How many proposals per state have both an alarm and a strong room?
+2026-03-17 00:37:31,268 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 00:37:31,276 - api - INFO - Generated answer (length: 44 chars)
+2026-03-17 00:38:01,436 - api - INFO - Received query: Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?
+2026-03-17 00:38:01,735 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:38:02,205 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:38:02,207 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:38:02,208 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:38:02,208 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:38:02,209 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:38:02,504 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:38:02,504 - ja_assure_rag - ERROR - LLM generation failed: Error code: 404 - {'message': 'Model llama-3.3-70b does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+2026-03-17 00:38:02,511 - api - INFO - Generated answer (length: 39 chars)
+2026-03-17 00:38:31,224 - api - INFO - Received query: What is the average premium charged to jewellers in Malaysia?
+2026-03-17 00:38:31,231 - api - INFO - Generated answer (length: 246 chars)
+2026-03-17 00:38:56,992 - api - INFO - Received query: Which proposals were approved by the underwriter?
+2026-03-17 00:38:56,999 - api - INFO - Generated answer (length: 310 chars)
+2026-03-17 00:39:42,374 - api - INFO - Received query: Which region has the highest claim frequency?
+2026-03-17 00:39:42,375 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 00:39:42,383 - api - INFO - Generated answer (length: 667 chars)
+2026-03-17 00:40:11,428 - api - INFO - Received query: What is the total revenue generated from Malaysia proposals this quarter?
+2026-03-17 00:40:11,434 - api - INFO - Generated answer (length: 287 chars)
+2026-03-17 00:50:47,428 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:50:47,429 - api - INFO - Initializing system components...
+2026-03-17 00:50:47,521 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:50:47,521 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:50:51,800 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:50:52,094 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:50:52,917 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:50:52,918 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:50:52,919 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:50:52,919 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:50:52,919 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:50:59,235 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:50:59,235 - api - INFO - Initializing system components...
+2026-03-17 00:50:59,259 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:50:59,259 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:51:03,209 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:51:03,347 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:51:03,807 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:51:03,808 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:51:03,810 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:51:03,810 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:51:03,811 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:51:27,829 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:51:27,829 - api - INFO - Initializing system components...
+2026-03-17 00:51:27,850 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:51:27,850 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:51:31,928 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:51:32,075 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:51:32,598 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:51:32,599 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:51:32,600 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:51:32,600 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:51:32,600 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:51:38,033 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:51:38,033 - api - INFO - Initializing system components...
+2026-03-17 00:51:38,056 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:51:38,056 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:51:42,068 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:51:42,196 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:51:42,728 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:51:42,728 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:51:42,729 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:51:42,730 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:51:42,730 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:51:48,818 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:51:48,818 - api - INFO - Initializing system components...
+2026-03-17 00:51:48,842 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:51:48,842 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:51:52,683 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:51:52,826 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:51:53,264 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:51:53,264 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:51:53,266 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:51:53,266 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:51:53,266 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:52:12,258 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:52:12,258 - api - INFO - Initializing system components...
+2026-03-17 00:52:12,289 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:52:12,289 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:52:16,456 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:52:16,593 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:52:17,088 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:52:17,089 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:52:17,090 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:52:17,090 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:52:17,090 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:53:59,635 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:53:59,636 - api - INFO - Initializing system components...
+2026-03-17 00:53:59,661 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:53:59,662 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:54:03,826 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:54:04,032 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:54:04,538 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:54:04,577 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:54:04,581 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:54:04,582 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:54:04,582 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:54:10,309 - api - INFO - Received query: Which regions have the highest claim frequency?
+2026-03-17 00:54:10,311 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 00:54:10,317 - api - INFO - Generated answer (length: 79 chars)
+2026-03-17 00:54:10,467 - api - INFO - Received query: Which proposals use armoured vehicles and Jaguar transit and armed guards during transit?
+2026-03-17 00:54:10,468 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 00:54:10,472 - api - INFO - Generated answer (length: 1281 chars)
+2026-03-17 00:54:29,605 - api - INFO - Received query: Which proposals opted for fidelity guarantee insurance?
+2026-03-17 00:54:29,948 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:54:30,568 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:54:30,568 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:54:30,569 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:54:30,569 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:54:30,570 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:54:31,079 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:54:31,080 - ja_assure_rag - ERROR - LLM generation failed: Error code: 404 - {'message': 'Model llama-3.3-70b does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+2026-03-17 00:54:31,085 - api - INFO - Generated answer (length: 39 chars)
+2026-03-17 00:54:31,252 - api - INFO - Received query: What is the average underwriting turnaround time?
+2026-03-17 00:54:31,258 - api - INFO - Generated answer (length: 215 chars)
+2026-03-17 00:54:31,433 - api - INFO - Received query: Which proposals have guards at premise and not armed guards during transit?
+2026-03-17 00:54:31,433 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 00:54:31,438 - api - INFO - Generated answer (length: 2026 chars)
+2026-03-17 00:55:32,627 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:55:32,628 - api - INFO - Initializing system components...
+2026-03-17 00:55:32,658 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:55:32,658 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:55:37,103 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:55:37,244 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:55:37,789 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:55:37,791 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:55:37,794 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:55:37,794 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:55:37,795 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:55:41,719 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:55:41,719 - api - INFO - Initializing system components...
+2026-03-17 00:55:41,739 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:55:41,740 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:55:45,560 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:55:45,702 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:55:46,136 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:55:46,174 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:55:46,175 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:55:46,175 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:55:46,175 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:55:47,952 - api - INFO - Received query: Which proposals have guards at premise and not armed guards during transit?
+2026-03-17 00:55:47,954 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 00:55:47,959 - api - INFO - Generated answer (length: 2026 chars)
+2026-03-17 00:55:48,101 - api - INFO - Received query: Which proposals opted for fidelity guarantee insurance?
+2026-03-17 00:55:48,197 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 00:55:48,526 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:55:48,616 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: [], Filter: None=None, Contains: None
+2026-03-17 00:55:48,617 - ja_assure_rag - INFO - Smart executor could not handle, trying fallback handlers
+2026-03-17 00:55:48,617 - ja_assure_rag - INFO - Query classified as: analytical
+2026-03-17 00:55:48,618 - ja_assure_rag - INFO - Analytical engine returned None, falling back to semantic
+2026-03-17 00:55:49,009 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 404 Not Found"
+2026-03-17 00:55:49,050 - ja_assure_rag - ERROR - LLM generation failed: Error code: 404 - {'message': 'Model llama-3.3-70b does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+2026-03-17 00:55:49,055 - api - INFO - Generated answer (length: 39 chars)
+2026-03-17 00:56:10,130 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:56:10,130 - api - INFO - Initializing system components...
+2026-03-17 00:56:10,152 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:56:10,153 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:56:14,533 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:56:14,735 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:56:15,359 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:56:15,360 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:56:15,361 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:56:15,361 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:56:15,361 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:56:29,092 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:56:29,092 - api - INFO - Initializing system components...
+2026-03-17 00:56:29,114 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:56:29,115 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:56:33,360 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:56:33,480 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:56:34,013 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:56:34,014 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:56:34,015 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:56:34,015 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:56:34,015 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 00:56:36,797 - api - INFO - Received query: Which proposals opted for fidelity guarantee insurance?
+2026-03-17 00:56:36,805 - api - INFO - Generated answer (length: 818 chars)
+2026-03-17 00:56:36,942 - api - INFO - Received query: Which proposals have guards at premise and not armed guards during transit?
+2026-03-17 00:56:36,942 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 00:56:36,948 - api - INFO - Generated answer (length: 2037 chars)
+2026-03-17 00:57:03,187 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 00:57:03,187 - api - INFO - Initializing system components...
+2026-03-17 00:57:03,211 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 00:57:03,211 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 00:57:07,223 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 00:57:07,387 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 00:57:07,800 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 00:57:07,841 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 00:57:07,843 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 00:57:07,843 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 00:57:07,843 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 10:29:48,620 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 10:29:48,622 - api - INFO - Initializing system components...
+2026-03-17 10:29:48,748 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 10:29:48,749 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 10:29:54,383 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 10:29:55,821 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 10:29:56,708 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 10:29:56,709 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 10:29:56,710 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 10:29:56,710 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 10:29:56,710 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 10:40:06,211 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 10:40:06,212 - api - INFO - Initializing system components...
+2026-03-17 10:40:06,284 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 10:40:06,284 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 10:40:16,105 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 10:40:16,543 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 10:40:17,053 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 10:40:17,054 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 10:40:17,055 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 10:40:17,055 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 10:40:17,055 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 10:40:30,602 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 10:40:30,602 - api - INFO - Initializing system components...
+2026-03-17 10:40:30,625 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 10:40:30,625 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 10:40:35,039 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 10:40:35,171 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 10:40:35,711 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 10:40:35,711 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 10:40:35,712 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 10:40:35,712 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 10:40:35,712 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 10:51:19,510 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 10:51:19,511 - api - INFO - Initializing system components...
+2026-03-17 10:51:19,620 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 10:51:19,620 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 10:51:24,505 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 10:51:24,937 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 10:51:25,551 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 10:51:25,552 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 10:51:25,553 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 10:51:25,553 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 10:51:25,553 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 11:02:31,248 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 11:02:31,249 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 11:02:36,999 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 11:02:39,009 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 11:02:39,797 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 11:02:39,839 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 11:02:39,842 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 11:02:39,842 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 11:31:00,009 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 11:31:00,011 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 11:31:04,874 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 11:31:05,132 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 11:31:05,783 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 11:31:05,785 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 11:31:05,792 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 11:31:05,792 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 11:44:29,004 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 11:44:29,004 - api - INFO - Initializing system components...
+2026-03-17 11:44:29,101 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 11:44:29,101 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 11:44:36,739 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 11:44:37,098 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 11:44:37,901 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 11:44:37,902 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 11:44:37,905 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 11:44:37,905 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 11:44:37,905 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 11:47:59,767 - api - INFO - Received query: What is the total revenue generated from Malaysia proposals this quarter?
+2026-03-17 11:47:59,788 - api - INFO - Generated answer (length: 246 chars)
+2026-03-17 11:48:21,360 - api - INFO - Received query: Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?
+2026-03-17 11:48:21,381 - api - INFO - Generated answer (length: 818 chars)
+2026-03-17 11:50:34,159 - api - INFO - Received query: What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?
+2026-03-17 11:50:34,172 - api - INFO - Generated answer (length: 818 chars)
+2026-03-17 11:51:18,269 - api - INFO - Received query: Which states in Malaysia have more than one proposal, and what is the total insured value per state?
+2026-03-17 11:51:18,280 - api - INFO - Generated answer (length: 56 chars)
+2026-03-17 11:51:32,039 - api - INFO - Received query: Compare the average insured stock value between jewellers and money changers in Malaysia.
+2026-03-17 11:51:33,595 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 11:51:33,605 - ja_assure_rag - INFO - Parsed query - Intent: out_of_scope, Fields: [], Filter: None=None, Contains: None
+2026-03-17 11:51:33,613 - api - INFO - Generated answer (length: 144 chars)
+2026-03-17 11:51:56,581 - api - INFO - Received query: Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit — and what are their total insured transit values?
+2026-03-17 11:51:56,584 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 11:51:56,591 - api - INFO - Generated answer (length: 1281 chars)
+2026-03-17 11:52:13,156 - api - INFO - Received query: Which proposals conduct background checks on all employees AND perform stock checks most frequently?
+2026-03-17 11:52:13,441 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 11:52:14,557 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 200 OK"
+2026-03-17 11:52:14,577 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['background_checks_for_all_employees_label', 'how_often_is_the_stock_check_carried_out_label'], Filter: background_checks_for_all_employees_label=001, Contains: None
+2026-03-17 11:52:14,579 - ja_assure_rag - INFO - Smart query executor handled - 0 results
+2026-03-17 11:52:14,584 - api - INFO - Generated answer (length: 31 chars)
+2026-03-17 11:52:31,622 - api - INFO - Received query: Which proposals do NOT have an alarm system, and what are their total insured values?
+2026-03-17 11:52:31,858 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 11:52:33,514 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 200 OK"
+2026-03-17 11:52:33,516 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['do_you_have_alarm_label'], Filter: do_you_have_alarm_label=002, Contains: None
+2026-03-17 11:52:33,520 - ja_assure_rag - INFO - Smart query executor handled - 1 results
+2026-03-17 11:52:33,528 - api - INFO - Generated answer (length: 56 chars)
+2026-03-17 11:52:49,526 - api - INFO - Received query: List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.
+2026-03-17 11:52:49,528 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 11:52:49,537 - api - INFO - Generated answer (length: 201 chars)
+2026-03-17 11:53:04,306 - api - INFO - Received query: Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?
+2026-03-17 11:53:04,307 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 11:53:04,318 - api - INFO - Generated answer (length: 264 chars)
+2026-03-17 11:53:18,239 - api - INFO - Received query: What is the total director's house coverage value across all proposals that have it enabled?
+2026-03-17 11:53:18,250 - api - INFO - Generated answer (length: 1200 chars)
+2026-03-17 11:53:32,229 - api - INFO - Received query: Which money changers have a CCTV maintenance contract and armed guards at the premise?
+2026-03-17 11:53:32,231 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 11:53:32,238 - api - INFO - Generated answer (length: 2475 chars)
+2026-03-17 11:53:50,439 - api - INFO - Received query: Which proposals have a safe of Grade 4 but no strong room — and what are their insured values?
+2026-03-17 11:53:50,441 - ja_assure_rag - INFO - Handled by compound query handler
+2026-03-17 11:53:50,451 - api - INFO - Generated answer (length: 941 chars)
+2026-03-17 11:54:10,700 - api - INFO - Received query: Rank all business types by their average total insured value. Which type carries the most risk per proposal?
+2026-03-17 11:54:10,711 - api - INFO - Generated answer (length: 1106 chars)
+2026-03-17 11:54:29,781 - api - INFO - Received query: Which proposals have the highest fidelity guarantee amount per staff member covered?
+2026-03-17 11:54:29,793 - api - INFO - Generated answer (length: 818 chars)
+2026-03-17 11:54:55,327 - api - INFO - Received query: How many proposals per state have both an alarm and a strong room?
+2026-03-17 11:54:55,328 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 11:54:55,342 - api - INFO - Generated answer (length: 44 chars)
+2026-03-17 11:55:11,664 - api - INFO - Received query: Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?
+2026-03-17 11:55:12,031 - ja_assure_rag - INFO - Using LLM-assisted query understanding
+2026-03-17 11:55:14,103 - httpx - INFO - HTTP Request: POST https://api.cerebras.ai/v1/chat/completions "HTTP/2 200 OK"
+2026-03-17 11:55:14,105 - ja_assure_rag - INFO - Parsed query - Intent: list, Fields: ['value_of_stock_out_of_safe_label', 'grade_label'], Filter: value_of_stock_out_of_safe_label=None, Contains: RM 200,000
+2026-03-17 11:55:14,111 - ja_assure_rag - INFO - Smart query executor handled - 0 results
+2026-03-17 11:55:14,119 - api - INFO - Generated answer (length: 51 chars)
+2026-03-17 11:55:28,981 - api - INFO - Received query: What is the average premium charged to jewellers in Malaysia?
+2026-03-17 11:55:28,992 - api - INFO - Generated answer (length: 243 chars)
+2026-03-17 11:55:46,099 - api - INFO - Received query: Which proposals were approved by the underwriter?
+2026-03-17 11:55:46,113 - api - INFO - Generated answer (length: 237 chars)
+2026-03-17 11:55:59,314 - api - INFO - Received query: Which region has the highest claim frequency?
+2026-03-17 11:55:59,315 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 11:55:59,326 - api - INFO - Generated answer (length: 79 chars)
+2026-03-17 11:56:16,212 - api - INFO - Received query: What is the total revenue generated from Malaysia proposals this quarter?
+2026-03-17 11:56:16,225 - api - INFO - Generated answer (length: 246 chars)
+2026-03-17 12:10:22,669 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 12:10:22,671 - api - INFO - Initializing system components...
+2026-03-17 12:10:22,741 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 12:10:22,741 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 12:10:28,957 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 12:10:29,462 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 12:10:30,654 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 12:10:30,656 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 12:10:30,659 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 12:10:30,659 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 12:10:30,660 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 12:11:04,651 - api - INFO - Received query: What is the total fidelity exposure by business type?
+2026-03-17 12:11:04,662 - api - INFO - Generated answer (length: 1040 chars)
+2026-03-17 12:11:16,120 - api - INFO - Received query: What is the total director house coverage value across all proposals?
+2026-03-17 12:11:16,126 - api - INFO - Generated answer (length: 328 chars)
+2026-03-17 12:11:24,298 - api - INFO - Received query: What is the fidelity per staff member?
+2026-03-17 12:11:24,305 - api - INFO - Generated answer (length: 1144 chars)
+2026-03-17 12:11:31,766 - api - INFO - Received query: What is the fidelity per staff member?
+2026-03-17 12:11:31,772 - api - INFO - Generated answer (length: 1144 chars)
+2026-03-17 12:11:40,788 - api - INFO - Received query: How many proposals per state?
+2026-03-17 12:11:40,788 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 12:11:40,793 - api - INFO - Generated answer (length: 44 chars)
+2026-03-17 12:12:16,527 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 12:12:16,528 - api - INFO - Initializing system components...
+2026-03-17 12:12:16,551 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 12:12:16,551 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 12:12:22,799 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 12:12:22,959 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 12:12:25,113 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 12:12:25,114 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 12:12:25,117 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 12:12:25,118 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 12:12:25,118 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 12:12:29,583 - api - INFO - Received query: How many proposals per state?
+2026-03-17 12:12:29,592 - api - INFO - Generated answer (length: 711 chars)
+2026-03-17 12:25:13,428 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 12:25:13,430 - api - INFO - Initializing system components...
+2026-03-17 12:25:13,455 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 12:25:13,455 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 12:25:19,498 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 12:25:19,932 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 12:25:21,422 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 12:25:21,424 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 12:25:21,431 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 12:25:21,431 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 12:25:21,431 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 12:25:54,577 - api - INFO - Received query: Which proposals do not have an alarm system?
+2026-03-17 12:25:54,587 - api - INFO - Generated answer (length: 117 chars)
+2026-03-17 12:26:19,405 - api - INFO - Received query: Which pawn brokers have a strong room and grade 3 safe?
+2026-03-17 12:26:19,405 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 12:26:19,411 - api - INFO - Generated answer (length: 264 chars)
+2026-03-17 12:28:51,877 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 12:28:51,878 - api - INFO - Initializing system components...
+2026-03-17 12:28:51,965 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 12:28:51,965 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 12:28:57,545 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 12:28:58,030 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 12:28:58,674 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 12:28:58,676 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 12:28:58,680 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 12:28:58,680 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 12:28:58,681 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 12:30:01,276 - api - INFO - Received query: Which proposals do not have an alarm system?
+2026-03-17 12:30:01,288 - api - INFO - Generated answer (length: 117 chars)
+2026-03-17 12:30:09,361 - api - INFO - Received query: Which pawn brokers have a strong room and grade 3 safe?
+2026-03-17 12:30:09,368 - api - INFO - Generated answer (length: 649 chars)
+2026-03-17 12:30:18,462 - api - INFO - Received query: Which money changers have a CCTV maintenance contract and guards at the premise?
+2026-03-17 12:30:18,466 - api - INFO - Generated answer (length: 869 chars)
+2026-03-17 14:01:43,318 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 14:01:43,320 - api - INFO - Initializing system components...
+2026-03-17 14:01:43,391 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 14:01:43,391 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 14:01:48,571 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 14:01:48,996 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 14:01:49,545 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 14:01:49,546 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 14:01:49,549 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 14:01:49,549 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 14:01:49,549 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 14:02:26,626 - api - INFO - Received query: Which proposals do not have an alarm system?
+2026-03-17 14:02:26,636 - api - INFO - Generated answer (length: 117 chars)
+2026-03-17 14:02:26,667 - api - INFO - Received query: Which pawn brokers have a strong room and grade 3 safe?
+2026-03-17 14:02:26,672 - api - INFO - Generated answer (length: 649 chars)
+2026-03-17 14:02:26,696 - api - INFO - Received query: Which money changers have a CCTV maintenance contract and guards at the premise?
+2026-03-17 14:02:26,700 - api - INFO - Generated answer (length: 869 chars)
+2026-03-17 14:21:54,182 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 14:21:54,184 - api - INFO - Initializing system components...
+2026-03-17 14:21:54,250 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 14:21:54,250 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 14:22:05,446 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 14:22:05,863 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 14:22:06,437 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 14:22:06,459 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 14:22:06,462 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 14:22:06,463 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 14:22:06,463 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 14:22:34,014 - api - INFO - Received query: Which states have more than one proposal and what is the total insured value per state?
+2026-03-17 14:22:34,023 - api - INFO - Generated answer (length: 914 chars)
+2026-03-17 14:22:54,062 - api - INFO - Received query: Compare average insured stock value between jewellers and money changers.
+2026-03-17 14:22:54,067 - api - INFO - Generated answer (length: 804 chars)
+2026-03-17 14:23:01,446 - api - INFO - Received query: Which proposals have grade 4 safe but no strong room?
+2026-03-17 14:23:01,451 - api - INFO - Generated answer (length: 1063 chars)
+2026-03-17 14:29:46,844 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 14:29:46,846 - api - INFO - Initializing system components...
+2026-03-17 14:29:46,976 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 14:29:46,976 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 14:29:53,959 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 14:29:54,503 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 14:29:55,098 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 14:29:55,100 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 14:29:55,103 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 14:29:55,103 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 14:29:55,103 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 14:35:05,928 - api - INFO - Received query: Which proposals conduct background checks on all employees AND perform stock checks most frequently?
+2026-03-17 14:35:05,940 - api - INFO - Generated answer (length: 1614 chars)
+2026-03-17 14:39:50,985 - api - INFO - Received query: What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?
+2026-03-17 14:39:50,995 - api - INFO - Generated answer (length: 1040 chars)
+2026-03-17 14:40:13,830 - api - INFO - Received query: What is the total director's house coverage value across all proposals that have it enabled?
+2026-03-17 14:40:13,845 - api - INFO - Generated answer (length: 328 chars)
+2026-03-17 14:40:35,090 - api - INFO - Received query: Which proposals have the highest fidelity guarantee amount per staff member covered?
+2026-03-17 14:40:35,104 - api - INFO - Generated answer (length: 1144 chars)
+2026-03-17 14:40:53,096 - api - INFO - Received query: Which states in Malaysia have more than one proposal, and what is the total insured value per state?
+2026-03-17 14:40:53,107 - api - INFO - Generated answer (length: 914 chars)
+2026-03-17 14:41:08,203 - api - INFO - Received query: Which proposals do NOT have an alarm system, and what are their total insured values?
+2026-03-17 14:41:08,216 - api - INFO - Generated answer (length: 117 chars)
+2026-03-17 14:41:37,935 - api - INFO - Received query: Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?
+2026-03-17 14:41:37,946 - api - INFO - Generated answer (length: 649 chars)
+2026-03-17 14:42:00,972 - api - INFO - Received query: Which money changers have a CCTV maintenance contract and armed guards at the premise?
+2026-03-17 14:42:00,983 - api - INFO - Generated answer (length: 869 chars)
+2026-03-17 14:42:20,993 - api - INFO - Received query: Which proposals have a safe of Grade 4 but no strong room — and what are their insured values?
+2026-03-17 14:42:21,004 - api - INFO - Generated answer (length: 1063 chars)
+2026-03-17 14:42:49,374 - api - INFO - Received query: Rank all business types by their average total insured value. Which type carries the most risk per proposal?
+2026-03-17 14:42:49,398 - api - INFO - Generated answer (length: 331 chars)
+2026-03-17 14:43:03,938 - api - INFO - Received query: Which proposals conduct background checks on all employees AND perform stock checks most frequently?
+2026-03-17 14:43:03,949 - api - INFO - Generated answer (length: 1614 chars)
+2026-03-17 15:10:57,298 - api - INFO - Received query: Which proposals do NOT have an alarm system, and what are their total insured values?
+2026-03-17 15:10:57,305 - api - INFO - Generated answer (length: 117 chars)
+2026-03-17 15:12:24,705 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 15:12:24,707 - api - INFO - Initializing system components...
+2026-03-17 15:12:24,801 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 15:12:24,801 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 15:12:29,501 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 15:12:30,228 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 15:12:30,937 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 15:12:30,939 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 15:12:30,942 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 15:12:30,943 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 15:12:30,943 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 15:12:44,205 - api - INFO - Received query: Which proposals do NOT have an alarm system, and what are their total insured values?
+2026-03-17 15:12:44,214 - api - INFO - Generated answer (length: 452 chars)
+2026-03-17 15:19:38,828 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 15:19:38,828 - api - INFO - Initializing system components...
+2026-03-17 15:19:38,850 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 15:19:38,850 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 15:19:43,842 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+2026-03-17 15:19:44,032 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 15:19:44,684 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 15:19:44,686 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 15:19:44,689 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 15:19:44,689 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 15:19:44,689 - api - INFO - API startup complete. Ready to handle requests.
+2026-03-17 15:29:01,013 - api - INFO - Received query: Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?
+2026-03-17 15:29:01,030 - api - INFO - Generated answer (length: 818 chars)

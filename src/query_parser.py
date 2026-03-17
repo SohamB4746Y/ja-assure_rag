@@ -188,6 +188,9 @@ NATURAL LANGUAGE PHRASE MAPPINGS — ALWAYS use these exact field names when you
 "guards at premise" / "guards at shop" / "security guards on site"
   → do_you_use_guards_at_premise_label
 
+"jaguar transit" / "usage of jaguar transit" / "jaguar service"
+    → usage_of_jaguar_transit_label
+
 "armoured vehicle" / "armored vehicle" / "security vehicle"
   → do_you_use_armoured_vehicle_label
 
@@ -300,6 +303,8 @@ IMPORTANT REMINDERS:
 - filter_field + filter_value are for filtering rows (e.g., alarm=001 means Yes). Do NOT use filter_field when filter_value is null.
 - When the user asks about a specific PERSON or BUSINESS NAME (not a quote ID), use filter_contains with that name and intent="lookup".
 - "how often", "how much", "how long" + a PERSON/BUSINESS name = intent "lookup" (NOT "count"). These ask for a specific field VALUE for a named entity.
+- If the query includes "Jaguar transit", always include usage_of_jaguar_transit_label as an independent filter condition. Never substitute with armoured vehicle fields.
+- Do not confuse do_you_use_guards_at_premise_label with do_you_use_armed_guards_during_transit_label. They are separate fields.
 
 Output ONLY the JSON, no explanation."""
 

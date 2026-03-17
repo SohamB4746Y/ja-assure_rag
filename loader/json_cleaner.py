@@ -26,6 +26,10 @@ Usage:
     ...     process(data)
 """
 
+import json
+import re
+import math
+
 SMART_QUOTES = {
     "\u201c": '"',
     "\u201d": '"',

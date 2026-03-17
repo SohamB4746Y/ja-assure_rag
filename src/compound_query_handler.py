@@ -25,9 +25,14 @@ class CompoundQueryHandler:
     # so that "armed guards during transit" matches before "guards".
     FIELD_PHRASE_MAP = [
         # --- Security ---
+                (["guards at premise", "guards at the premise", "guards on site",
+                    "security guards at premise"],
+                 ("transit_and_gaurds", "do_you_use_guards_at_premise_label")),
         (["armed guards during transit", "armed guards", "guards during transit",
           "transit guards"],
          ("transit_and_gaurds", "do_you_use_armed_guards_during_transit_label")),
+                (["jaguar transit", "usage of jaguar transit", "jaguar service"],
+                 ("transit_and_gaurds", "usage_of_jaguar_transit_label")),
         (["armoured vehicle", "armored vehicle", "armoured car"],
          ("transit_and_gaurds", "do_you_use_armoured_vehicle_label")),
         (["gps tracker", "gps installed", "have gps", "use gps",
@@ -81,6 +86,13 @@ class CompoundQueryHandler:
 
     # Condition indicators: (phrase, field_name, expected_decoded_value)
     CONDITION_INDICATORS = [
+        ("have guards at premise", "do_you_use_guards_at_premise_label", "Yes"),
+        ("with guards at premise", "do_you_use_guards_at_premise_label", "Yes"),
+        ("guards at premise", "do_you_use_guards_at_premise_label", "Yes"),
+        ("have jaguar transit", "usage_of_jaguar_transit_label", "Yes"),
+        ("use jaguar transit", "usage_of_jaguar_transit_label", "Yes"),
+        ("with jaguar transit", "usage_of_jaguar_transit_label", "Yes"),
+        ("jaguar transit", "usage_of_jaguar_transit_label", "Yes"),
         ("have armed guards", "do_you_use_armed_guards_during_transit_label", "Yes"),
         ("use armed guards", "do_you_use_armed_guards_during_transit_label", "Yes"),
         ("with armed guards", "do_you_use_armed_guards_during_transit_label", "Yes"),
@@ -103,10 +115,17 @@ class CompoundQueryHandler:
         ("have sop", "standard_operating_procedure_label", "Yes"),
         ("no armed guards", "do_you_use_armed_guards_during_transit_label", "No"),
         ("without armed guards", "do_you_use_armed_guards_during_transit_label", "No"),
+        ("not armed guards during transit", "do_you_use_armed_guards_during_transit_label", "No"),
+        ("without armed guards during transit", "do_you_use_armed_guards_during_transit_label", "No"),
+        ("no armed guards during transit", "do_you_use_armed_guards_during_transit_label", "No"),
         ("no strong room", "do_you_have_a_strong_room_label", "No"),
         ("without strong room", "do_you_have_a_strong_room_label", "No"),
         ("no alarm", "do_you_have_alarm_label", "No"),
         ("no gps", "installed_gps_tracker_in_transit_vehicles_label", "No"),
+        ("no jaguar transit", "usage_of_jaguar_transit_label", "No"),
+        ("without jaguar transit", "usage_of_jaguar_transit_label", "No"),
+        ("no guards at premise", "do_you_use_guards_at_premise_label", "No"),
+        ("without guards at premise", "do_you_use_guards_at_premise_label", "No"),
     ]
 
     # Location names for extraction — longest first to avoid partial matches
@@ -287,7 +306,17 @@ class CompoundQueryHandler:
         """Extract field=value conditions. Returns [(field_name, value)]."""
         conditions: List[Tuple[str, str]] = []
         seen_fields: set = set()
-        for phrase, field, value in self.CONDITION_INDICATORS:
+
+        def _is_negative_phrase(phrase: str) -> bool:
+            p = phrase.lower()
+            return " no " in f" {p} " or "without" in p or p.startswith("not ")
+
+        ordered_indicators = sorted(
+            self.CONDITION_INDICATORS,
+            key=lambda item: (0 if _is_negative_phrase(item[0]) else 1, -len(item[0])),
+        )
+
+        for phrase, field, value in ordered_indicators:
             if phrase in q and field not in seen_fields:
                 conditions.append((field, value))
                 seen_fields.add(field)

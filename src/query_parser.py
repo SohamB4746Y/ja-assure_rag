@@ -14,7 +14,7 @@ from __future__ import annotations
 import json
 import re
 from typing import Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from src.llm_client import LLMClient
 
@@ -322,6 +322,7 @@ class ParsedQuery:
     understood_question: str
     raw_query: str
     parse_success: bool
+    filter_conditions: list[dict] = field(default_factory=list)
 
 
 class QueryParser:
@@ -842,6 +843,93 @@ class QueryParser:
         
         return None
 
+    def _extract_structured_conditions(self, query: str) -> list[dict]:
+        """
+        Extract deterministic field conditions from natural language.
+        Returns conditions shaped as:
+        [{"field": <field_name>, "comparator": "eq|gt|lt|gte|lte", "value": <str>}]
+        """
+        q = query.lower()
+        conditions: list[dict] = []
+
+        # Yes/No condition phrases. This is generic phrase-to-field routing, not
+        # answer hardcoding, and feeds deterministic executor filtering.
+        yn_field_map = [
+            ("do_you_have_alarm_label", ["alarm"]),
+            ("do_you_have_a_strong_room_label", ["strong room", "strongroom"]),
+            ("do_you_use_armoured_vehicle_label", ["armoured vehicle", "armored vehicle"]),
+            ("usage_of_jaguar_transit_label", ["jaguar transit"]),
+            ("do_you_use_armed_guards_during_transit_label", ["armed guards during transit", "armed guards"]),
+            ("do_you_use_guards_at_premise_label", ["guards at premise", "guards at the premise"]),
+            ("installed_gps_tracker_in_transit_vehicles_label", ["gps in transit vehicles", "gps in vehicles", "vehicle gps"]),
+            ("installed_gps_tracker_in_transit_bags_label", ["gps in transit bags", "gps in bags"]),
+            ("cctv_maintenance_contract_label", ["cctv maintenance", "camera maintenance"]),
+            ("director_house_question_label", ["director house coverage", "director house"]),
+            ("fidelity_guarantee_insurance_add_coverage_label", ["fidelity guarantee insurance", "fidelity guarantee"]),
+        ]
+
+        negative_markers = ["without", " do not ", " don't ", " dont ", " no ", " not "]
+        for field_name, phrases in yn_field_map:
+            phrase_hit = any(p in q for p in phrases)
+            if not phrase_hit:
+                continue
+            is_negative = any(marker in f" {q} " for marker in negative_markers)
+            conditions.append({
+                "field": field_name,
+                "comparator": "eq",
+                "value": "No" if is_negative else "Yes",
+            })
+
+        # Grade conditions like "Grade 4" or "Grade 3 or higher"
+        grade_match = re.search(r"grade\s*(\d+)", q)
+        if grade_match:
+            grade_num = grade_match.group(1)
+            comparator = "eq"
+            if "or higher" in q or "and above" in q or "at least" in q:
+                comparator = "gte"
+            elif "or lower" in q or "and below" in q or "at most" in q:
+                comparator = "lte"
+            conditions.append({
+                "field": "grade_label",
+                "comparator": comparator,
+                "value": grade_num,
+            })
+
+        # Numeric threshold examples: "exceeding RM 200,000", "above 5m"
+        threshold_patterns = [
+            (
+                r"(stock out of safe|value of stock out of safe)[^\d]*(?:over|above|exceeding|greater than|>)\s*rm?\s*([\d,]+)",
+                "value_of_stock_out_of_safe_label",
+                "gt",
+            ),
+            (
+                r"(insured value|sum insured|sum assured)[^\d]*(?:over|above|exceeding|greater than|>)\s*rm?\s*([\d,]+)",
+                "sum_assured_limit_label",
+                "gt",
+            ),
+        ]
+        for pattern, field_name, comparator in threshold_patterns:
+            m = re.search(pattern, q)
+            if not m:
+                continue
+            numeric_val = m.group(2).replace(",", "")
+            conditions.append({
+                "field": field_name,
+                "comparator": comparator,
+                "value": numeric_val,
+            })
+
+        # Deduplicate by (field, comparator, value)
+        dedup = []
+        seen = set()
+        for c in conditions:
+            key = (c.get("field"), c.get("comparator"), str(c.get("value")))
+            if key in seen:
+                continue
+            seen.add(key)
+            dedup.append(c)
+        return dedup
+
     def parse(self, query: str) -> ParsedQuery:
         """
         Parse a natural language query into a structured format.
@@ -878,7 +966,8 @@ class QueryParser:
                 output_fields=[],
                 understood_question=query,
                 raw_query=query,
-                parse_success=False
+                parse_success=False,
+                filter_conditions=[]
             )
         
                                                                 
@@ -920,8 +1009,33 @@ class QueryParser:
                 output_fields=parsed.get("output_fields", []),
                 understood_question=parsed.get("understood_question", query),
                 raw_query=query,
-                parse_success=True
+                parse_success=True,
+                filter_conditions=[]
             )
+
+            llm_conditions = parsed.get("filter_conditions", [])
+            if isinstance(llm_conditions, list):
+                for cond in llm_conditions:
+                    if not isinstance(cond, dict):
+                        continue
+                    field_name = cond.get("field")
+                    comp = (cond.get("comparator") or "eq").lower()
+                    value = cond.get("value")
+                    if field_name and value is not None:
+                        parsed_result.filter_conditions.append({
+                            "field": field_name,
+                            "comparator": comp,
+                            "value": str(value),
+                        })
+
+            if parsed_result.filter_field and parsed_result.filter_value is not None:
+                parsed_result.filter_conditions.append({
+                    "field": parsed_result.filter_field,
+                    "comparator": "eq",
+                    "value": parsed_result.filter_value,
+                })
+
+            parsed_result.filter_conditions.extend(self._extract_structured_conditions(query))
             
                                                                                       
             query_entity = self._extract_entity_from_query(query)
@@ -1014,5 +1128,6 @@ class QueryParser:
             output_fields=[],
             understood_question=query,
             raw_query=query,
-            parse_success=False
+            parse_success=False,
+            filter_conditions=[]
         )

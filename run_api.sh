@@ -27,5 +27,19 @@ echo ""
 echo "Press CTRL+C to stop"
 echo ""
 
+# Resolve a usable Python executable across environments
+if [ -n "$VIRTUAL_ENV" ] && [ -x "$VIRTUAL_ENV/bin/python" ]; then
+    PYTHON_CMD="$VIRTUAL_ENV/bin/python"
+elif [ -x "venv/bin/python" ]; then
+    PYTHON_CMD="venv/bin/python"
+elif command -v python3 >/dev/null 2>&1; then
+    PYTHON_CMD="python3"
+elif command -v python >/dev/null 2>&1; then
+    PYTHON_CMD="python"
+else
+    echo "Error: No Python executable found"
+    exit 1
+fi
+
 # Run the API server
-python api.py
+"$PYTHON_CMD" api.py

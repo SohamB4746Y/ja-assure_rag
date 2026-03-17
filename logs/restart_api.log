@@ -1,0 +1,246 @@
+
+=== JA Assure RAG API Server ===
+
+Starting FastAPI server on http://localhost:8000
+Interactive docs: http://localhost:8000/docs
+
+Press CTRL+C to stop
+
+/Users/user57/Documents/ja-assure_rag_final/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+/Users/user57/Documents/ja-assure_rag_final/api.py:63: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+/Users/user57/Documents/ja-assure_rag_final/api.py:86: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  question: str = Field(
+INFO:     Started server process [15932]
+INFO:     Waiting for application startup.
+2026-03-17 17:16:35,829 - api - INFO - Starting JA Assure RAG API...
+2026-03-17 17:16:35,833 - api - INFO - Initializing system components...
+2026-03-17 17:16:35,934 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2026-03-17 17:16:35,934 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-17 17:16:41,209 - ja_assure_rag - INFO - Embedder initialized: 384 dimensions
+
+=== JA Assure RAG API ===
+
+Starting FastAPI server...
+API will be available at: http://localhost:8000
+Interactive docs: http://localhost:8000/docs
+Alternative docs: http://localhost:8000/redoc
+
+Press CTRL+C to stop
+
+
+=== JA Assure | Production RAG System ===
+
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.86it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.86it/s]
+2026-03-17 17:16:41,792 - ja_assure_rag - INFO - Predefined Q&A loaded: 10 pairs
+2026-03-17 17:16:42,473 - httpx - INFO - HTTP Request: GET https://api.cerebras.ai/v1/tcp_warming "HTTP/2 200 OK"
+2026-03-17 17:16:42,476 - ja_assure_rag - INFO - LLM client initialized
+2026-03-17 17:16:42,480 - ja_assure_rag.analytical_engine - INFO - AnalyticalEngine: loaded 15 proposal records
+2026-03-17 17:16:42,480 - ja_assure_rag - INFO - Analytical engine initialized: 15 records
+2026-03-17 17:16:42,481 - api - INFO - API startup complete. Ready to handle requests.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+Model: qwen-3-235b-a22b-instruct-2507
+INFO:     127.0.0.1:52787 - "GET /health HTTP/1.1" 200 OK
+2026-03-17 17:16:55,856 - api - INFO - Received query: List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.
+2026-03-17 17:16:55,865 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 17:16:55,872 - api - INFO - Generated answer (length: 281 chars)
+INFO:     127.0.0.1:52797 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:16:55,873 - api - INFO - Received query: Which proposals have a safe of Grade 4 but no strong room — and what are their insured values?
+2026-03-17 17:16:55,879 - api - INFO - Generated answer (length: 1543 chars)
+INFO:     127.0.0.1:52798 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:16:55,881 - api - INFO - Received query: List proposals with alarm and strong room and cctv and xyznonexistentfield over RM 1
+2026-03-17 17:16:55,887 - api - INFO - Generated answer (length: 56 chars)
+INFO:     127.0.0.1:52799 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,929 - api - INFO - Received query: Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?
+2026-03-17 17:19:24,936 - api - INFO - Generated answer (length: 702 chars)
+INFO:     127.0.0.1:52894 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,938 - api - INFO - Received query: Which proposals do NOT have an alarm system, and what are their total insured values?
+2026-03-17 17:19:24,942 - api - INFO - Generated answer (length: 197 chars)
+INFO:     127.0.0.1:52895 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,943 - api - INFO - Received query: What is the total director's house coverage value across all proposals that have it enabled?
+2026-03-17 17:19:24,948 - api - INFO - Generated answer (length: 317 chars)
+INFO:     127.0.0.1:52896 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,948 - api - INFO - Received query: Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?
+2026-03-17 17:19:24,954 - api - INFO - Generated answer (length: 1058 chars)
+INFO:     127.0.0.1:52897 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,955 - api - INFO - Received query: Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?
+2026-03-17 17:19:24,959 - api - INFO - Generated answer (length: 120 chars)
+INFO:     127.0.0.1:52898 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,960 - api - INFO - Received query: Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit - and what are their total insured transit values?
+2026-03-17 17:19:24,964 - api - INFO - Generated answer (length: 407 chars)
+INFO:     127.0.0.1:52899 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,965 - api - INFO - Received query: What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?
+2026-03-17 17:19:24,970 - api - INFO - Generated answer (length: 1040 chars)
+INFO:     127.0.0.1:52900 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,971 - api - INFO - Received query: Which states in Malaysia have more than one proposal, and what is the total insured value per state?
+2026-03-17 17:19:24,976 - api - INFO - Generated answer (length: 914 chars)
+INFO:     127.0.0.1:52901 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,976 - api - INFO - Received query: Compare the average insured stock value between jewellers and money changers in Malaysia.
+2026-03-17 17:19:24,981 - api - INFO - Generated answer (length: 804 chars)
+INFO:     127.0.0.1:52902 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,982 - api - INFO - Received query: List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.
+2026-03-17 17:19:24,982 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 17:19:24,987 - api - INFO - Generated answer (length: 281 chars)
+INFO:     127.0.0.1:52903 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,987 - api - INFO - Received query: Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?
+2026-03-17 17:19:24,992 - api - INFO - Generated answer (length: 649 chars)
+INFO:     127.0.0.1:52904 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,993 - api - INFO - Received query: How many proposals per state have both an alarm and a strong room?
+2026-03-17 17:19:24,998 - api - INFO - Generated answer (length: 711 chars)
+INFO:     127.0.0.1:52905 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:24,999 - api - INFO - Received query: Which money changers have a CCTV maintenance contract and armed guards at the premise?
+2026-03-17 17:19:25,004 - api - INFO - Generated answer (length: 869 chars)
+INFO:     127.0.0.1:52906 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:25,005 - api - INFO - Received query: Which proposals have a safe of Grade 4 but no strong room - and what are their insured values?
+2026-03-17 17:19:25,010 - api - INFO - Generated answer (length: 1543 chars)
+INFO:     127.0.0.1:52907 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:25,010 - api - INFO - Received query: Rank all business types by their average total insured value. Which type carries the most risk per proposal?
+2026-03-17 17:19:25,015 - api - INFO - Generated answer (length: 363 chars)
+INFO:     127.0.0.1:52908 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:25,016 - api - INFO - Received query: Which proposals have the highest fidelity guarantee amount per staff member covered?
+2026-03-17 17:19:25,021 - api - INFO - Generated answer (length: 1144 chars)
+INFO:     127.0.0.1:52909 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:25,021 - api - INFO - Received query: What is the average premium charged to jewellers in Malaysia?
+2026-03-17 17:19:25,026 - api - INFO - Generated answer (length: 243 chars)
+INFO:     127.0.0.1:52910 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:25,027 - api - INFO - Received query: Which proposals were approved by the underwriter?
+2026-03-17 17:19:25,032 - api - INFO - Generated answer (length: 237 chars)
+INFO:     127.0.0.1:52911 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:25,033 - api - INFO - Received query: Which region has the highest claim frequency?
+2026-03-17 17:19:25,033 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 17:19:25,039 - api - INFO - Generated answer (length: 79 chars)
+INFO:     127.0.0.1:52912 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:19:25,040 - api - INFO - Received query: What is the total revenue generated from Malaysia proposals this quarter?
+2026-03-17 17:19:25,044 - api - INFO - Generated answer (length: 246 chars)
+INFO:     127.0.0.1:52913 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,503 - api - INFO - Received query: Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?
+2026-03-17 17:20:19,510 - api - INFO - Generated answer (length: 702 chars)
+INFO:     127.0.0.1:52948 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,512 - api - INFO - Received query: Which proposals do NOT have an alarm system, and what are their total insured values?
+2026-03-17 17:20:19,519 - api - INFO - Generated answer (length: 197 chars)
+INFO:     127.0.0.1:52949 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,520 - api - INFO - Received query: What is the total director's house coverage value across all proposals that have it enabled?
+2026-03-17 17:20:19,525 - api - INFO - Generated answer (length: 317 chars)
+INFO:     127.0.0.1:52950 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,526 - api - INFO - Received query: Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?
+2026-03-17 17:20:19,530 - api - INFO - Generated answer (length: 1058 chars)
+INFO:     127.0.0.1:52951 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,531 - api - INFO - Received query: Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?
+2026-03-17 17:20:19,536 - api - INFO - Generated answer (length: 120 chars)
+INFO:     127.0.0.1:52952 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,536 - api - INFO - Received query: Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit - and what are their total insured transit values?
+2026-03-17 17:20:19,541 - api - INFO - Generated answer (length: 407 chars)
+INFO:     127.0.0.1:52953 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,542 - api - INFO - Received query: What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?
+2026-03-17 17:20:19,547 - api - INFO - Generated answer (length: 1040 chars)
+INFO:     127.0.0.1:52954 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,548 - api - INFO - Received query: Which states in Malaysia have more than one proposal, and what is the total insured value per state?
+2026-03-17 17:20:19,553 - api - INFO - Generated answer (length: 914 chars)
+INFO:     127.0.0.1:52955 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,554 - api - INFO - Received query: Compare the average insured stock value between jewellers and money changers in Malaysia.
+2026-03-17 17:20:19,558 - api - INFO - Generated answer (length: 804 chars)
+INFO:     127.0.0.1:52956 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,559 - api - INFO - Received query: List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.
+2026-03-17 17:20:19,559 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 17:20:19,564 - api - INFO - Generated answer (length: 281 chars)
+INFO:     127.0.0.1:52957 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,565 - api - INFO - Received query: Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?
+2026-03-17 17:20:19,569 - api - INFO - Generated answer (length: 649 chars)
+INFO:     127.0.0.1:52958 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,570 - api - INFO - Received query: How many proposals per state have both an alarm and a strong room?
+2026-03-17 17:20:19,575 - api - INFO - Generated answer (length: 711 chars)
+INFO:     127.0.0.1:52959 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,576 - api - INFO - Received query: Which money changers have a CCTV maintenance contract and armed guards at the premise?
+2026-03-17 17:20:19,580 - api - INFO - Generated answer (length: 869 chars)
+INFO:     127.0.0.1:52960 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,581 - api - INFO - Received query: Which proposals have a safe of Grade 4 but no strong room - and what are their insured values?
+2026-03-17 17:20:19,586 - api - INFO - Generated answer (length: 1543 chars)
+INFO:     127.0.0.1:52961 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,586 - api - INFO - Received query: Rank all business types by their average total insured value. Which type carries the most risk per proposal?
+2026-03-17 17:20:19,591 - api - INFO - Generated answer (length: 363 chars)
+INFO:     127.0.0.1:52962 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,592 - api - INFO - Received query: Which proposals have the highest fidelity guarantee amount per staff member covered?
+2026-03-17 17:20:19,597 - api - INFO - Generated answer (length: 1144 chars)
+INFO:     127.0.0.1:52963 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,598 - api - INFO - Received query: What is the average premium charged to jewellers in Malaysia?
+2026-03-17 17:20:19,602 - api - INFO - Generated answer (length: 243 chars)
+INFO:     127.0.0.1:52964 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,603 - api - INFO - Received query: Which proposals were approved by the underwriter?
+2026-03-17 17:20:19,608 - api - INFO - Generated answer (length: 237 chars)
+INFO:     127.0.0.1:52965 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,608 - api - INFO - Received query: Which region has the highest claim frequency?
+2026-03-17 17:20:19,608 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 17:20:19,613 - api - INFO - Generated answer (length: 79 chars)
+INFO:     127.0.0.1:52966 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:20:19,614 - api - INFO - Received query: What is the total revenue generated from Malaysia proposals this quarter?
+2026-03-17 17:20:19,618 - api - INFO - Generated answer (length: 246 chars)
+INFO:     127.0.0.1:52967 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,667 - api - INFO - Received query: Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?
+2026-03-17 17:21:04,675 - api - INFO - Generated answer (length: 702 chars)
+INFO:     127.0.0.1:53002 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,676 - api - INFO - Received query: Which proposals do NOT have an alarm system, and what are their total insured values?
+2026-03-17 17:21:04,682 - api - INFO - Generated answer (length: 197 chars)
+INFO:     127.0.0.1:53003 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,682 - api - INFO - Received query: What is the total director's house coverage value across all proposals that have it enabled?
+2026-03-17 17:21:04,687 - api - INFO - Generated answer (length: 317 chars)
+INFO:     127.0.0.1:53004 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,688 - api - INFO - Received query: Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?
+2026-03-17 17:21:04,693 - api - INFO - Generated answer (length: 1058 chars)
+INFO:     127.0.0.1:53005 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,694 - api - INFO - Received query: Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?
+2026-03-17 17:21:04,699 - api - INFO - Generated answer (length: 120 chars)
+INFO:     127.0.0.1:53006 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,699 - api - INFO - Received query: Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit - and what are their total insured transit values?
+2026-03-17 17:21:04,705 - api - INFO - Generated answer (length: 407 chars)
+INFO:     127.0.0.1:53007 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,705 - api - INFO - Received query: What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?
+2026-03-17 17:21:04,710 - api - INFO - Generated answer (length: 1040 chars)
+INFO:     127.0.0.1:53008 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,711 - api - INFO - Received query: Which states in Malaysia have more than one proposal, and what is the total insured value per state?
+2026-03-17 17:21:04,716 - api - INFO - Generated answer (length: 914 chars)
+INFO:     127.0.0.1:53009 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,717 - api - INFO - Received query: Compare the average insured stock value between jewellers and money changers in Malaysia.
+2026-03-17 17:21:04,722 - api - INFO - Generated answer (length: 804 chars)
+INFO:     127.0.0.1:53010 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,723 - api - INFO - Received query: List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.
+2026-03-17 17:21:04,723 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 17:21:04,728 - api - INFO - Generated answer (length: 281 chars)
+INFO:     127.0.0.1:53011 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,728 - api - INFO - Received query: Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?
+2026-03-17 17:21:04,733 - api - INFO - Generated answer (length: 649 chars)
+INFO:     127.0.0.1:53012 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,734 - api - INFO - Received query: How many proposals per state have both an alarm and a strong room?
+2026-03-17 17:21:04,740 - api - INFO - Generated answer (length: 711 chars)
+INFO:     127.0.0.1:53013 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,740 - api - INFO - Received query: Which money changers have a CCTV maintenance contract and armed guards at the premise?
+2026-03-17 17:21:04,746 - api - INFO - Generated answer (length: 869 chars)
+INFO:     127.0.0.1:53014 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,746 - api - INFO - Received query: Which proposals have a safe of Grade 4 but no strong room - and what are their insured values?
+2026-03-17 17:21:04,752 - api - INFO - Generated answer (length: 1543 chars)
+INFO:     127.0.0.1:53015 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,753 - api - INFO - Received query: Rank all business types by their average total insured value. Which type carries the most risk per proposal?
+2026-03-17 17:21:04,758 - api - INFO - Generated answer (length: 363 chars)
+INFO:     127.0.0.1:53016 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,759 - api - INFO - Received query: Which proposals have the highest fidelity guarantee amount per staff member covered?
+2026-03-17 17:21:04,765 - api - INFO - Generated answer (length: 1144 chars)
+INFO:     127.0.0.1:53017 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,765 - api - INFO - Received query: What is the average premium charged to jewellers in Malaysia?
+2026-03-17 17:21:04,771 - api - INFO - Generated answer (length: 243 chars)
+INFO:     127.0.0.1:53018 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,771 - api - INFO - Received query: Which proposals were approved by the underwriter?
+2026-03-17 17:21:04,776 - api - INFO - Generated answer (length: 237 chars)
+INFO:     127.0.0.1:53019 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,777 - api - INFO - Received query: Which region has the highest claim frequency?
+2026-03-17 17:21:04,777 - ja_assure_rag - INFO - Handled by analytical engine (early)
+2026-03-17 17:21:04,782 - api - INFO - Generated answer (length: 79 chars)
+INFO:     127.0.0.1:53020 - "POST /query HTTP/1.1" 200 OK
+2026-03-17 17:21:04,783 - api - INFO - Received query: What is the total revenue generated from Malaysia proposals this quarter?
+2026-03-17 17:21:04,788 - api - INFO - Generated answer (length: 246 chars)
+INFO:     127.0.0.1:53021 - "POST /query HTTP/1.1" 200 OK

@@ -1,0 +1,148 @@
+{
+  "total": 20,
+  "passed": 20,
+  "failed": 0,
+  "pass_rate": 100.0,
+  "results": [
+    {
+      "id": 1,
+      "question": "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+      "passed": true,
+      "reason": "expected qids=['MYJADEQT001', 'MYJADEQT004', 'MYJADEQT008', 'MYJADEQT011', 'MYJADEQT014'] combined=2215000",
+      "answer": "Matching proposals: 5\nJa Assure IN (MYJADEQT001) | Director Amount: RM 400,000 | Fidelity Amount: RM 30,000 | Combined: RM 430,000\nLuxGold Jewellers (MYJADEQT004) | Director Amount: RM 500,000 | Fidelity Amount: RM 60,000 | Combined: RM 560,000\nHeritage Gold & Jewels (MYJADEQT008) | Director Amount: RM 420,000 | Fidelity Amount: RM 55,000 | Combined: RM 475,000\nRoyal Gems & Jewels (MYJADEQT011) | Director Amount: RM 360,000 | Fidelity Amount: RM 48,000 | Combined: RM 408,000\nSunrise Jewel House (MYJADEQT014) | Director Amount: RM 300,000 | Fidelity Amount: RM 42,000 | Combined: RM 342,000\nTotal Director Amount: RM 1,980,000\nTotal Fidelity Amount: RM 235,000\nCombined Add-on Amount: RM 2,215,000"
+    },
+    {
+      "id": 2,
+      "question": "Which proposals do NOT have an alarm system, and what are their total insured values?",
+      "passed": true,
+      "reason": "expected qids=['MYJADEQT001'] total=0",
+      "answer": "Proposals without an alarm system \u2014 1 found:\nJa Assure IN (MYJADEQT001) \u2014 Total Insured: RM 8,500,000\n\nTotal insured across all 1 proposals: RM 8,500,000\n14 of 15 proposals DO have an alarm system."
+    },
+    {
+      "id": 3,
+      "question": "What is the total director's house coverage value across all proposals that have it enabled?",
+      "passed": true,
+      "reason": "expected total_director=1980000",
+      "answer": "Director's House Coverage \u2014 5 proposals opted:\nJa Assure IN (MYJADEQT001): RM 400,000\nLuxGold Jewellers (MYJADEQT004): RM 500,000\nHeritage Gold & Jewels (MYJADEQT008): RM 420,000\nRoyal Gems & Jewels (MYJADEQT011): RM 360,000\nSunrise Jewel House (MYJADEQT014): RM 300,000\n\nTotal Director's House Coverage: RM 1,980,000"
+    },
+    {
+      "id": 4,
+      "question": "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+      "passed": true,
+      "reason": "expected qids=['MYJADEQT004', 'MYJADEQT008']",
+      "answer": "Proposals with stock out of safe exceeding RM 200,000:\nLuxGold Jewellers (MYJADEQT004): RM 280,000 out of safe | Safe: Grade 4\nHeritage Gold & Jewels (MYJADEQT008): RM 210,000 out of safe | Safe: Grade 4\n\nBelow / at threshold (13 proposals):\nGlobal Money Exchange (MYJADEQT005): RM 200,000 | Safe: Grade 3\nRoyal Gems & Jewels (MYJADEQT011): RM 180,000 | Safe: Grade 3\nSunrise Jewel House (MYJADEQT014): RM 160,000 | Safe: Grade 3\nHarbor FX Services (MYJADEQT015): RM 155,000 | Safe: Grade 2\nFinSecure Money Services (MYJADEQT002): RM 150,000 | Safe: Grade 3\nCity FX Exchange (MYJADEQT010): RM 140,000 | Safe: Grade 2\nRapid FX Money Exchange (MYJADEQT007): RM 120,000 | Safe: Grade 2\nMetro FX Exchange (MYJADEQT012): RM 110,000 | Safe: Grade 2\nMehta Pawn Services (MYJADEQT003): RM 75,000 | Safe: Grade 3\nTrust Pawn Brokers (MYJADEQT009): RM 65,000 | Safe: Grade 3\nSecure Pawn Brokers (MYJADEQT006): RM 60,000 | Safe: Grade 3\nPrime Pawn Services (MYJADEQT013): RM 58,000 | Safe: Grade 3\nJa Assure IN (MYJADEQT001): RM 0 (no stock outside safe) | Safe: Grade 4"
+    },
+    {
+      "id": 5,
+      "question": "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+      "passed": true,
+      "reason": "expected top_staff_qids=['MYJADEQT001'] max_staff=23",
+      "answer": "Highest fidelity staff covered: 23\nJa Assure IN (MYJADEQT001) | Staff Covered: 23 | Director House Coverage Enabled: Yes"
+    },
+    {
+      "id": 6,
+      "question": "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit - and what are their total insured transit values?",
+      "passed": true,
+      "reason": "expected qids=['MYJADEQT001', 'MYJADEQT004', 'MYJADEQT008', 'MYJADEQT011', 'MYJADEQT014'] total_transit=2880000",
+      "answer": "Matching proposals: 5\nJa Assure IN (MYJADEQT001) | Insured Transit Value: RM 500,000\nLuxGold Jewellers (MYJADEQT004) | Insured Transit Value: RM 750,000\nHeritage Gold & Jewels (MYJADEQT008) | Insured Transit Value: RM 650,000\nRoyal Gems & Jewels (MYJADEQT011) | Insured Transit Value: RM 520,000\nSunrise Jewel House (MYJADEQT014) | Insured Transit Value: RM 460,000\nTotal Insured Transit Value: RM 2,880,000"
+    },
+    {
+      "id": 7,
+      "question": "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+      "passed": true,
+      "reason": "expected grand_total=560000 top_btype=Jewellers",
+      "answer": "Fidelity Guarantee Insurance by Business Type:\n\nJewellers (4 proposals):\n Total: RM 205,000 | Average: RM 51,250\nLuxGold Jewellers (MYJADEQT004): RM 60,000\nHeritage Gold & Jewels (MYJADEQT008): RM 55,000\nRoyal Gems & Jewels (MYJADEQT011): RM 48,000\nSunrise Jewel House (MYJADEQT014): RM 42,000\n\nMoney Changers (6 proposals):\n Total: RM 226,000 | Average: RM 37,667\nFinSecure Money Services (MYJADEQT002): RM 45,000\nGlobal Money Exchange (MYJADEQT005): RM 40,000\nRapid FX Money Exchange (MYJADEQT007): RM 35,000\nCity FX Exchange (MYJADEQT010): RM 36,000\nMetro FX Exchange (MYJADEQT012): RM 32,000\nHarbor FX Services (MYJADEQT015): RM 38,000\n\nOther (1 proposals):\n Total: RM 30,000 | Average: RM 30,000\nJa Assure IN (MYJADEQT001): RM 30,000\n\nPawn Brokers (4 proposals):\n Total: RM 99,000 | Average: RM 24,750\nMehta Pawn Services (MYJADEQT003): RM 20,000\nSecure Pawn Brokers (MYJADEQT006): RM 25,000\nTrust Pawn Brokers (MYJADEQT009): RM 28,000\nPrime Pawn Services (MYJADEQT013): RM 26,000\n\nGrand Total Fidelity across all proposals: RM 560,000"
+    },
+    {
+      "id": 8,
+      "question": "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+      "passed": true,
+      "reason": "expected multi-proposal states=['Johor', 'Kuala Lumpur', 'Perak', 'Selangor']",
+      "answer": "States with more than 1 proposal \u2014 4 state(s) found:\n\nJohor: 3 proposals | Total Insured: RM 12,310,000\nJa Assure IN (MYJADEQT001) [Other]: RM 8,500,000\nSecure Pawn Brokers (MYJADEQT006) [Pawn Broker]: RM 1,770,000\nMetro FX Exchange (MYJADEQT012) [Money Changer]: RM 2,040,000\nKuala Lumpur: 2 proposals | Total Insured: RM 10,280,000\nFinSecure Money Services (MYJADEQT002) [Money Changer]: RM 3,050,000\nLuxGold Jewellers (MYJADEQT004) [Jeweller]: RM 7,230,000\nSelangor: 2 proposals | Total Insured: RM 6,915,000\nGlobal Money Exchange (MYJADEQT005) [Money Changer]: RM 3,950,000\nHarbor FX Services (MYJADEQT015) [Money Changer]: RM 2,965,000\nPerak: 2 proposals | Total Insured: RM 3,523,000\nTrust Pawn Brokers (MYJADEQT009) [Pawn Broker]: RM 1,875,000\nPrime Pawn Services (MYJADEQT013) [Pawn Broker]: RM 1,648,000\n\nCombined insured (multi-proposal states): RM 33,028,000\n\nSingle-proposal states (6 total) not shown."
+    },
+    {
+      "id": 9,
+      "question": "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+      "passed": true,
+      "reason": "expected j_avg=0 m_avg=0",
+      "answer": "Average Insured Value Comparison \u2014 Jewellers vs Money Changers:\n\nJewellers: 4 proposals\n Total: RM 21,510,000 | Average: RM 5,377,500\nLuxGold Jewellers (MYJADEQT004): RM 7,230,000\nHeritage Gold & Jewels (MYJADEQT008): RM 5,660,000\nRoyal Gems & Jewels (MYJADEQT011): RM 4,600,000\nSunrise Jewel House (MYJADEQT014): RM 4,020,000\n\nMoney Changers: 6 proposals\n Total: RM 16,845,000 | Average: RM 2,807,500\nFinSecure Money Services (MYJADEQT002): RM 3,050,000\nGlobal Money Exchange (MYJADEQT005): RM 3,950,000\nRapid FX Money Exchange (MYJADEQT007): RM 2,240,000\nCity FX Exchange (MYJADEQT010): RM 2,600,000\nMetro FX Exchange (MYJADEQT012): RM 2,040,000\nHarbor FX Services (MYJADEQT015): RM 2,965,000\n\nJewellers average is 1.9x that of Money Changers.\nJewellers carry higher average insured value per proposal."
+    },
+    {
+      "id": 10,
+      "question": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+      "passed": true,
+      "reason": "expected qids=['MYJADEQT003', 'MYJADEQT006', 'MYJADEQT009', 'MYJADEQT013']",
+      "answer": "GPS Tracker Statistics:\n GPS in transit vehicles: 11 Yes, 4 No\n GPS in transit bags: 15 Yes, 0 No\n Proposals with GPS in bags but NOT in vehicles:\nMehta Pawn Services (MYJADEQT003)\nSecure Pawn Brokers (MYJADEQT006)\nTrust Pawn Brokers (MYJADEQT009)\nPrime Pawn Services (MYJADEQT013)"
+    },
+    {
+      "id": 11,
+      "question": "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+      "passed": true,
+      "reason": "expected qids=['MYJADEQT003', 'MYJADEQT006', 'MYJADEQT009', 'MYJADEQT013']",
+      "answer": "Pawn Brokers \u2014 4 total in database, filtered by: strong room AND safe Grade 3 or Grade 4\nMatching: 4 proposal(s)\nMehta Pawn Services (MYJADEQT003) \u2014 Penang\n Strong Room: Yes | Safe: Grade 3 | CCTV Contract: Yes | Guards at Premise: Yes | Alarm: Yes\nSecure Pawn Brokers (MYJADEQT006) \u2014 Johor\n Strong Room: Yes | Safe: Grade 3 | CCTV Contract: No | Guards at Premise: Yes | Alarm: Yes\nTrust Pawn Brokers (MYJADEQT009) \u2014 Perak\n Strong Room: Yes | Safe: Grade 3 | CCTV Contract: No | Guards at Premise: Yes | Alarm: Yes\nPrime Pawn Services (MYJADEQT013) \u2014 Perak\n Strong Room: Yes | Safe: Grade 3 | CCTV Contract: No | Guards at Premise: Yes | Alarm: Yes"
+    },
+    {
+      "id": 12,
+      "question": "How many proposals per state have both an alarm and a strong room?",
+      "passed": true,
+      "reason": "expected total=10",
+      "answer": "Proposals with BOTH alarm and strong room \u2014 grouped by state:\nTotal matching: 10 out of 15 proposals\n\nJohor: 1 of 3 proposals\nSecure Pawn Brokers (MYJADEQT006)\nKedah: 1 of 1 proposals\nSunrise Jewel House (MYJADEQT014)\nKuala Lumpur: 2 of 2 proposals\nFinSecure Money Services (MYJADEQT002)\nLuxGold Jewellers (MYJADEQT004)\nMelaka: 1 of 1 proposals\nHeritage Gold & Jewels (MYJADEQT008)\nNegeri Sembilan: 1 of 1 proposals\nRoyal Gems & Jewels (MYJADEQT011)\nPahang: 0 of 1 proposals\nPenang: 1 of 1 proposals\nMehta Pawn Services (MYJADEQT003)\nPerak: 2 of 2 proposals\nTrust Pawn Brokers (MYJADEQT009)\nPrime Pawn Services (MYJADEQT013)\nSabah: 0 of 1 proposals\nSelangor: 1 of 2 proposals\nGlobal Money Exchange (MYJADEQT005)"
+    },
+    {
+      "id": 13,
+      "question": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+      "passed": true,
+      "reason": "expected qids=['MYJADEQT010', 'MYJADEQT015']",
+      "answer": "Money Changers \u2014 6 total in database, filtered by: CCTV maintenance contract AND guards at premise\nMatching: 2 proposal(s)\nCity FX Exchange (MYJADEQT010) \u2014 Pahang\n Strong Room: No | Safe: Grade 2 | CCTV Contract: Yes | Guards at Premise: Yes | Alarm: Yes\nHarbor FX Services (MYJADEQT015) \u2014 Selangor\n Strong Room: No | Safe: Grade 2 | CCTV Contract: Yes | Guards at Premise: Yes | Alarm: Yes\n\nDid not match (4):\nFinSecure Money Services (MYJADEQT002): Strong Room: Yes | Safe: Grade 3 | CCTV Contract: No | Guards at Premise: Yes\nGlobal Money Exchange (MYJADEQT005): Strong Room: Yes | Safe: Grade 3 | CCTV Contract: No | Guards at Premise: Yes\nRapid FX Money Exchange (MYJADEQT007): Strong Room: No | Safe: Grade 2 | CCTV Contract: No | Guards at Premise: Yes\nMetro FX Exchange (MYJADEQT012): Strong Room: No | Safe: Grade 2 | CCTV Contract: No | Guards at Premise: Yes"
+    },
+    {
+      "id": 14,
+      "question": "Which proposals have a safe of Grade 4 but no strong room - and what are their insured values?",
+      "passed": true,
+      "reason": "expected qids=['MYJADEQT001'] + insured values mentioned",
+      "answer": "Proposals with Grade 4 safe AND no strong room:\nJa Assure IN (MYJADEQT001) \u2014 Total Insured: RM 8,500,000\n\nAll proposals \u2014 safe grade + strong room:\n Ja Assure IN (MYJADEQT001): Grade 4 | Strong Room: No | Total Insured: RM 8,500,000 \u2190 MATCH\n FinSecure Money Services (MYJADEQT002): Grade 3 | Strong Room: Yes | Total Insured: RM 3,050,000\n Mehta Pawn Services (MYJADEQT003): Grade 3 | Strong Room: Yes | Total Insured: RM 2,255,000\n LuxGold Jewellers (MYJADEQT004): Grade 4 | Strong Room: Yes | Total Insured: RM 7,230,000\n Global Money Exchange (MYJADEQT005): Grade 3 | Strong Room: Yes | Total Insured: RM 3,950,000\n Secure Pawn Brokers (MYJADEQT006): Grade 3 | Strong Room: Yes | Total Insured: RM 1,770,000\n Rapid FX Money Exchange (MYJADEQT007): Grade 2 | Strong Room: No | Total Insured: RM 2,240,000\n Heritage Gold & Jewels (MYJADEQT008): Grade 4 | Strong Room: Yes | Total Insured: RM 5,660,000\n Trust Pawn Brokers (MYJADEQT009): Grade 3 | Strong Room: Yes | Total Insured: RM 1,875,000\n City FX Exchange (MYJADEQT010): Grade 2 | Strong Room: No | Total Insured: RM 2,600,000\n Royal Gems & Jewels (MYJADEQT011): Grade 3 | Strong Room: Yes | Total Insured: RM 4,600,000\n Metro FX Exchange (MYJADEQT012): Grade 2 | Strong Room: No | Total Insured: RM 2,040,000\n Prime Pawn Services (MYJADEQT013): Grade 3 | Strong Room: Yes | Total Insured: RM 1,648,000\n Sunrise Jewel House (MYJADEQT014): Grade 3 | Strong Room: Yes | Total Insured: RM 4,020,000\n Harbor FX Services (MYJADEQT015): Grade 2 | Strong Room: No | Total Insured: RM 2,965,000"
+    },
+    {
+      "id": 15,
+      "question": "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+      "passed": true,
+      "reason": "expected top rank types include=['Jewellers', 'Money Changers']",
+      "answer": "Business Types Ranked by Average Total Insured Value:\nOther: avg RM 8,500,000 (total RM 8,500,000 across 1 proposal \u2014 limited sample, not comparable)\nJewellers: avg RM 5,377,500 (total RM 21,510,000 across 4 proposals)\nMoney Changers: avg RM 2,807,500 (total RM 16,845,000 across 6 proposals)\nPawn Brokers: avg RM 1,887,000 (total RM 7,548,000 across 4 proposals)"
+    },
+    {
+      "id": 16,
+      "question": "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+      "passed": true,
+      "reason": "expected top_qid=MYJADEQT004",
+      "answer": "Fidelity Guarantee per Staff Member \u2014 15 proposals:\nLuxGold Jewellers (MYJADEQT004): RM 3,000/staff (RM 60,000 \u00f7 20 staff)\nCity FX Exchange (MYJADEQT010): RM 2,769/staff (RM 36,000 \u00f7 13 staff)\nHarbor FX Services (MYJADEQT015): RM 2,714/staff (RM 38,000 \u00f7 14 staff)\nGlobal Money Exchange (MYJADEQT005): RM 2,667/staff (RM 40,000 \u00f7 15 staff)\nRoyal Gems & Jewels (MYJADEQT011): RM 2,667/staff (RM 48,000 \u00f7 18 staff)\nMetro FX Exchange (MYJADEQT012): RM 2,667/staff (RM 32,000 \u00f7 12 staff)\nSunrise Jewel House (MYJADEQT014): RM 2,625/staff (RM 42,000 \u00f7 16 staff)\nPrime Pawn Services (MYJADEQT013): RM 2,600/staff (RM 26,000 \u00f7 10 staff)\nTrust Pawn Brokers (MYJADEQT009): RM 2,545/staff (RM 28,000 \u00f7 11 staff)\nFinSecure Money Services (MYJADEQT002): RM 2,500/staff (RM 45,000 \u00f7 18 staff)\nSecure Pawn Brokers (MYJADEQT006): RM 2,500/staff (RM 25,000 \u00f7 10 staff)\nRapid FX Money Exchange (MYJADEQT007): RM 2,500/staff (RM 35,000 \u00f7 14 staff)\nHeritage Gold & Jewels (MYJADEQT008): RM 2,500/staff (RM 55,000 \u00f7 22 staff)\nMehta Pawn Services (MYJADEQT003): RM 1,667/staff (RM 20,000 \u00f7 12 staff)\nJa Assure IN (MYJADEQT001): RM 1,304/staff (RM 30,000 \u00f7 23 staff)"
+    },
+    {
+      "id": 17,
+      "question": "What is the average premium charged to jewellers in Malaysia?",
+      "passed": true,
+      "reason": "expected out-of-scope refusal",
+      "answer": "This information is not available in the proposal database.\n\nPremium amounts and premium rates are not available in proposal records.\n\nYou can ask: 'Which proposals have the highest insured value?' or 'List all proposals ranked by sum insured'"
+    },
+    {
+      "id": 18,
+      "question": "Which proposals were approved by the underwriter?",
+      "passed": true,
+      "reason": "expected out-of-scope refusal",
+      "answer": "This information is not available in the proposal database.\n\nUnderwriting decisions and policy approval status are not available in proposal records.\n\nYou can ask: 'List all proposals in the database' or 'Show proposals by business type'"
+    },
+    {
+      "id": 19,
+      "question": "Which region has the highest claim frequency?",
+      "passed": true,
+      "reason": "expected zero-claims conclusion",
+      "answer": "All 15 proposals report zero claims. No claim frequency comparison is possible."
+    },
+    {
+      "id": 20,
+      "question": "What is the total revenue generated from Malaysia proposals this quarter?",
+      "passed": true,
+      "reason": "expected out-of-scope refusal",
+      "answer": "This information is not available in the proposal database.\n\nRevenue or financial performance data is not available in proposal records.\n\nYou can ask: 'Which proposals have the highest insured value?' or 'List all proposals ranked by sum insured'"
+    }
+  ]
+}

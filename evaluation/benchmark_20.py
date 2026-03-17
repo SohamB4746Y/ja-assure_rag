@@ -1,0 +1,464 @@
+"""
+20-question benchmark harness for JA Assure RAG API.
+
+Design goals:
+- No hardcoded answer strings.
+- Expected values are computed from metadata deterministically.
+- Validation is semantic and numeric (not exact wording).
+"""
+
+from __future__ import annotations
+
+import json
+import pickle
+import re
+import urllib.request
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable
+
+API_URL = "http://127.0.0.1:8000/query"
+METADATA_PATH = Path("index/metadata.pkl")
+
+
+@dataclass
+class BenchmarkCase:
+    id: int
+    question: str
+    validator: Callable[[str, dict], tuple[bool, str]]
+
+
+def _read_json_response(question: str) -> str:
+    req = urllib.request.Request(
+        API_URL,
+        data=json.dumps({"question": question}).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=120) as resp:
+        payload = json.loads(resp.read().decode("utf-8"))
+    return payload.get("answer", "")
+
+
+def _to_num(value) -> float:
+    if value is None:
+        return 0.0
+    s = str(value).replace(",", "").replace("RM", "").strip()
+    try:
+        return float(s)
+    except ValueError:
+        return 0.0
+
+
+def _as_code(v) -> str:
+    return str(v or "").strip()
+
+
+def _load_records() -> dict:
+    with METADATA_PATH.open("rb") as f:
+        chunks = pickle.load(f)
+
+    records: dict = {}
+    for c in chunks:
+        qid = c.get("quote_id")
+        if not qid:
+            continue
+        rec = records.setdefault(qid, {"sections": {}, "risk_location": c.get("risk_location", "")})
+
+        sec = c.get("section")
+        fields = c.get("fields") or {}
+        if isinstance(fields, list):
+            fields = fields[0] if fields and isinstance(fields[0], dict) else {}
+        if isinstance(fields, dict):
+            sec_fields = rec["sections"].setdefault(sec, {})
+            sec_fields.update(fields)
+
+        df = c.get("decoded_fields") or {}
+        if isinstance(df, dict):
+            if "business_name_label" in df:
+                rec["business_name"] = str(df.get("business_name_label") or "").strip()
+            if "nature_of_business_label" in df:
+                rec["business_type"] = str(df.get("nature_of_business_label") or "").strip()
+
+    return records
+
+
+def _extract_state(risk_location: str) -> str:
+    parts = [p.strip() for p in str(risk_location or "").split(",") if p.strip()]
+    if not parts:
+        return "Unknown"
+    # Typical format: city, state, country
+    if len(parts) >= 2 and parts[-1].lower() == "malaysia":
+        return parts[-2]
+    return parts[-1]
+
+
+def _normalize_business_type(rec: dict) -> str:
+    # Prefer decoded label if available and descriptive.
+    bt = str(rec.get("business_type") or "").strip()
+    bt_low = bt.lower()
+    if any(k in bt_low for k in ["jeweller", "money changer", "pawn", "other"]):
+        return bt
+
+    bp = rec.get("sections", {}).get("business_profile", {})
+    code = _as_code(bp.get("businesstype_id_label") or bp.get("industry_id_label") or bt)
+    code_map = {
+        "1": "Jewellers",
+        "001": "Jewellers",
+        "2": "Money Changers",
+        "002": "Money Changers",
+        "5": "Pawn Brokers",
+        "005": "Pawn Brokers",
+        "3": "Other",
+        "003": "Other",
+    }
+    return code_map.get(code, bt or "Unknown")
+
+
+def _contains_all(text: str, needles: list[str]) -> bool:
+    t = text.lower()
+    return all(n.lower() in t for n in needles)
+
+
+def _extract_qids(text: str) -> set[str]:
+    return set(re.findall(r"MYJADEQT\d+", text))
+
+
+def _compute_expectations(records: dict) -> dict:
+    exp: dict = {}
+
+    # Q1 / Q3: director + fidelity
+    q1_rows = []
+    total_director = 0.0
+    total_fidelity = 0.0
+    for qid, rec in records.items():
+        a = rec["sections"].get("add_on_coverage", {})
+        if _as_code(a.get("director_house_question_label")) == "001" and _as_code(a.get("fidelity_guarantee_insurance_add_coverage_label")) == "001":
+            d_amt = _to_num(a.get("director_house_coverage_label"))
+            f_amt = _to_num(a.get("fidelity_guarantee_insurance_label"))
+            q1_rows.append((qid, d_amt, f_amt))
+            total_director += d_amt
+            total_fidelity += f_amt
+    exp[1] = {
+        "qids": sorted(q for q, _, _ in q1_rows),
+        "total_director": int(total_director),
+        "total_fidelity": int(total_fidelity),
+        "combined": int(total_director + total_fidelity),
+    }
+    exp[3] = {"total_director": int(total_director), "qids": exp[1]["qids"]}
+
+    # Q2: no alarm + insured
+    q2 = []
+    for qid, rec in records.items():
+        alarm = rec["sections"].get("alarm", {})
+        sa = rec["sections"].get("sum_assured", {})
+        if _as_code(alarm.get("do_you_have_alarm_label")) == "002":
+            q2.append((qid, _to_num(sa.get("property_label"))))
+    exp[2] = {"qids": sorted(q for q, _ in q2), "total": int(sum(v for _, v in q2))}
+
+    # Q4: stock out of safe > 200000 and grade 4
+    q4 = []
+    for qid, rec in records.items():
+        sa = rec["sections"].get("sum_assured", {})
+        safe = rec["sections"].get("safe", {})
+        if _to_num(sa.get("value_of_stock_out_of_safe_label")) > 200000 and _as_code(safe.get("grade_label")) == "004":
+            q4.append(qid)
+    exp[4] = {"qids": sorted(q4)}
+
+    # Q5: highest fidelity staff + director enabled
+    staff_rows = []
+    for qid, rec in records.items():
+        a = rec["sections"].get("add_on_coverage", {})
+        staff_rows.append((qid, int(_to_num(a.get("fidelity_guarantee_total_staff_label"))), _as_code(a.get("director_house_question_label")) == "001"))
+    max_staff = max(v for _, v, _ in staff_rows)
+    exp[5] = {
+        "max_staff": max_staff,
+        "qids": sorted(q for q, v, _ in staff_rows if v == max_staff),
+        "all_director_enabled": all(d for _, v, d in staff_rows if v == max_staff),
+    }
+
+    # Q6: armoured + jaguar + armed transit with transit value
+    q6 = []
+    total_transit = 0.0
+    for qid, rec in records.items():
+        t = rec["sections"].get("transit_and_gaurds", {})
+        sa = rec["sections"].get("sum_assured", {})
+        if _as_code(t.get("do_you_use_armoured_vehicle_label")) == "001" and _as_code(t.get("usage_of_jaguar_transit_label")) == "001" and _as_code(t.get("do_you_use_armed_guards_during_transit_label")) == "001":
+            v = _to_num(sa.get("maximum_stock_during_transit_label"))
+            q6.append((qid, v))
+            total_transit += v
+    exp[6] = {"qids": sorted(q for q, _ in q6), "total_transit": int(total_transit)}
+
+    # Q10: gps bag yes and vehicle no
+    q10 = []
+    for qid, rec in records.items():
+        t = rec["sections"].get("transit_and_gaurds", {})
+        if _as_code(t.get("installed_gps_tracker_in_transit_bags_label")) == "001" and _as_code(t.get("installed_gps_tracker_in_transit_vehicles_label")) == "002":
+            q10.append(qid)
+    exp[10] = {"qids": sorted(q10)}
+
+    # Q14: grade4 + no strong room + insured
+    q14 = []
+    for qid, rec in records.items():
+        safe = rec["sections"].get("safe", {})
+        sr = rec["sections"].get("strong_room", {})
+        sa = rec["sections"].get("sum_assured", {})
+        if _as_code(safe.get("grade_label")) == "004" and _as_code(sr.get("do_you_have_a_strong_room_label")) == "002":
+            q14.append((qid, int(_to_num(sa.get("property_label")))))
+    exp[14] = {"qids": sorted(q for q, _ in q14)}
+
+    # Q7: fidelity totals by business type and highest average
+    btype_groups: dict[str, list[float]] = {}
+    for _qid, rec in records.items():
+        btype = _normalize_business_type(rec)
+        a = rec["sections"].get("add_on_coverage", {})
+        amt = _to_num(a.get("fidelity_guarantee_insurance_label"))
+        btype_groups.setdefault(btype, []).append(amt)
+    totals = {k: int(sum(vs)) for k, vs in btype_groups.items()}
+    avgs = {k: (sum(vs) / len(vs) if vs else 0.0) for k, vs in btype_groups.items()}
+    top_btype = max(avgs.items(), key=lambda kv: kv[1])[0] if avgs else ""
+    exp[7] = {"grand_total": int(sum(totals.values())), "top_btype": top_btype}
+
+    # Q8: states with more than one proposal and total insured per state
+    state_groups: dict[str, list[float]] = {}
+    for _qid, rec in records.items():
+        state = _extract_state(str(rec.get("risk_location") or ""))
+        sa = rec["sections"].get("sum_assured", {})
+        state_groups.setdefault(state, []).append(_to_num(sa.get("property_label")))
+    multi_state_totals = {s: int(sum(vs)) for s, vs in state_groups.items() if len(vs) > 1}
+    exp[8] = {"states": sorted(multi_state_totals.keys()), "totals": multi_state_totals}
+
+    # Q9: jewellers vs money changers average insured
+    jew_vals = []
+    mc_vals = []
+    for _qid, rec in records.items():
+        b = _normalize_business_type(rec).lower()
+        sa = rec["sections"].get("sum_assured", {})
+        v = _to_num(sa.get("property_label"))
+        if "jeweller" in b:
+            jew_vals.append(v)
+        if "money changer" in b:
+            mc_vals.append(v)
+    j_avg = int(sum(jew_vals) / len(jew_vals)) if jew_vals else 0
+    m_avg = int(sum(mc_vals) / len(mc_vals)) if mc_vals else 0
+    exp[9] = {"j_avg": j_avg, "m_avg": m_avg}
+
+    # Q11: pawn brokers with strong room yes and grade >=3
+    q11 = []
+    for qid, rec in records.items():
+        b = _normalize_business_type(rec).lower()
+        sr = rec["sections"].get("strong_room", {})
+        safe = rec["sections"].get("safe", {})
+        grade = int(_to_num(_as_code(safe.get("grade_label"))))
+        if "pawn" in b and _as_code(sr.get("do_you_have_a_strong_room_label")) == "001" and grade >= 3:
+            q11.append(qid)
+    exp[11] = {"qids": sorted(q11)}
+
+    # Q12: per-state counts with alarm yes and strong room yes
+    state_counts = {}
+    for _qid, rec in records.items():
+        state = _extract_state(str(rec.get("risk_location") or ""))
+        alarm = rec["sections"].get("alarm", {})
+        sr = rec["sections"].get("strong_room", {})
+        if _as_code(alarm.get("do_you_have_alarm_label")) == "001" and _as_code(sr.get("do_you_have_a_strong_room_label")) == "001":
+            state_counts[state] = state_counts.get(state, 0) + 1
+    exp[12] = {"state_counts": state_counts, "total": int(sum(state_counts.values()))}
+
+    # Q13: money changers with cctv maintenance yes and guards at premise yes
+    q13 = []
+    for qid, rec in records.items():
+        b = _normalize_business_type(rec).lower()
+        cctv = rec["sections"].get("cctv", {})
+        tr = rec["sections"].get("transit_and_gaurds", {})
+        if "money changer" in b and _as_code(cctv.get("cctv_maintenance_contract_label")) == "001" and _as_code(tr.get("do_you_use_guards_at_premise_label")) == "001":
+            q13.append(qid)
+    exp[13] = {"qids": sorted(q13)}
+
+    # Q15: rank business types by average insured
+    avg_by_btype = {}
+    for btype, vals in btype_groups.items():
+        # property total from records for this btype
+        b_vals = []
+        for _qid, rec in records.items():
+            if _normalize_business_type(rec) == btype:
+                b_vals.append(_to_num(rec["sections"].get("sum_assured", {}).get("property_label")))
+        avg_by_btype[btype] = (sum(b_vals) / len(b_vals)) if b_vals else 0.0
+    ranked = sorted(avg_by_btype.items(), key=lambda kv: kv[1], reverse=True)
+    exp[15] = {"ranked": [k for k, _ in ranked]}
+
+    # Q16: highest fidelity amount per staff
+    ratios = []
+    for qid, rec in records.items():
+        a = rec["sections"].get("add_on_coverage", {})
+        amt = _to_num(a.get("fidelity_guarantee_insurance_label"))
+        staff = _to_num(a.get("fidelity_guarantee_total_staff_label"))
+        if staff > 0:
+            ratios.append((qid, amt / staff))
+    ratios.sort(key=lambda x: x[1], reverse=True)
+    exp[16] = {"top_qid": ratios[0][0] if ratios else ""}
+
+    # Q17/18/20 are out-of-scope; Q19 is all-zero-claims dataset fact
+    return exp
+
+
+def _validator_factory(case_id: int) -> Callable[[str, dict], tuple[bool, str]]:
+    def v(answer: str, exp: dict) -> tuple[bool, str]:
+        a = answer.lower()
+
+        if case_id == 1:
+            qids = set(exp[1]["qids"])
+            ok = qids.issubset(_extract_qids(answer)) and str(exp[1]["combined"]) in answer.replace(",", "")
+            return ok, f"expected qids={sorted(qids)} combined={exp[1]['combined']}"
+
+        if case_id == 2:
+            qids = set(exp[2]["qids"])
+            ok = qids.issubset(_extract_qids(answer)) and str(exp[2]["total"]) in answer.replace(",", "")
+            return ok, f"expected qids={sorted(qids)} total={exp[2]['total']}"
+
+        if case_id == 3:
+            ok = str(exp[3]["total_director"]) in answer.replace(",", "")
+            return ok, f"expected total_director={exp[3]['total_director']}"
+
+        if case_id == 4:
+            qids = set(exp[4]["qids"])
+            ok = qids.issubset(_extract_qids(answer))
+            return ok, f"expected qids={sorted(qids)}"
+
+        if case_id == 5:
+            qids = set(exp[5]["qids"])
+            ok = qids.issubset(_extract_qids(answer)) and str(exp[5]["max_staff"]) in answer
+            return ok, f"expected top_staff_qids={sorted(qids)} max_staff={exp[5]['max_staff']}"
+
+        if case_id == 6:
+            qids = set(exp[6]["qids"])
+            ok = qids.issubset(_extract_qids(answer)) and str(exp[6]["total_transit"]) in answer.replace(",", "")
+            return ok, f"expected qids={sorted(qids)} total_transit={exp[6]['total_transit']}"
+
+        if case_id == 10:
+            qids = set(exp[10]["qids"])
+            ok = qids.issubset(_extract_qids(answer))
+            return ok, f"expected qids={sorted(qids)}"
+
+        if case_id == 7:
+            ok = str(exp[7]["grand_total"]) in answer.replace(",", "") and exp[7]["top_btype"].lower() in a
+            return ok, f"expected grand_total={exp[7]['grand_total']} top_btype={exp[7]['top_btype']}"
+
+        if case_id == 8:
+            ok = all(state.lower() in a for state in exp[8]["states"])
+            return ok, f"expected multi-proposal states={exp[8]['states']}"
+
+        if case_id == 9:
+            ok = str(exp[9]["j_avg"]) in answer.replace(",", "") and str(exp[9]["m_avg"]) in answer.replace(",", "")
+            return ok, f"expected j_avg={exp[9]['j_avg']} m_avg={exp[9]['m_avg']}"
+
+        if case_id == 11:
+            qids = set(exp[11]["qids"])
+            ok = qids.issubset(_extract_qids(answer))
+            return ok, f"expected qids={sorted(qids)}"
+
+        if case_id == 12:
+            ok = str(exp[12]["total"]) in answer and any(state.lower() in a for state in exp[12]["state_counts"].keys())
+            return ok, f"expected total={exp[12]['total']}"
+
+        if case_id == 13:
+            qids = set(exp[13]["qids"])
+            ok = qids.issubset(_extract_qids(answer))
+            return ok, f"expected qids={sorted(qids)}"
+
+        if case_id == 14:
+            qids = set(exp[14]["qids"])
+            ok = qids.issubset(_extract_qids(answer)) and "insured" in a
+            return ok, f"expected qids={sorted(qids)} + insured values mentioned"
+
+        if case_id == 15:
+            ranked = exp[15]["ranked"]
+            # Require top 2 types to be present for rank appropriateness.
+            ok = len(ranked) >= 2 and ranked[0].lower() in a and ranked[1].lower() in a
+            return ok, f"expected top rank types include={ranked[:2]}"
+
+        if case_id == 16:
+            ok = exp[16]["top_qid"] in answer
+            return ok, f"expected top_qid={exp[16]['top_qid']}"
+
+        if case_id in (17, 18, 20):
+            ok = _contains_all(a, ["not available", "proposal database"])
+            return ok, "expected out-of-scope refusal"
+
+        if case_id == 19:
+            ok = _contains_all(a, ["zero claims"]) or _contains_all(a, ["no claim"]) 
+            return ok, "expected zero-claims conclusion"
+
+        # For remaining questions, enforce minimum appropriateness signals.
+        must = []
+        ok = all(m in a for m in must) if must else len(answer.strip()) > 0
+        return ok, f"expected generic intent markers={must if must else '[non-empty]'}"
+
+    return v
+
+
+def build_cases() -> list[BenchmarkCase]:
+    questions = [
+        "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+        "Which proposals do NOT have an alarm system, and what are their total insured values?",
+        "What is the total director's house coverage value across all proposals that have it enabled?",
+        "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+        "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+        "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit - and what are their total insured transit values?",
+        "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+        "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+        "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+        "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+        "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+        "How many proposals per state have both an alarm and a strong room?",
+        "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+        "Which proposals have a safe of Grade 4 but no strong room - and what are their insured values?",
+        "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+        "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+        "What is the average premium charged to jewellers in Malaysia?",
+        "Which proposals were approved by the underwriter?",
+        "Which region has the highest claim frequency?",
+        "What is the total revenue generated from Malaysia proposals this quarter?",
+    ]
+    return [BenchmarkCase(i + 1, q, _validator_factory(i + 1)) for i, q in enumerate(questions)]
+
+
+def main() -> None:
+    records = _load_records()
+    expectations = _compute_expectations(records)
+    cases = build_cases()
+
+    results = []
+    passed = 0
+
+    for c in cases:
+        answer = _read_json_response(c.question)
+        ok, reason = c.validator(answer, expectations)
+        if ok:
+            passed += 1
+        results.append(
+            {
+                "id": c.id,
+                "question": c.question,
+                "passed": ok,
+                "reason": reason,
+                "answer": answer,
+            }
+        )
+
+    report = {
+        "total": len(cases),
+        "passed": passed,
+        "failed": len(cases) - passed,
+        "pass_rate": round((passed / len(cases)) * 100, 2),
+        "results": results,
+    }
+
+    out_path = Path("evaluation") / "benchmark_20_report.json"
+    out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+
+    print(f"Benchmark complete: {passed}/{len(cases)} passed ({report['pass_rate']}%)")
+    print(f"Report written to {out_path}")
+
+
+if __name__ == "__main__":
+    main()

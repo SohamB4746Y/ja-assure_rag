@@ -277,6 +277,39 @@ class QueryClassifier:
 
     PARTIAL_ANSWER_PATTERNS = [
         # --- Specific analytical handlers (must come before generic ones) ---
+        {
+            "triggers": [
+                "opted for director's house coverage",
+                "opted for director house coverage",
+                "director's house coverage and fidelity",
+                "director house coverage and fidelity",
+                "combined add-on coverage",
+            ],
+            "handler": "director_fidelity_combined",
+            "description": "Can list proposals opted for both director and fidelity coverages with combined amounts",
+        },
+        {
+            "triggers": [
+                "highest number of staff covered under fidelity",
+                "staff covered under fidelity",
+                "highest fidelity staff",
+                "fidelity staff covered",
+            ],
+            "handler": "highest_fidelity_staff_with_director",
+            "description": "Can find proposals with highest fidelity staff count and director coverage status",
+        },
+        {
+            "triggers": [
+                "armoured vehicles and jaguar transit",
+                "armoured vehicle and jaguar transit",
+                "jaguar transit services",
+                "armed guards during transit",
+                "insured transit values",
+                "transit values",
+            ],
+            "handler": "transit_security_combo_values",
+            "description": "Can list proposals matching transit security combo and compute insured transit values",
+        },
         # No alarm filter
         {
             "triggers": [
@@ -400,18 +433,6 @@ class QueryClassifier:
             "handler": "safe_grade_no_strong_room",
             "description": "Can find proposals with grade 4 safe and no strong room",
         },
-        # Rank business types by average insured value
-        {
-            "triggers": [
-                "rank business types",
-                "rank by average insured",
-                "most risk per proposal",
-                "business type with highest average",
-                "average insured value",
-            ],
-            "handler": "rank_business_types_by_insured_value",
-            "description": "Can rank business types by average total insured value",
-        },
         # Stock out of safe threshold
         {
             "triggers": [
@@ -424,6 +445,18 @@ class QueryClassifier:
             ],
             "handler": "stock_out_of_safe_threshold",
             "description": "Can filter proposals by stock-out-of-safe value threshold",
+        },
+        # Rank business types by average insured value
+        {
+            "triggers": [
+                "rank business types",
+                "rank by average insured",
+                "most risk per proposal",
+                "business type with highest average",
+                "average insured value",
+            ],
+            "handler": "rank_business_types_by_insured_value",
+            "description": "Can rank business types by average total insured value",
         },
         # State security count
         {
@@ -591,17 +624,9 @@ class QueryClassifier:
                     triggered_domains.append(domain)
                     break
 
-        # 3 — check for a partial-answer handler (first match wins).
-        #     Use word-boundary matching for short (<8 char, single-word) triggers
-        #     to prevent false hits like "over" inside "coverage".
-        partial_handler: Optional[str] = None
-        for pattern in self.PARTIAL_ANSWER_PATTERNS:
-            for trigger in pattern["triggers"]:
-                if self._trigger_matches(trigger, q):
-                    partial_handler = pattern["handler"]
-                    break
-            if partial_handler:
-                break
+        # 3 — select best matching partial-answer handler via weighted scoring.
+        # This prevents generic handlers from hijacking more specific intents.
+        partial_handler = self._select_partial_handler(q)
 
         # 4 — determine final classification
         #
@@ -686,6 +711,37 @@ class QueryClassifier:
         if len(trigger) >= 8 or " " in trigger:
             return trigger in q
         return bool(re.search(r"\b" + re.escape(trigger) + r"\b", q))
+
+    _HANDLER_PRIORITY = {
+        "director_fidelity_combined": 30,
+        "highest_fidelity_staff_with_director": 30,
+        "transit_security_combo_values": 30,
+        "stock_out_of_safe_threshold": 25,
+        "compare_business_type_averages": 20,
+        "background_check_stock_frequency": 20,
+        "state_grouping": 15,
+        "safe_grade_no_strong_room": 10,
+        "addon_coverage_opt_in": -5,
+    }
+
+    def _select_partial_handler(self, q: str) -> Optional[str]:
+        """Select the most specific matching partial handler for the query."""
+        candidates: list[tuple[int, str]] = []
+        for pattern in self.PARTIAL_ANSWER_PATTERNS:
+            matched = [t for t in pattern["triggers"] if self._trigger_matches(t, q)]
+            if not matched:
+                continue
+            handler = pattern["handler"]
+            longest = max(len(t) for t in matched)
+            coverage = (len(matched) - 1) * 5
+            priority = self._HANDLER_PRIORITY.get(handler, 0)
+            score = longest + coverage + priority
+            candidates.append((score, handler))
+
+        if not candidates:
+            return None
+        candidates.sort(key=lambda x: x[0], reverse=True)
+        return candidates[0][1]
 
     @staticmethod
     def _detect_query_intent(q: str) -> str:
@@ -1012,6 +1068,9 @@ class PartialAnswerEngine:
             "list_all_businesses": lambda: self.handle_list_all_businesses(),
             "gps_tracker_proposals": lambda: self.handle_gps_tracker_proposals(),
             "addon_coverage_opt_in": lambda: self.handle_addon_coverage_opt_in(query),
+            "director_fidelity_combined": lambda: self.handle_director_fidelity_combined(),
+            "highest_fidelity_staff_with_director": lambda: self.handle_highest_fidelity_staff_with_director(),
+            "transit_security_combo_values": lambda: self.handle_transit_security_combo_values(),
             "aggregate_fidelity_by_business_type": lambda: self.handle_aggregate_fidelity_by_business_type(),
             "total_director_coverage": lambda: self.handle_total_director_coverage(),
             "fidelity_per_staff_ratio": lambda: self.handle_fidelity_per_staff_ratio(),
@@ -1190,26 +1249,27 @@ class PartialAnswerEngine:
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        summary_map: dict = {}
+        optin_map: dict = {}
         amount_map: dict = {}
         for chunk in complete_metadata:
             qid = chunk.get("quote_id")
             if not qid:
                 continue
-            if chunk.get("section") == "summary_coverage_values":
-                summary_map[qid] = chunk.get("fields") or {}
-            elif chunk.get("section") == "add_on_coverage":
-                amount_map[qid] = chunk.get("fields") or {}
+            if chunk.get("section") == "add_on_coverage":
+                fields = chunk.get("fields") or {}
+                amount_map[qid] = fields
+                optin_map[qid] = {
+                    "director_opted": str(fields.get("director_house_question_label", "") or "").strip(),
+                    "fidelity_opted": str(fields.get("fidelity_guarantee_insurance_add_coverage_label", "") or "").strip(),
+                }
 
         q = query.lower()
         wants_fidelity = "fidelity" in q
         wants_director = "director" in q
         wants_both = "both" in q or (wants_fidelity and wants_director)
 
-        def _flag_true(v) -> bool:
-            if isinstance(v, bool):
-                return v
-            return str(v).strip().lower() in ("true", "1", "yes", "001")
+        def _is_yes_code(v) -> bool:
+            return str(v).strip() == "001"
 
         def _as_num(v) -> float:
             try:
@@ -1219,10 +1279,10 @@ class PartialAnswerEngine:
 
         matches = []
         for qid in sorted(name_map.keys()):
-            summary = summary_map.get(qid, {})
+            opt = optin_map.get(qid, {})
             addon = amount_map.get(qid, {})
-            fidelity_opted = _flag_true(summary.get("fidelity_guarantee_insurance_label"))
-            director_opted = _flag_true(summary.get("director_house_coverage_label"))
+            fidelity_opted = _is_yes_code(opt.get("fidelity_opted", ""))
+            director_opted = _is_yes_code(opt.get("director_opted", ""))
 
             include = False
             if wants_both:
@@ -1323,37 +1383,24 @@ class PartialAnswerEngine:
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Get opted flags from summary_coverage_values
-        summary_map: dict = {}
-        for chunk in complete_metadata:
-            if chunk.get("section") != "summary_coverage_values":
-                continue
-            qid = chunk.get("quote_id")
-            if not qid or qid in summary_map:
-                continue
-            summary_map[qid] = chunk.get("fields") or {}
-
-        # Get amounts from add_on_coverage
+        # Get opted flags and amounts from add_on_coverage
         amount_map: dict = {}
+        optin_map: dict = {}
         for chunk in complete_metadata:
             if chunk.get("section") != "add_on_coverage":
                 continue
             qid = chunk.get("quote_id")
             if not qid or qid in amount_map:
                 continue
-            amount_map[qid] = chunk.get("fields") or {}
-
-        def _flag_true(v) -> bool:
-            if isinstance(v, bool):
-                return v
-            return str(v).strip().lower() in ("true", "1", "yes", "001")
+            fields = chunk.get("fields") or {}
+            amount_map[qid] = fields
+            optin_map[qid] = str(fields.get("director_house_question_label", "") or "").strip()
 
         matches = []
         total = 0.0
         for qid in sorted(name_map.keys()):
-            scv = summary_map.get(qid, {})
             addon = amount_map.get(qid, {})
-            if _flag_true(scv.get("director_house_coverage_label")):
+            if optin_map.get(qid, "") == "001":
                 amt = self._safe_float(addon.get("director_house_coverage_label"))
                 matches.append((name_map.get(qid, qid), qid, amt))
                 total += amt
@@ -1477,20 +1524,20 @@ class PartialAnswerEngine:
         name_map = self._build_business_name_map(complete_metadata)
         sa_map = self._build_sa_map(complete_metadata)
 
-        # Build strong_room map — "002" means No strong room / no alarm system
-        strong_room_map: dict = {}
+        # Build alarm map — "002" means no alarm system
+        alarm_map: dict = {}
         for chunk in complete_metadata:
             qid = chunk.get("quote_id")
             if not qid:
                 continue
-            if chunk.get("section") == "strong_room" and qid not in strong_room_map:
+            if chunk.get("section") == "alarm" and qid not in alarm_map:
                 fields = chunk.get("fields") or {}
-                strong_room_map[qid] = str(fields.get("do_you_have_a_strong_room_label", "") or "").strip()
+                alarm_map[qid] = str(fields.get("do_you_have_alarm_label", "") or "").strip()
 
         # Collect ALL proposals where strong_room = "002" (No)
         matches = []
         for qid in sorted(name_map.keys()):
-            if strong_room_map.get(qid, "") == "002":
+            if alarm_map.get(qid, "") == "002":
                 insured = sa_map.get(qid, 0)
                 matches.append((name_map.get(qid, qid), qid, insured))
 
@@ -1871,6 +1918,7 @@ class PartialAnswerEngine:
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
+        sa_map = self._build_sa_map(complete_metadata)
 
         safe_map: dict = {}
         for chunk in complete_metadata:
@@ -1895,7 +1943,7 @@ class PartialAnswerEngine:
             sr_map[qid] = str(fields.get("do_you_have_a_strong_room_label", "") or "").strip()
 
         matches = [
-            (name_map.get(qid, qid), qid)
+            (name_map.get(qid, qid), qid, sa_map.get(qid, 0.0))
             for qid in sorted(name_map.keys())
             if safe_map.get(qid) == "004" and sr_map.get(qid) == "002"
         ]
@@ -1904,8 +1952,8 @@ class PartialAnswerEngine:
         if not matches:
             lines.append("  None found.")
         else:
-            for name, qid in matches:
-                lines.append(f"  - {name} ({qid})")
+            for name, qid, insured in matches:
+                lines.append(f"  - {name} ({qid}) — Total Insured: RM {insured:,.0f}")
 
         # Full grade / strong-room breakdown for context
         lines.append("\nAll proposals — safe grade + strong room:")
@@ -1915,7 +1963,10 @@ class PartialAnswerEngine:
             grade_str = SAFE_GRADE_MAP.get(grade, f"Code {grade}" if grade else "Unknown")
             sr_str = "Yes" if sr == "001" else ("No" if sr == "002" else "Unknown")
             marker = " ← MATCH" if (grade == "004" and sr == "002") else ""
-            lines.append(f"  {name_map.get(qid, qid)} ({qid}): {grade_str} | Strong Room: {sr_str}{marker}")
+            insured = sa_map.get(qid, 0.0)
+            lines.append(
+                f"  {name_map.get(qid, qid)} ({qid}): {grade_str} | Strong Room: {sr_str} | Total Insured: RM {insured:,.0f}{marker}"
+            )
 
         return "\n".join(lines)
 
@@ -2035,6 +2086,141 @@ class PartialAnswerEngine:
                 else:
                     lines.append(f"  - {name} ({qid}): RM 0 (no stock outside safe) | Safe: {grade_str}")
 
+        return "\n".join(lines)
+
+    def handle_director_fidelity_combined(self) -> str:
+        """List proposals opted into both director-house and fidelity add-ons with totals."""
+        metadata = self.metadata
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
+
+        addon_map: dict = {}
+        for chunk in complete_metadata:
+            if chunk.get("section") != "add_on_coverage":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid or qid in addon_map:
+                continue
+            addon_map[qid] = chunk.get("fields") or {}
+
+        matches = []
+        total_director = 0.0
+        total_fidelity = 0.0
+        for qid in sorted(name_map.keys()):
+            fields = addon_map.get(qid, {})
+            director_opted = str(fields.get("director_house_question_label", "") or "").strip() == "001"
+            fidelity_opted = str(fields.get("fidelity_guarantee_insurance_add_coverage_label", "") or "").strip() == "001"
+            if not (director_opted and fidelity_opted):
+                continue
+            d_amt = self._safe_float(fields.get("director_house_coverage_label"))
+            f_amt = self._safe_float(fields.get("fidelity_guarantee_insurance_label"))
+            matches.append((name_map.get(qid, qid), qid, d_amt, f_amt, d_amt + f_amt))
+            total_director += d_amt
+            total_fidelity += f_amt
+
+        if not matches:
+            return "No proposals have both director-house and fidelity add-ons enabled."
+
+        lines = [f"Matching proposals: {len(matches)}"]
+        for name, qid, d_amt, f_amt, combined in matches:
+            lines.append(
+                f"- {name} ({qid}) | Director Amount: RM {d_amt:,.0f} | Fidelity Amount: RM {f_amt:,.0f} | Combined: RM {combined:,.0f}"
+            )
+        lines.append(f"Total Director Amount: RM {total_director:,.0f}")
+        lines.append(f"Total Fidelity Amount: RM {total_fidelity:,.0f}")
+        lines.append(f"Combined Add-on Amount: RM {total_director + total_fidelity:,.0f}")
+        return "\n".join(lines)
+
+    def handle_highest_fidelity_staff_with_director(self) -> str:
+        """Return proposals with highest fidelity staff count and director coverage status."""
+        metadata = self.metadata
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
+
+        records = []
+        for chunk in complete_metadata:
+            if chunk.get("section") != "add_on_coverage":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+            fields = chunk.get("fields") or {}
+            staff_raw = str(fields.get("fidelity_guarantee_total_staff_label", "") or "0").strip()
+            try:
+                staff = int(staff_raw)
+            except ValueError:
+                staff = 0
+            director_enabled = str(fields.get("director_house_question_label", "") or "").strip() == "001"
+            records.append((name_map.get(qid, qid), qid, staff, director_enabled))
+
+        if not records:
+            return "No fidelity staff coverage data found."
+
+        max_staff = max(r[2] for r in records)
+        top = [r for r in records if r[2] == max_staff]
+        top.sort(key=lambda x: x[1])
+
+        lines = [f"Highest fidelity staff covered: {max_staff}"]
+        for name, qid, staff, director_enabled in top:
+            lines.append(
+                f"- {name} ({qid}) | Staff Covered: {staff} | Director House Coverage Enabled: {'Yes' if director_enabled else 'No'}"
+            )
+        return "\n".join(lines)
+
+    def handle_transit_security_combo_values(self) -> str:
+        """Find proposals with armoured+jaguar+armed-transit and report transit insured values."""
+        metadata = self.metadata
+        complete_metadata = self._get_complete_proposals_only(metadata)
+        name_map = self._build_business_name_map(complete_metadata)
+
+        transit_map: dict = {}
+        for chunk in complete_metadata:
+            qid = chunk.get("quote_id")
+            if not qid:
+                continue
+            if chunk.get("section") == "transit_and_gaurds" and qid not in transit_map:
+                fields = chunk.get("fields") or {}
+                transit_map[qid] = {
+                    "armoured": str(fields.get("do_you_use_armoured_vehicle_label", "") or "").strip(),
+                    "jaguar": str(fields.get("usage_of_jaguar_transit_label", "") or "").strip(),
+                    "armed": str(fields.get("do_you_use_armed_guards_during_transit_label", "") or "").strip(),
+                }
+
+        transit_values: dict = {}
+        for chunk in complete_metadata:
+            if chunk.get("section") != "sum_assured":
+                continue
+            qid = chunk.get("quote_id")
+            if not qid or qid in transit_values:
+                continue
+            fields = chunk.get("fields") or {}
+            if isinstance(fields, list):
+                fields = fields[0] if fields and isinstance(fields[0], dict) else {}
+            transit_val = 0.0
+            for key in (
+                "maximum_stock_during_transit_label",
+                "maximum_stock_foreign_currency_in_transit_label",
+                "value_of_stock_in_transit_label",
+            ):
+                transit_val = max(transit_val, self._safe_float(fields.get(key)))
+            transit_values[qid] = transit_val
+
+        matches = []
+        total_transit = 0.0
+        for qid in sorted(name_map.keys()):
+            t = transit_map.get(qid, {})
+            if t.get("armoured") == "001" and t.get("jaguar") == "001" and t.get("armed") == "001":
+                val = transit_values.get(qid, 0.0)
+                matches.append((name_map.get(qid, qid), qid, val))
+                total_transit += val
+
+        if not matches:
+            return "No proposals match armoured vehicle + Jaguar transit + armed guards during transit."
+
+        lines = [f"Matching proposals: {len(matches)}"]
+        for name, qid, val in matches:
+            lines.append(f"- {name} ({qid}) | Insured Transit Value: RM {val:,.0f}")
+        lines.append(f"Total Insured Transit Value: RM {total_transit:,.0f}")
         return "\n".join(lines)
 
     # Handler: group proposals by industry (Bug 4 fix — two-map approach)

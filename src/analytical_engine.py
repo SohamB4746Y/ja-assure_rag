@@ -392,14 +392,15 @@ class AnalyticalEngine:
         with_vehicle, without_vehicle = [], []
         with_bags, without_bags = [], []
         for r in self.records:
+            row_label = f"{r['business_name']} ({r['quote_id']})"
             if r["gps_vehicle"] == "Yes":
-                with_vehicle.append(r["business_name"])
+                with_vehicle.append(row_label)
             else:
-                without_vehicle.append(r["business_name"])
+                without_vehicle.append(row_label)
             if r["gps_bags"] == "Yes":
-                with_bags.append(r["business_name"])
+                with_bags.append(row_label)
             else:
-                without_bags.append(r["business_name"])
+                without_bags.append(row_label)
         return {
             "gps_vehicle_yes": len(with_vehicle),
             "gps_vehicle_no": len(without_vehicle),
@@ -840,11 +841,13 @@ class AnalyticalEngine:
             f"{data['gps_bags_yes']} Yes, {data['gps_bags_no']} No",
         ]
         if data["missing_vehicle_gps"]:
-            names = ", ".join(data["missing_vehicle_gps"])
-            lines.append(f"  Missing vehicle GPS: {names}")
+            lines.append("  Proposals with GPS in bags but NOT in vehicles:")
+            for item in data["missing_vehicle_gps"]:
+                lines.append(f"    - {item}")
         if data["missing_bags_gps"]:
-            names = ", ".join(data["missing_bags_gps"])
-            lines.append(f"  Missing bags GPS: {names}")
+            lines.append("  Missing bags GPS:")
+            for item in data["missing_bags_gps"]:
+                lines.append(f"    - {item}")
         return "\n".join(lines)
 
     def _fmt_claim_stats(self, data: List[Dict]) -> str:

@@ -4903,5 +4903,1355 @@
     "num_chunks_retrieved": 0,
     "top_similarity_score": 0.0,
     "answer_length": 828
+  },
+  {
+    "timestamp": "2026-03-17T15:42:08.853635",
+    "query": "Among jewellers in Malaysia, which ones have the strongest combined security profile \u2014 having alarms, strong rooms, CCTV with maintenance contracts, and GPS in both bags and vehicles?",
+    "query_type": "compound",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 1625
+  },
+  {
+    "timestamp": "2026-03-17T15:42:31.542873",
+    "query": "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 828
+  },
+  {
+    "timestamp": "2026-03-17T15:42:59.627705",
+    "query": "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1104
+  },
+  {
+    "timestamp": "2026-03-17T15:43:18.217075",
+    "query": "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 950
+  },
+  {
+    "timestamp": "2026-03-17T15:43:36.877721",
+    "query": "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 846
+  },
+  {
+    "timestamp": "2026-03-17T15:43:54.460925",
+    "query": "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit \u2014 and what are their total insured transit values?",
+    "query_type": "compound",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 1421
+  },
+  {
+    "timestamp": "2026-03-17T15:44:25.793809",
+    "query": "Which proposals conduct background checks on all employees AND perform stock checks most frequently?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1638
+  },
+  {
+    "timestamp": "2026-03-17T15:44:25.806665",
+    "query": "Do these overlap with the highest insured value proposals?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 1228
+  },
+  {
+    "timestamp": "2026-03-17T15:45:08.326767",
+    "query": "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 828
+  },
+  {
+    "timestamp": "2026-03-17T15:45:25.419464",
+    "query": "Which proposals conduct background checks on all employees AND perform stock checks most frequently?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1638
+  },
+  {
+    "timestamp": "2026-03-17T15:45:47.122824",
+    "query": "Which proposals do NOT have an alarm system, and what are their total insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 473
+  },
+  {
+    "timestamp": "2026-03-17T15:46:09.474666",
+    "query": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 204
+  },
+  {
+    "timestamp": "2026-03-17T15:46:29.586022",
+    "query": "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 678
+  },
+  {
+    "timestamp": "2026-03-17T15:46:47.918843",
+    "query": "What is the total director's house coverage value across all proposals that have it enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 348
+  },
+  {
+    "timestamp": "2026-03-17T15:47:03.749829",
+    "query": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 900
+  },
+  {
+    "timestamp": "2026-03-17T15:48:37.680127",
+    "query": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 900
+  },
+  {
+    "timestamp": "2026-03-17T15:48:54.049876",
+    "query": "Which proposals have a safe of Grade 4 but no strong room \u2014 and what are their insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1082
+  },
+  {
+    "timestamp": "2026-03-17T15:49:09.644923",
+    "query": "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 384
+  },
+  {
+    "timestamp": "2026-03-17T15:49:30.154442",
+    "query": "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1225
+  },
+  {
+    "timestamp": "2026-03-17T15:49:46.960987",
+    "query": "How many proposals per state have both an alarm and a strong room?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 751
+  },
+  {
+    "timestamp": "2026-03-17T15:50:02.420968",
+    "query": "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1082
+  },
+  {
+    "timestamp": "2026-03-17T15:50:27.549614",
+    "query": "What is the average premium charged to jewellers in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 243
+  },
+  {
+    "timestamp": "2026-03-17T15:50:56.216518",
+    "query": "Which proposals were approved by the underwriter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 237
+  },
+  {
+    "timestamp": "2026-03-17T15:51:22.446839",
+    "query": "Which region has the highest claim frequency?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 79
+  },
+  {
+    "timestamp": "2026-03-17T15:51:39.574742",
+    "query": "What is the total revenue generated from Malaysia proposals this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-17T16:44:50.417799",
+    "query": "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 828
+  },
+  {
+    "timestamp": "2026-03-17T16:45:16.801257",
+    "query": "Which proposals do NOT have an alarm system, and what are their total insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 473
+  },
+  {
+    "timestamp": "2026-03-17T16:45:36.146762",
+    "query": "What is the total director's house coverage value across all proposals that have it enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 348
+  },
+  {
+    "timestamp": "2026-03-17T16:45:58.344237",
+    "query": "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1082
+  },
+  {
+    "timestamp": "2026-03-17T16:46:31.035117",
+    "query": "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 828
+  },
+  {
+    "timestamp": "2026-03-17T16:46:55.420825",
+    "query": "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit \u2014 and what are their total insured transit values?",
+    "query_type": "compound",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 1421
+  },
+  {
+    "timestamp": "2026-03-17T16:47:16.076288",
+    "query": "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1104
+  },
+  {
+    "timestamp": "2026-03-17T16:47:43.529136",
+    "query": "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 950
+  },
+  {
+    "timestamp": "2026-03-17T16:48:21.282552",
+    "query": "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 846
+  },
+  {
+    "timestamp": "2026-03-17T16:48:47.196268",
+    "query": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 204
+  },
+  {
+    "timestamp": "2026-03-17T16:49:10.168760",
+    "query": "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 678
+  },
+  {
+    "timestamp": "2026-03-17T16:49:38.187761",
+    "query": "How many proposals per state have both an alarm and a strong room?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 751
+  },
+  {
+    "timestamp": "2026-03-17T16:51:21.161156",
+    "query": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 900
+  },
+  {
+    "timestamp": "2026-03-17T16:51:46.627989",
+    "query": "Which proposals have a safe of Grade 4 but no strong room \u2014 and what are their insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1082
+  },
+  {
+    "timestamp": "2026-03-17T16:52:05.364873",
+    "query": "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 384
+  },
+  {
+    "timestamp": "2026-03-17T16:52:28.077305",
+    "query": "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1225
+  },
+  {
+    "timestamp": "2026-03-17T16:52:52.514653",
+    "query": "What is the average premium charged to jewellers in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 243
+  },
+  {
+    "timestamp": "2026-03-17T16:53:17.167116",
+    "query": "Which proposals were approved by the underwriter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 237
+  },
+  {
+    "timestamp": "2026-03-17T16:53:37.994884",
+    "query": "Which region has the highest claim frequency?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 79
+  },
+  {
+    "timestamp": "2026-03-17T16:53:58.660312",
+    "query": "What is the total revenue generated from Malaysia proposals this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-17T17:02:54.812218",
+    "query": "What is the business name of MYJADEQT001?",
+    "query_type": "smart_executor",
+    "quote_id_extracted": "MYJADEQT001",
+    "num_chunks_retrieved": 1,
+    "top_similarity_score": 1.0,
+    "answer_length": 44
+  },
+  {
+    "timestamp": "2026-03-17T17:04:01.082456",
+    "query": "What is the total revenue generated from Malaysia proposals this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-17T17:05:45.079004",
+    "query": "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1118
+  },
+  {
+    "timestamp": "2026-03-17T17:05:45.086886",
+    "query": "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit \u2014 and what are their total insured transit values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 417
+  },
+  {
+    "timestamp": "2026-03-17T17:05:45.092225",
+    "query": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 204
+  },
+  {
+    "timestamp": "2026-03-17T17:05:45.097831",
+    "query": "Which proposals have a safe of Grade 4 but no strong room \u2014 and what are their insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1082
+  },
+  {
+    "timestamp": "2026-03-17T17:05:45.103013",
+    "query": "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1225
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.871173",
+    "query": "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 712
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.876659",
+    "query": "Which proposals do NOT have an alarm system, and what are their total insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 202
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.881689",
+    "query": "What is the total director's house coverage value across all proposals that have it enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 337
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.886648",
+    "query": "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 122
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.891509",
+    "query": "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1104
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.896802",
+    "query": "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 950
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.903116",
+    "query": "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 846
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.908312",
+    "query": "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 678
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.913377",
+    "query": "How many proposals per state have both an alarm and a strong room?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 751
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.918568",
+    "query": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 900
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.923648",
+    "query": "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 384
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.928578",
+    "query": "What is the average premium charged to jewellers in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 243
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.933635",
+    "query": "Which proposals were approved by the underwriter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 237
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.938722",
+    "query": "Which region has the highest claim frequency?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 79
+  },
+  {
+    "timestamp": "2026-03-17T17:05:54.943643",
+    "query": "What is the total revenue generated from Malaysia proposals this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.347204",
+    "query": "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 712
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.355300",
+    "query": "Which proposals do NOT have an alarm system, and what are their total insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 202
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.360308",
+    "query": "What is the total director's house coverage value across all proposals that have it enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 337
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.365802",
+    "query": "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1118
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.371098",
+    "query": "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 122
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.376121",
+    "query": "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit \u2014 and what are their total insured transit values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 417
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.381287",
+    "query": "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1104
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.386579",
+    "query": "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 950
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.391845",
+    "query": "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 846
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.397059",
+    "query": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 204
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.402423",
+    "query": "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 678
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.407607",
+    "query": "How many proposals per state have both an alarm and a strong room?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 751
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.413122",
+    "query": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 900
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.418234",
+    "query": "Which proposals have a safe of Grade 4 but no strong room \u2014 and what are their insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1082
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.423696",
+    "query": "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 384
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.428850",
+    "query": "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1225
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.433932",
+    "query": "What is the average premium charged to jewellers in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 243
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.438701",
+    "query": "Which proposals were approved by the underwriter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 237
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.444130",
+    "query": "Which region has the highest claim frequency?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 79
+  },
+  {
+    "timestamp": "2026-03-17T17:14:50.449518",
+    "query": "What is the total revenue generated from Malaysia proposals this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-17T17:16:55.866058",
+    "query": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 308
+  },
+  {
+    "timestamp": "2026-03-17T17:16:55.875009",
+    "query": "Which proposals have a safe of Grade 4 but no strong room \u2014 and what are their insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1562
+  },
+  {
+    "timestamp": "2026-03-17T17:16:55.881781",
+    "query": "List proposals with alarm and strong room and cctv and xyznonexistentfield over RM 1",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 56
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.930820",
+    "query": "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 712
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.938410",
+    "query": "Which proposals do NOT have an alarm system, and what are their total insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 202
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.943858",
+    "query": "What is the total director's house coverage value across all proposals that have it enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 337
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.949424",
+    "query": "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1118
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.955269",
+    "query": "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 122
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.960494",
+    "query": "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit - and what are their total insured transit values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 417
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.965830",
+    "query": "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1104
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.971497",
+    "query": "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 950
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.977146",
+    "query": "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 846
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.982587",
+    "query": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 308
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.988134",
+    "query": "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 678
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.993716",
+    "query": "How many proposals per state have both an alarm and a strong room?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 751
+  },
+  {
+    "timestamp": "2026-03-17T17:19:24.999596",
+    "query": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 900
+  },
+  {
+    "timestamp": "2026-03-17T17:19:25.005802",
+    "query": "Which proposals have a safe of Grade 4 but no strong room - and what are their insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1562
+  },
+  {
+    "timestamp": "2026-03-17T17:19:25.011126",
+    "query": "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 384
+  },
+  {
+    "timestamp": "2026-03-17T17:19:25.016401",
+    "query": "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1225
+  },
+  {
+    "timestamp": "2026-03-17T17:19:25.022081",
+    "query": "What is the average premium charged to jewellers in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 243
+  },
+  {
+    "timestamp": "2026-03-17T17:19:25.027545",
+    "query": "Which proposals were approved by the underwriter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 237
+  },
+  {
+    "timestamp": "2026-03-17T17:19:25.033540",
+    "query": "Which region has the highest claim frequency?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 79
+  },
+  {
+    "timestamp": "2026-03-17T17:19:25.040383",
+    "query": "What is the total revenue generated from Malaysia proposals this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.504842",
+    "query": "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 712
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.512443",
+    "query": "Which proposals do NOT have an alarm system, and what are their total insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 202
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.520740",
+    "query": "What is the total director's house coverage value across all proposals that have it enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 337
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.526410",
+    "query": "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1118
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.531705",
+    "query": "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 122
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.537004",
+    "query": "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit - and what are their total insured transit values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 417
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.542998",
+    "query": "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1104
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.548899",
+    "query": "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 950
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.554417",
+    "query": "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 846
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.559870",
+    "query": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 308
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.565419",
+    "query": "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 678
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.570795",
+    "query": "How many proposals per state have both an alarm and a strong room?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 751
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.576485",
+    "query": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 900
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.581821",
+    "query": "Which proposals have a safe of Grade 4 but no strong room - and what are their insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1562
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.587209",
+    "query": "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 384
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.592854",
+    "query": "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1225
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.598351",
+    "query": "What is the average premium charged to jewellers in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 243
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.603603",
+    "query": "Which proposals were approved by the underwriter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 237
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.608955",
+    "query": "Which region has the highest claim frequency?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 79
+  },
+  {
+    "timestamp": "2026-03-17T17:20:19.614231",
+    "query": "What is the total revenue generated from Malaysia proposals this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.669103",
+    "query": "Which proposals have opted for director's house coverage AND fidelity guarantee insurance, and what is the total combined add-on coverage value for each?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 712
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.677284",
+    "query": "Which proposals do NOT have an alarm system, and what are their total insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 202
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.683061",
+    "query": "What is the total director's house coverage value across all proposals that have it enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 337
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.688752",
+    "query": "Which proposals have stock out of safe exceeding RM 200,000, and do they have a Grade 4 safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1118
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.694238",
+    "query": "Which proposals have the highest number of staff covered under fidelity guarantee insurance, and do those businesses also have director's house coverage enabled?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 122
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.700232",
+    "query": "Which proposals use armoured vehicles AND Jaguar transit services AND armed guards during transit - and what are their total insured transit values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 417
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.706020",
+    "query": "What is the total fidelity guarantee insurance exposure across all Malaysia proposals, and which business type carries the highest average fidelity guarantee amount?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1104
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.711803",
+    "query": "Which states in Malaysia have more than one proposal, and what is the total insured value per state?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 950
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.717605",
+    "query": "Compare the average insured stock value between jewellers and money changers in Malaysia.",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 846
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.723330",
+    "query": "List all proposals where GPS trackers are installed in transit bags but NOT in transit vehicles.",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 308
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.729056",
+    "query": "Which pawn brokers in Malaysia have a strong room AND a Grade 3 or higher safe?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 678
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.735012",
+    "query": "How many proposals per state have both an alarm and a strong room?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 751
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.741066",
+    "query": "Which money changers have a CCTV maintenance contract and armed guards at the premise?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 900
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.747089",
+    "query": "Which proposals have a safe of Grade 4 but no strong room - and what are their insured values?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1562
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.753712",
+    "query": "Rank all business types by their average total insured value. Which type carries the most risk per proposal?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 384
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.759996",
+    "query": "Which proposals have the highest fidelity guarantee amount per staff member covered?",
+    "query_type": "partially_answerable",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 1225
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.766121",
+    "query": "What is the average premium charged to jewellers in Malaysia?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 243
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.771843",
+    "query": "Which proposals were approved by the underwriter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 237
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.777677",
+    "query": "Which region has the highest claim frequency?",
+    "query_type": "analytical",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 1.0,
+    "answer_length": 79
+  },
+  {
+    "timestamp": "2026-03-17T17:21:04.783523",
+    "query": "What is the total revenue generated from Malaysia proposals this quarter?",
+    "query_type": "out_of_scope",
+    "quote_id_extracted": null,
+    "num_chunks_retrieved": 0,
+    "top_similarity_score": 0.0,
+    "answer_length": 246
   }
 ]

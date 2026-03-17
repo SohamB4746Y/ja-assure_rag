@@ -580,6 +580,45 @@ def search_proposals_by_value(query: str) -> Optional[str]:
     
     return None
 
+
+def _is_structured_deterministic_query(query: str, parsed: Optional[ParsedQuery]) -> bool:
+    """Return True when query should be answered by deterministic logic, not semantic fallback."""
+    q = query.lower()
+    structured_markers = [
+        "how many", "count", "which proposals", "list all", "total", "average",
+        "highest", "lowest", "more than", "less than", "exceeding", "above", "below",
+        " and ", " with ", " without ", " not ",
+    ]
+    has_structured_language = any(m in q for m in structured_markers)
+
+    if not parsed:
+        return has_structured_language
+
+    has_structured_parse = bool(
+        parsed.filter_field
+        or parsed.filter_value
+        or parsed.filter_contains
+        or parsed.quote_id
+        or parsed.output_fields
+        or parsed.target_fields
+        or parsed.filter_conditions
+        or parsed.intent in {"count", "list", "compare"}
+    )
+    return has_structured_language or has_structured_parse
+
+
+def _structured_failure_response(parsed: Optional[ParsedQuery]) -> str:
+    """Consistent refusal for structured queries that failed deterministic execution."""
+    if parsed and parsed.intent == "compare":
+        return (
+            "I could not compute that comparison from the structured proposal fields. "
+            "Try narrowing the request to specific fields or conditions."
+        )
+    return (
+        "I could not satisfy this structured query with deterministic proposal data. "
+        "Please rephrase with explicit fields or simpler conditions."
+    )
+
 def analytical_query_handler(query: str) -> Optional[str]:
     """
     Handle analytical queries that aggregate data across all proposals.
@@ -861,6 +900,16 @@ def handle_query(
         if query_parser:
             query_parser.add_raw_to_history(query, cross_search_result)
         return clean_output(cross_search_result)
+
+    # Structured safety gate: refuse instead of semantic generation when
+    # deterministic structured execution failed.
+    if _is_structured_deterministic_query(query, parsed):
+        refusal = _structured_failure_response(parsed)
+        logger.info("Structured query failed deterministic handlers - refusing semantic fallback")
+        log_query(query, "structured_refusal", quote_id, 0, 0.0, refusal)
+        if query_parser:
+            query_parser.add_raw_to_history(query, refusal)
+        return clean_output(refusal)
     
                                                  
                                            

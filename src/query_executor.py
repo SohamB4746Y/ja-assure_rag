@@ -531,6 +531,45 @@ class SmartQueryExecutor:
     # Count
     def _execute_count(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a count query."""
+        # Structured proposal-level conditions (AND across conditions).
+        if parsed.filter_conditions:
+            matched_quotes = []
+            for quote_id in self._get_all_quote_ids():
+                if parsed.filter_contains and not self._quote_matches_contains(quote_id, parsed.filter_contains):
+                    continue
+                if self._quote_matches_conditions(quote_id, parsed.filter_conditions, parsed.raw_query):
+                    matched_quotes.append(quote_id)
+
+            matching_data = []
+            for quote_id in matched_quotes:
+                # Get business name from first chunk for this quote
+                chunk = next((c for c in self.metadata if c.get("quote_id") == quote_id), None)
+                business_name = self._get_field_value(chunk, "business_name") if chunk else "Unknown"
+                matching_data.append({
+                    "quote_id": quote_id,
+                    "business_name": business_name,
+                    "conditions": parsed.filter_conditions,
+                })
+
+            count = len(matched_quotes)
+            if count > 0:
+                details = [f"{d.get('business_name', d['quote_id'])} ({d['quote_id']})" for d in matching_data]
+                return QueryResult(
+                    success=True,
+                    data=matching_data,
+                    count=count,
+                    summary=f"{count} proposal(s) match the criteria",
+                    details=details,
+                )
+
+            return QueryResult(
+                success=True,
+                data=[],
+                count=0,
+                summary="0 proposals match the criteria",
+                details=[],
+            )
+
         matching_quotes = set()
         matching_data = []
         
@@ -840,3 +879,123 @@ class SmartQueryExecutor:
             return float(value_str)
         except ValueError:
             return None
+
+    def _get_all_quote_ids(self) -> list[str]:
+        """Return sorted unique quote IDs from metadata."""
+        return sorted({chunk.get("quote_id") for chunk in self.metadata if chunk.get("quote_id")})
+
+    def _quote_matches_contains(self, quote_id: str, search_term: str) -> bool:
+        """Proposal-level contains check across all sections and top-level fields."""
+        term = search_term.lower().strip()
+        if not term:
+            return True
+
+        for chunk in self.metadata:
+            if chunk.get("quote_id") != quote_id:
+                continue
+
+            if term in str(chunk.get("text", "")).lower():
+                return True
+            if term in str(chunk.get("risk_location", "")).lower():
+                return True
+            if term in str(chunk.get("user_name", "")).lower():
+                return True
+
+            search_fields = self._get_search_fields(chunk)
+            for _field_name, value in search_fields.items():
+                if term in str(value).lower():
+                    return True
+
+        return False
+
+    @staticmethod
+    def _normalize_bool_token(value: str) -> str:
+        """Normalize boolean-ish tokens to yes/no/other."""
+        v = str(value).strip().lower()
+        if v in {"yes", "001", "true", "1"}:
+            return "yes"
+        if v in {"no", "002", "false", "2"}:
+            return "no"
+        return v
+
+    def _matches_condition(self, raw_value, comparator: str, expected_value: str) -> bool:
+        """Check a single value against a comparator condition."""
+        comp = (comparator or "eq").lower()
+        raw_text = str(raw_value).strip()
+        exp_text = str(expected_value).strip()
+
+        if self._is_empty_value(raw_text):
+            return False
+
+        # Numeric comparators when either side parses as numeric
+        raw_num = self._parse_numeric(raw_text)
+        exp_num = self._parse_numeric(exp_text)
+        if comp in {"gt", "gte", "lt", "lte"} and raw_num is not None and exp_num is not None:
+            if comp == "gt":
+                return raw_num > exp_num
+            if comp == "gte":
+                return raw_num >= exp_num
+            if comp == "lt":
+                return raw_num < exp_num
+            return raw_num <= exp_num
+
+        # Grade-aware numeric compare, e.g., "Grade 4" >= 3
+        if comp in {"gt", "gte", "lt", "lte"}:
+            grade_raw = re.search(r"(\d+)", raw_text)
+            grade_exp = re.search(r"(\d+)", exp_text)
+            if grade_raw and grade_exp:
+                rv = float(grade_raw.group(1))
+                ev = float(grade_exp.group(1))
+                if comp == "gt":
+                    return rv > ev
+                if comp == "gte":
+                    return rv >= ev
+                if comp == "lt":
+                    return rv < ev
+                return rv <= ev
+
+        # Equality fallback with boolean normalization and contains support
+        norm_raw = self._normalize_bool_token(raw_text)
+        norm_exp = self._normalize_bool_token(exp_text)
+        if comp == "eq":
+            return norm_raw == norm_exp or norm_exp in norm_raw
+
+        return False
+
+    def _quote_matches_conditions(self, quote_id: str, conditions: list[dict], query: str) -> bool:
+        """Proposal-level AND evaluation across possibly different sections/fields."""
+        if not conditions:
+            return True
+
+        quote_chunks = [c for c in self.metadata if c.get("quote_id") == quote_id]
+        if not quote_chunks:
+            return False
+
+        for cond in conditions:
+            field_name = str(cond.get("field", "")).strip()
+            expected = cond.get("value")
+            comparator = str(cond.get("comparator", "eq")).lower()
+            if not field_name or expected is None:
+                continue
+
+            condition_matched = False
+            for chunk in quote_chunks:
+                section = chunk.get("section", "")
+                search_fields = self._get_search_fields(chunk)
+                best_score = 0
+                best_val = None
+                for actual_field, actual_val in search_fields.items():
+                    score = self._field_match_score(field_name, actual_field, section, query)
+                    if score > best_score:
+                        best_score = score
+                        best_val = actual_val
+
+                if best_score >= 10 and best_val is not None:
+                    if self._matches_condition(best_val, comparator, str(expected)):
+                        condition_matched = True
+                        break
+
+            if not condition_matched:
+                return False
+
+        return True

@@ -25,7 +25,7 @@ from dataclasses import dataclass
 
 from src.query_parser import ParsedQuery
 
-# ---- Section keyword mapping for field-match disambiguation ----
+                                                                  
 SECTION_KEYWORDS = {
     "backup": ["cctv"],
     "cctv": ["cctv"],
@@ -62,7 +62,7 @@ SECTION_KEYWORDS = {
 class QueryResult:
     """Result of executing a parsed query."""
     success: bool
-    data: list[dict]  # List of matching records with requested fields
+    data: list[dict]                                                  
     count: int
     summary: str
     details: list[str]
@@ -94,7 +94,7 @@ class SmartQueryExecutor:
             with open(self.metadata_path, "rb") as f:
                 self.metadata = pickle.load(f)
     
-    # Empty / null value helper
+                               
     def _is_empty_value(self, value) -> bool:
         """Return True if *value* represents missing / null / empty data."""
         if value is None:
@@ -102,7 +102,7 @@ class SmartQueryExecutor:
         val_str = str(value).strip().lower()
         return val_str in {"none", "null", "", "-1", "nan", "0", "n/a"}
     
-    # Field matching helper
+                           
     def _field_match_score(self, requested_field: str, actual_field: str,
                             chunk_section: str = "", query: str = "") -> int:
         """
@@ -115,15 +115,15 @@ class SmartQueryExecutor:
         req = requested_field.lower().replace("_label", "").replace("_", " ")
         act = actual_field.lower().replace("_label", "").replace("_", " ")
         
-        # Exact match — perfect
+                               
         if req == act:
             return 100
         
-        # One is fully contained in the other
+                                             
         if req in act or act in req:
             base = 50 + len(min(req, act, key=len))
         else:
-            # Word overlap
+                          
             noise = {"the", "a", "an", "of", "in", "for", "is", "do", "you", "label"}
             req_words = set(req.split()) - noise
             act_words = set(act.split()) - noise
@@ -137,7 +137,7 @@ class SmartQueryExecutor:
         if base == 0:
             return 0
         
-        # Section relevance bonus / penalty
+                                           
         section_bonus = 0
         if chunk_section and query:
             query_lower = query.lower()
@@ -147,9 +147,9 @@ class SmartQueryExecutor:
                 for k in relevant_keywords:
                     all_preferred.update(SECTION_KEYWORDS[k])
                 if chunk_section in all_preferred:
-                    section_bonus = 25   # correct section
+                    section_bonus = 25                    
                 else:
-                    section_bonus = -20  # wrong section
+                    section_bonus = -20                 
         
         return max(0, base + section_bonus)
     
@@ -186,11 +186,11 @@ class SmartQueryExecutor:
         if isinstance(raw_fields, dict):
             search_fields.update(raw_fields)
         if decoded_fields:
-            search_fields.update(decoded_fields)  # decoded overwrites raw
+            search_fields.update(decoded_fields)                          
         
         return search_fields
     
-    # Main routing
+                  
     def execute(self, parsed: ParsedQuery) -> QueryResult:
         """
         Execute a parsed query and return results.
@@ -206,10 +206,10 @@ class SmartQueryExecutor:
         if intent == "lookup" and parsed.quote_id:
             return self._execute_lookup(parsed)
         elif intent == "lookup" and not parsed.quote_id:
-            # Lookup by entity name (person, business) - retrieve specific fields
+                                                                                 
             return self._execute_entity_lookup(parsed)
         elif not parsed.quote_id and self._should_entity_lookup(parsed):
-            # Smart detection: LLM said count/list but query is really an entity field lookup
+                                                                                             
             return self._execute_entity_lookup(parsed)
         elif intent == "count":
             return self._execute_count(parsed)
@@ -218,10 +218,10 @@ class SmartQueryExecutor:
         elif intent == "compare":
             return self._execute_compare(parsed)
         else:
-            # Try general search
+                                
             return self._execute_general(parsed)
     
-    # Lookup by quote_id
+                        
     def _execute_lookup(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a lookup query for a specific quote ID."""
         quote_id = parsed.quote_id
@@ -237,7 +237,7 @@ class SmartQueryExecutor:
             
             section = chunk.get("section", "")
             
-            # Scored matching for output_fields
+                                               
             for output_field in (parsed.output_fields or []):
                 best_score = 0
                 best_field_name = None
@@ -256,10 +256,10 @@ class SmartQueryExecutor:
                     results.append({
                         "quote_id": quote_id,
                         "field": best_field_name,
-                        "value": best_value  # already decoded
+                        "value": best_value                   
                     })
             
-            # Fallback: try target_fields if no output_fields matched
+                                                                     
             if not results and parsed.target_fields:
                 for target in parsed.target_fields:
                     best_score = 0
@@ -279,10 +279,10 @@ class SmartQueryExecutor:
                         results.append({
                             "quote_id": quote_id,
                             "field": best_field_name,
-                            "value": best_value  # already decoded
+                            "value": best_value                   
                         })
         
-        # Deduplicate
+                     
         seen = set()
         unique_results = []
         for r in results:
@@ -291,7 +291,7 @@ class SmartQueryExecutor:
                 seen.add(key)
                 unique_results.append(r)
         
-        # Validate relevance (Fix 5)
+                                    
         unique_results = [r for r in unique_results if self._is_result_relevant(r, parsed)]
         
         if unique_results:
@@ -312,7 +312,7 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # Entity detection helpers
+                              
     def _should_entity_lookup(self, parsed: ParsedQuery) -> bool:
         """
         Detect if a query should be routed to entity lookup even though the LLM
@@ -324,7 +324,7 @@ class SmartQueryExecutor:
         1. filter_contains matches a known entity name (person or business), AND
         2. output_fields or target_fields contain specific data fields (not just business_name_label)
         """
-        # Must have specific output/target fields beyond just names
+                                                                   
         data_fields = []
         for f in (parsed.output_fields or []) + (parsed.target_fields or []):
             f_lower = f.lower()
@@ -334,13 +334,13 @@ class SmartQueryExecutor:
         if not data_fields:
             return False
         
-        # Check if filter_contains matches a known entity
+                                                         
         if parsed.filter_contains:
             entity = self._extract_entity_from_query(parsed.filter_contains)
             if entity:
                 return True
         
-        # Check if the raw query contains a known entity name
+                                                             
         if parsed.raw_query:
             entity = self._extract_entity_from_query(parsed.raw_query)
             if entity:
@@ -356,15 +356,15 @@ class SmartQueryExecutor:
         """
         query_lower = query.lower()
         
-        # Collect all known names — longest first for greedy matching
+                                                                     
         known_names = set()
         for chunk in self.metadata:
-            # Top-level user_name (person)
+                                          
             uname = chunk.get("user_name", "")
             if uname:
                 known_names.add(str(uname).strip())
             
-            # Use decoded_fields for business_name / person_in_charge
+                                                                     
             search_fields = self._get_search_fields(chunk)
             for field_name, value in search_fields.items():
                 if "business_name" in field_name.lower() or "person_in_charge" in field_name.lower():
@@ -372,7 +372,7 @@ class SmartQueryExecutor:
                     if val and val.lower() not in ("unknown", "none", ""):
                         known_names.add(val)
         
-        # Sort by length descending (match longest names first to avoid partial matches)
+                                                                                        
         sorted_names = sorted(known_names, key=len, reverse=True)
         
         for name in sorted_names:
@@ -381,7 +381,7 @@ class SmartQueryExecutor:
         
         return None
     
-    # Entity lookup (by person/business name)
+                                             
     def _execute_entity_lookup(self, parsed: ParsedQuery) -> QueryResult:
         """
         Execute a lookup query by entity name (person or business) without a quote_id.
@@ -389,7 +389,7 @@ class SmartQueryExecutor:
         
         All values come from decoded_fields — already human-readable.
         """
-        # Determine what entity name to search for
+                                                  
         search_name = None
         if parsed.filter_contains:
             search_name = parsed.filter_contains.lower().strip()
@@ -402,7 +402,7 @@ class SmartQueryExecutor:
         if not search_name:
             return self._execute_general(parsed)
         
-        # Determine which fields to retrieve
+                                            
         output_fields = list(parsed.output_fields or [])
         if parsed.filter_field and not parsed.filter_value and parsed.filter_field not in output_fields:
             output_fields.append(parsed.filter_field)
@@ -413,8 +413,8 @@ class SmartQueryExecutor:
         if not output_fields:
             return self._execute_general(parsed)
         
-        # Step 1: Find matching quote_id(s) by searching person/business names
-        matched_quotes = {}  # quote_id -> business_name
+                                                                              
+        matched_quotes = {}                             
         seen_quotes = set()
         
         for chunk in self.metadata:
@@ -425,12 +425,12 @@ class SmartQueryExecutor:
             search_fields = self._get_search_fields(chunk)
             found = False
             
-            # Check top-level user_name
+                                       
             user_name = str(chunk.get("user_name", "")).lower().strip()
             if search_name in user_name or user_name in search_name:
                 found = True
             
-            # Check person_in_charge / business_name in search_fields
+                                                                     
             if not found:
                 for field_name, value in search_fields.items():
                     if "person_in_charge" in field_name.lower() or "business_name" in field_name.lower():
@@ -453,7 +453,7 @@ class SmartQueryExecutor:
                 details=[]
             )
         
-        # Step 2: For each matching quote, retrieve the requested output_fields
+                                                                               
         results = []
         
         for match_qid, match_bname in matched_quotes.items():
@@ -467,9 +467,9 @@ class SmartQueryExecutor:
                 
                 for out_field in output_fields:
                     if out_field in retrieved_fields:
-                        continue  # Already found this field
+                        continue                            
                     
-                    # Use scored matching with section awareness
+                                                                
                     section = chunk.get("section", "")
                     best_score = 0
                     best_field_name = None
@@ -485,7 +485,7 @@ class SmartQueryExecutor:
                             best_value = value
                     
                     if best_score >= 10 and best_field_name is not None:
-                        retrieved_fields[best_field_name] = best_value  # already decoded
+                        retrieved_fields[best_field_name] = best_value                   
             
             if retrieved_fields:
                 for field_name, decoded_value in retrieved_fields.items():
@@ -503,7 +503,7 @@ class SmartQueryExecutor:
                     "value": "Not found"
                 })
         
-        # Validate relevance (Fix 5)
+                                    
         results = [r for r in results if self._is_result_relevant(r, parsed)]
         
         if results:
@@ -528,10 +528,10 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # Count
+           
     def _execute_count(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a count query."""
-        # Structured proposal-level conditions (AND across conditions).
+                                                                       
         if parsed.filter_conditions:
             matched_quotes = []
             for quote_id in self._get_all_quote_ids():
@@ -542,7 +542,7 @@ class SmartQueryExecutor:
 
             matching_data = []
             for quote_id in matched_quotes:
-                # Get business name from first chunk for this quote
+                                                                   
                 chunk = next((c for c in self.metadata if c.get("quote_id") == quote_id), None)
                 business_name = self._get_field_value(chunk, "business_name") if chunk else "Unknown"
                 matching_data.append({
@@ -582,23 +582,23 @@ class SmartQueryExecutor:
             chunk_text = chunk.get("text", "").lower()
             section = chunk.get("section", "")
             
-            # Check filter_contains - search in decoded fields, chunk text, AND top-level metadata
+                                                                                                  
             if parsed.filter_contains:
                 search_term = parsed.filter_contains.lower()
                 found = False
                 
-                # Check chunk text
+                                  
                 if search_term in chunk_text:
                     found = True
                 
-                # Check in decoded field values
+                                               
                 if not found:
                     for field_name, value in search_fields.items():
                         if search_term in str(value).lower():
                             found = True
                             break
                 
-                # Check top-level metadata keys
+                                               
                 if not found:
                     for top_key in ("risk_location", "user_name"):
                         top_val = chunk.get(top_key, "")
@@ -617,7 +617,7 @@ class SmartQueryExecutor:
                     })
                 continue
             
-            # Check for filter on fields (yes/no decoded values, exact match, or substring)
+                                                                                           
             if parsed.filter_field and parsed.filter_value:
                 expected = str(parsed.filter_value).lower().strip()
                 filter_key = parsed.filter_field.lower().replace("_label", "")
@@ -625,40 +625,40 @@ class SmartQueryExecutor:
                 matched_field = None
                 matched_value = None
                 
-                # Determine whether this is a negation query (filter_value
-                # represents "No" / absence).  Negation queries should also
-                # match proposals where the field is empty/missing.
+                                                                          
+                                                                           
+                                                                   
                 NO_CODES = {"no", "002", "false", "2"}
                 YES_CODES = {"yes", "001", "true", "1"}
                 is_negation = expected in NO_CODES
                 
-                # Search in decoded fields
+                                          
                 for field_name, value in search_fields.items():
                     if filter_key in field_name.lower().replace("_label", ""):
-                        # Guard: skip empty/null field values.
-                        #
-                        # For POSITIVE filters (e.g. armed_guards = Yes):
-                        #   Use `continue` so we keep scanning — the same
-                        #   logical field may appear twice in search_fields
-                        #   (once as a raw None and once as a decoded "Yes").
-                        #   Breaking on the raw None would miss the decoded hit
-                        #   and produce undercounts; a `continue` is safe here.
-                        #
-                        # For NEGATION filters (e.g. alarm = No / missing):
-                        #   An empty/null value means the feature is absent →
-                        #   count the proposal as a match and stop.
+                                                              
+                         
+                                                                         
+                                                                         
+                                                                           
+                                                                             
+                                                                               
+                                                                               
+                         
+                                                                           
+                                                                             
+                                                                   
                         if self._is_empty_value(value):
                             if is_negation:
                                 matched = True
                                 matched_field = field_name
                                 matched_value = "N/A"
-                                break  # negation match confirmed — stop scanning
-                            continue  # positive filter: skip empty, keep scanning
+                                break                                            
+                            continue                                              
 
                         value_lower = str(value).lower().strip()
                         
-                        # Normalize yes/no matching — decoded values may be "Yes"/"No"
-                        # but filter_value from LLM may be codes like "001"/"002"
+                                                                                      
+                                                                                 
                         if expected in YES_CODES and value_lower in YES_CODES:
                             matched = True
                         elif expected in NO_CODES and value_lower in NO_CODES:
@@ -670,10 +670,10 @@ class SmartQueryExecutor:
                         
                         if matched:
                             matched_field = field_name
-                            matched_value = value  # already decoded
+                            matched_value = value                   
                             break
                 
-                # Also check top-level metadata keys
+                                                    
                 if not matched:
                     for top_key in ("risk_location", "user_name"):
                         if filter_key in top_key.lower():
@@ -720,7 +720,7 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # List
+          
     def _execute_list(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a list query."""
         result = self._execute_count(parsed)
@@ -735,7 +735,7 @@ class SmartQueryExecutor:
         
         return result
     
-    # Compare (highest/lowest)
+                              
     def _execute_compare(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a comparison query (highest/lowest)."""
         values_with_data = []
@@ -745,9 +745,9 @@ class SmartQueryExecutor:
             if not quote_id:
                 continue
             
-            # Use raw fields for numeric comparisons — decoded values may have
-            # currency symbols or labels that interfere with numeric parsing.
-            # But also try decoded_fields for passthrough numeric fields.
+                                                                              
+                                                                             
+                                                                         
             raw_fields = chunk.get("fields", {})
             if not isinstance(raw_fields, dict):
                 continue
@@ -789,7 +789,7 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # General search
+                    
     def _execute_general(self, parsed: ParsedQuery) -> QueryResult:
         """Execute a general search query using decoded fields."""
         matching_data = []
@@ -849,16 +849,16 @@ class SmartQueryExecutor:
             details=[]
         )
     
-    # Helpers
+             
     def _get_field_value(self, chunk: dict, field_pattern: str) -> str:
         """Get a decoded field value from a chunk by pattern matching."""
-        # Check decoded_fields first (already human-readable)
+                                                             
         search_fields = self._get_search_fields(chunk)
         for field_name, value in search_fields.items():
             if field_pattern.lower() in field_name.lower():
                 return str(value)
         
-        # Check other chunks for the same quote_id
+                                                  
         quote_id = chunk.get("quote_id")
         for other_chunk in self.metadata:
             if other_chunk.get("quote_id") == quote_id and other_chunk != chunk:
@@ -927,7 +927,7 @@ class SmartQueryExecutor:
         if self._is_empty_value(raw_text):
             return False
 
-        # Numeric comparators when either side parses as numeric
+                                                                
         raw_num = self._parse_numeric(raw_text)
         exp_num = self._parse_numeric(exp_text)
         if comp in {"gt", "gte", "lt", "lte"} and raw_num is not None and exp_num is not None:
@@ -939,7 +939,7 @@ class SmartQueryExecutor:
                 return raw_num < exp_num
             return raw_num <= exp_num
 
-        # Grade-aware numeric compare, e.g., "Grade 4" >= 3
+                                                           
         if comp in {"gt", "gte", "lt", "lte"}:
             grade_raw = re.search(r"(\d+)", raw_text)
             grade_exp = re.search(r"(\d+)", exp_text)
@@ -954,7 +954,7 @@ class SmartQueryExecutor:
                     return rv < ev
                 return rv <= ev
 
-        # Equality fallback with boolean normalization and contains support
+                                                                           
         norm_raw = self._normalize_bool_token(raw_text)
         norm_exp = self._normalize_bool_token(exp_text)
         if comp == "eq":

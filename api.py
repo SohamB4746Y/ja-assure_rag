@@ -6,12 +6,12 @@ Exposes the existing RAG system via HTTP endpoints without modifying core logic.
 import os
 from pathlib import Path
 
-# Load .env file if it exists
+                             
 try:
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parent / '.env')
 except ImportError:
-    # If python-dotenv is not installed, try manual loading
+                                                           
     env_path = Path(__file__).parent / '.env'
     if env_path.exists():
         with open(env_path) as f:
@@ -24,7 +24,7 @@ except ImportError:
 import logging
 from typing import Optional
 
-# Force HuggingFace offline mode
+                                
 os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
@@ -34,16 +34,16 @@ from pydantic import BaseModel, Field
 from main import initialize_system, handle_query
 from src.query_parser import QueryParser
 
-# Configure logging
+                   
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# =============================================================
-# FASTAPI APP INITIALIZATION
-# =============================================================
+                                                               
+                            
+                                                               
 
 app = FastAPI(
     title="JA Assure RAG API",
@@ -51,7 +51,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Global state - initialized once at startup
+                                            
 embedder = None
 llm = None
 qa_store = None
@@ -68,18 +68,18 @@ async def startup_event():
     logger.info("Starting JA Assure RAG API...")
     logger.info("Initializing system components...")
     
-    # Initialize all components
+                               
     embedder, llm, qa_store, analytical_engine, metadata = initialize_system()
     
-    # Create a persistent query parser for conversation history
+                                                               
     query_parser = QueryParser(llm)
     
     logger.info("API startup complete. Ready to handle requests.")
 
 
-# =============================================================
-# REQUEST/RESPONSE MODELS
-# =============================================================
+                                                               
+                         
+                                                               
 
 class QueryRequest(BaseModel):
     """Request model for query endpoint."""
@@ -101,9 +101,9 @@ class HealthResponse(BaseModel):
     status: str = Field(..., description="Health status of the API")
 
 
-# =============================================================
-# API ENDPOINTS
-# =============================================================
+                                                               
+               
+                                                               
 
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
 async def health_check():
@@ -137,7 +137,7 @@ async def query_endpoint(request: QueryRequest):
     Raises:
         HTTPException: If system components are not initialized or query fails
     """
-    # Validate system is initialized
+                                    
     if embedder is None or llm is None:
         logger.error("System not initialized - components are None")
         raise HTTPException(
@@ -156,7 +156,7 @@ async def query_endpoint(request: QueryRequest):
     logger.info(f"Received query: {question}")
     
     try:
-        # Multi-question support
+                                
         from main import split_questions
         questions = split_questions(question)
         if len(questions) > 1:
@@ -197,9 +197,9 @@ async def query_endpoint(request: QueryRequest):
         )
 
 
-# =============================================================
-# RUN INSTRUCTIONS
-# =============================================================
+                                                               
+                  
+                                                               
 
 if __name__ == "__main__":
     import uvicorn

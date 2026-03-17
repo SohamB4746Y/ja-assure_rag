@@ -10,7 +10,7 @@ import logging
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# Configuration constants
+                         
 DEFAULT_MODEL = "all-MiniLM-L6-v2"
 DEFAULT_BATCH_SIZE = 16
 MAX_RETRIES = 3
@@ -225,7 +225,7 @@ def batch_cosine_similarity(query_vec: np.ndarray, vectors: np.ndarray) -> np.nd
     if vectors.ndim == 1:
         vectors = vectors.reshape(1, -1)
 
-    # For normalized vectors, cosine similarity = dot product
+                                                             
     similarities = np.dot(vectors, query_vec)
 
     return similarities

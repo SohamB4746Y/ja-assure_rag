@@ -52,7 +52,7 @@ FORMAT RULES:
 
 Write a natural, helpful response to the user's question using ONLY the data above:"""
 
-# ---- sentinel values that should be treated as "no data" ----
+                                                               
 _EMPTY_SENTINELS = {None, "", "None", "nan", "-1", "N/A"}
 
 def _field_match_score(requested: str, actual: str) -> int:
@@ -78,9 +78,9 @@ def _is_empty(value) -> bool:
     s = str(value).strip()
     if s in _EMPTY_SENTINELS:
         return True
-    # Also catch list-of-dict empties like [{'amount': '0', 'year': '0', ...}]
+                                                                              
     if s.startswith("[") and s.endswith("]"):
-        # Quick heuristic: if every dict value is empty/zero, treat as empty
+                                                                            
         try:
             import ast
             items = ast.literal_eval(s)
@@ -104,14 +104,14 @@ def _filter_result(parsed: ParsedQuery, result: QueryResult) -> QueryResult:
     """
     output_fields = parsed.output_fields or []
 
-    # --- Step 1: remove rows with empty values (Bug 2) ---
+                                                           
     non_empty = [
         (row, detail)
         for row, detail in zip(result.data, result.details)
         if not _is_empty(row.get("value"))
     ]
 
-    # --- Step 2: if output_fields specified, keep only best match per field (Bug 1) ---
+                                                                                        
     if output_fields and non_empty:
         kept = []
         for of in output_fields:
@@ -162,25 +162,25 @@ def format_answer(
     Returns:
         Natural language answer string
     """
-    # For count queries with 0 results, this is a valid answer (not a failure)
+                                                                              
     if parsed.intent == "count" and result.count == 0:
         return "0 proposals match the criteria. No records found with the specified condition."
     
-    # For list queries with 0 results - also a valid answer
+                                                           
     if parsed.intent == "list" and result.count == 0:
         if parsed.filter_contains:
             return f"0 proposals found with '{parsed.filter_contains}' in the records."
         return "0 proposals match the criteria."
     
-    # ---- Apply output-field + empty-value filter for lookup results ----
+                                                                          
     if parsed.intent == "lookup" and result.data and result.details:
         result = _filter_result(parsed, result)
     
-    # For non-count/list queries with no results
+                                                
     if not result.success or result.count == 0:
         return "Data not available in the proposal records."
     
-    # For single value lookups, return directly
+                                               
     if parsed.intent == "lookup" and result.count == 1:
         detail = result.details[0] if result.details else result.summary
         if parsed.quote_id:
@@ -188,13 +188,13 @@ def format_answer(
         else:
             return detail
     
-    # For multi-field or multi-entity lookups
+                                             
     if parsed.intent == "lookup" and result.count > 1:
         if result.details:
             return "\n".join(f"- {d}" for d in result.details)
         return result.summary
     
-    # For count queries - ONLY show count unless names are explicitly asked
+                                                                           
     if parsed.intent == "count":
         query_lower = parsed.raw_query.lower()
         wants_names = any(w in query_lower for w in [
@@ -208,13 +208,13 @@ def format_answer(
             else:
                 return f"There are {result.count} proposal(s) that match. Here are the first 20:\n" + "\n".join(f"- {n}" for n in names) + f"\n... and {result.count - 20} more."
         else:
-            # Just the count — do NOT list names
+                                                
             return f"{result.count} proposal(s) match the criteria."
     
-    # For list queries
+                      
     if parsed.intent == "list":
         if result.details:
-            items = result.details[:15]  # Limit to 15
+            items = result.details[:15]               
             header = f"Found {result.count} matching proposal(s):\n"
             listing = "\n".join(f"- {item}" for item in items)
             if result.count > 15:
@@ -223,11 +223,11 @@ def format_answer(
         else:
             return result.summary
     
-    # For compare queries
+                         
     if parsed.intent == "compare":
         return result.summary
 
-    # For complex results, use LLM to format
+                                            
     prompt = FORMAT_PROMPT.format(
         question=parsed.raw_query,
         understood=parsed.understood_question,
@@ -241,7 +241,7 @@ def format_answer(
         response = llm.generate(prompt)
         return response.strip()
     except Exception:
-        # Fallback to simple format
+                                   
         if result.details:
             return result.summary + "\n" + "\n".join(f"- {d}" for d in result.details[:10])
         return result.summary
@@ -285,7 +285,7 @@ def format_classified_response(
         return "\n".join(lines)
 
     if c == "PARTIALLY_ANSWERABLE":
-        # No partial answer produced — fall back to OUT_OF_SCOPE style
+                                                                      
         if not partial_answer:
             return format_classified_response(
                 QueryClassification(
@@ -296,16 +296,16 @@ def format_classified_response(
                 )
             )
 
-        # If the handler's answer is self-sufficient, return it cleanly
-        # with NO "outside scope" noise appended.
+                                                                       
+                                                 
         if classification.answer_is_sufficient:
             return partial_answer
 
-        # Only add a specific scope gap note when genuinely incomplete
+                                                                      
         result = partial_answer
         if classification.scope_gap_description:
             result += f"\n\nNote: {classification.scope_gap_description}"
         return result
 
-    # ANSWERABLE — existing pipeline handles it
+                                               
     return None

@@ -420,9 +420,9 @@ class QueryParser:
                 if partial in query_lower:
                     return name
         
-        # -----------------------------------------------------------
-        # Safety net: extract Title Case phrases as candidate entities
-        # -----------------------------------------------------------
+                                                                     
+                                                                      
+                                                                     
         IGNORE_WORDS = {
             "What", "Which", "How", "Does", "Do", "Is", "Are", "Who",
             "Where", "When", "The", "A", "An", "CCTV", "GPS", "SOP"
@@ -433,7 +433,7 @@ class QueryParser:
         current_segment: list[str] = []
         
         for word in words:
-            # Strip trailing punctuation for the check but keep original
+                                                                        
             stripped = word.rstrip("?.,!;:")
             if stripped and stripped[0].isupper() and stripped not in IGNORE_WORDS:
                 current_segment.append(stripped)
@@ -444,8 +444,8 @@ class QueryParser:
         if current_segment:
             segments.append(current_segment)
         
-        # Pick the longest segment with at least 2 words (likely a name)
-        # Fall back to any single-word segment if nothing longer exists
+                                                                        
+                                                                       
         best = None
         for seg in segments:
             if len(seg) >= 2:
@@ -773,7 +773,7 @@ class QueryParser:
         query_lower = query.lower()
         
         FIELD_PHRASE_MAP = [
-            # Safe section — check most specific first
+                                                      
             (["safe model", "model of safe", "safe brand", "which safe"],     "safe_model_label"),
             (["safe grade", "grade of safe", "safe rating"],                  "grade_label"),
             (["safe capacity", "capacity of safe"],                           "safe_capacity_label"),
@@ -781,27 +781,27 @@ class QueryParser:
             (["value out of safe", "stock out of safe", "outside the safe"],  "value_of_stock_out_of_safe_label"),
             (["key combination", "safe key", "safe access type"],             "key_combination_code_or_both_label"),
             
-            # CCTV section
+                          
             (["cctv backup", "type of backup", "backup type", "recording backup"], "type_of_back_up_label"),
             (["cctv retention", "how long cctv", "retain cctv", "retention period", "how long recording"], "retained_period_of_cctv_recording_label"),
             (["cctv maintenance", "camera maintenance", "maintenance contract for cctv"], "cctv_maintenance_contract_label"),
             (["cctv model", "camera model", "model of cctv"],                 "model_label"),
             (["number of cameras", "how many cameras", "camera count"],       "number_of_cctv_label"),
             
-            # Alarm section
+                           
             (["alarm model", "model of alarm", "alarm brand"],                "alarm_model_label"),
             (["alarm type", "type of alarm", "alarm system type"],            "type_of_alarm_label"),
             (["alarm connection", "alarm connected to", "connection type"],   "connection_type_label"),
             (["alarm maintenance", "alarm contract", "maintenance for alarm"],"under_maintenance_contract_label"),
             
-            # Transit section
+                             
             (["armoured vehicle", "armored vehicle", "security vehicle"],     "do_you_use_armoured_vehicle_label"),
             (["armed guards transit", "guards during transit", "transit guards"], "do_you_use_armed_guards_during_transit_label"),
             (["transit limit", "cash in transit", "transit cash limit"],      "limit_per_transit_label"),
             (["gps tracker", "gps in vehicle", "vehicle tracker", "gps installed"], "installed_gps_tracker_in_transit_vehicles_label"),
             (["jaguar transit", "jaguar service"],                            "usage_of_jaguar_transit_label"),
             
-            # Physical setup
+                            
             (["roof material", "type of roof", "roof type"],                  "roof_materials_label"),
             (["wall material", "type of wall", "wall type"],                  "wall_materials_label"),
             (["floor material", "type of floor", "floor type"],               "floor_materials_label"),
@@ -811,10 +811,10 @@ class QueryParser:
             (["wall showcase", "have wall showcase"],                         "do_you_have_wall_showcase_label"),
             (["counter showcase", "display counter"],                         "do_you_have_counter_showcase_label"),
             
-            # Door access
+                         
             (["door access", "access type", "entry method", "how do they access", "how is access"], "door_access_label"),
             
-            # Additional details
+                                
             (["background check", "employee check", "staff screening", "employee screening"], "background_checks_for_all_employees_label"),
             (["police station", "nearest police", "distance to police", "how far police"], "the_nearest_police_station_label"),
             (["stock check frequency", "how often stock", "stock check", "checking stock", "how often is the stock"], "how_often_is_the_stock_check_carried_out_label"),
@@ -823,16 +823,16 @@ class QueryParser:
             (["central monitoring", "monitoring station"],                    "central_monitoring_stations_label"),
             (["time locking", "time lock"],                                   "time_locking_label"),
             
-            # Business profile
+                              
             (["nature of business", "type of business", "what kind of business", "what business do"], "nature_of_business_label"),
             (["business name", "name of business", "company name"],           "business_name_label"),
             (["contact number", "phone number", "mobile number", "contact no"], "contact_number_label"),
             (["email", "correspondence email", "email address"],              "correspondence_email_label"),
             
-            # Claim history
+                           
             (["claim history", "previous claims", "any claims", "claims history", "claim record"], "claim_history_label"),
             
-            # Records keeping
+                             
             (["records maintained", "how records kept", "online or offline", "records online"], "records_maintained_in_label"),
         ]
         
@@ -852,8 +852,8 @@ class QueryParser:
         q = query.lower()
         conditions: list[dict] = []
 
-        # Yes/No condition phrases. This is generic phrase-to-field routing, not
-        # answer hardcoding, and feeds deterministic executor filtering.
+                                                                                
+                                                                        
         yn_field_map = [
             ("do_you_have_alarm_label", ["alarm"]),
             ("do_you_have_a_strong_room_label", ["strong room", "strongroom"]),
@@ -880,7 +880,7 @@ class QueryParser:
                 "value": "No" if is_negative else "Yes",
             })
 
-        # Grade conditions like "Grade 4" or "Grade 3 or higher"
+                                                                
         grade_match = re.search(r"grade\s*(\d+)", q)
         if grade_match:
             grade_num = grade_match.group(1)
@@ -895,7 +895,7 @@ class QueryParser:
                 "value": grade_num,
             })
 
-        # Numeric threshold examples: "exceeding RM 200,000", "above 5m"
+                                                                        
         threshold_patterns = [
             (
                 r"(stock out of safe|value of stock out of safe)[^\d]*(?:over|above|exceeding|greater than|>)\s*rm?\s*([\d,]+)",
@@ -919,7 +919,7 @@ class QueryParser:
                 "value": numeric_val,
             })
 
-        # Deduplicate by (field, comparator, value)
+                                                   
         dedup = []
         seen = set()
         for c in conditions:

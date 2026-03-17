@@ -40,12 +40,12 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-# Load .env file if it exists
+                             
 try:
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parent / '.env')
 except ImportError:
-    # If python-dotenv is not installed, try manual loading
+                                                           
     env_path = Path(__file__).parent / '.env'
     if env_path.exists():
         with open(env_path) as f:
@@ -88,7 +88,7 @@ from src.compound_query_handler import CompoundQueryHandler
 from src.flattened_context import build_flattened_proposal_context
 from embeddings.embedder import Embedder, cosine_similarity
 
-# Configuration
+               
 EXCEL_PATH = "data/JADE-Fields DB(Integrated)_Mentor Copy.xlsx"
 SHEET_NAME = "tbl_MY"
 INDEX_PATH = "index/index.faiss"
@@ -97,14 +97,14 @@ PREDEFINED_QA_PATH = "evaluation/predefined_qa.json"
 LOG_DIR = "logs"
 LOG_FILE = "logs/query_log.json"
 
-# Similarity thresholds
+                       
 PREDEFINED_SIMILARITY_THRESHOLD = 0.85
 CHUNK_SIMILARITY_THRESHOLD = 0.5
 TOP_K_CHUNKS = 5
 
 os.makedirs(LOG_DIR, exist_ok=True)
 
-# Module-level lazy singletons — created on first query, not at import time
+                                                                           
 _scope_classifier: Optional[QueryClassifier] = None
 _partial_engine: Optional[PartialAnswerEngine] = None
 _compound_handler: Optional[CompoundQueryHandler] = None
@@ -410,7 +410,7 @@ def structured_lookup(query: str) -> Optional[str]:
     
     query_lower = query.lower()
     
-    # Handle location queries specially
+                                       
     location_keywords = ["location", "address", "where", "located", "risk location", "city", "state"]
     if any(kw in query_lower for kw in location_keywords):
         for chunk in metadata:
@@ -751,7 +751,7 @@ def handle_query(
     global _scope_classifier, _partial_engine, _compound_handler
     query = query.strip()
 
-    # Scope pre-check (before embedding or LLM call)
+                                                    
     if _scope_classifier is None:
         _scope_classifier = QueryClassifier()
     if _partial_engine is None:
@@ -770,7 +770,7 @@ def handle_query(
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
 
-    # Analytical engine (deterministic aggregation queries)
+                                                           
     analytical_result = analytical_engine.run(query)
     if analytical_result:
         logger.info("Handled by analytical engine (early)")
@@ -779,8 +779,8 @@ def handle_query(
             query_parser.add_raw_to_history(query, analytical_result)
         return clean_output(analytical_result)
 
-    # Partial answer handlers (deterministic, specific patterns)
-    # Must run before compound handler so specific business-type filters take priority
+                                                                
+                                                                                      
     if scope.classification == "PARTIALLY_ANSWERABLE":
         partial_answer = _partial_engine.dispatch(
             scope.partial_handler or "", query,
@@ -792,7 +792,7 @@ def handle_query(
             query_parser.add_raw_to_history(query, answer)
         return clean_output(answer)
 
-    # Compound multi-field query handler
+                                        
     if _compound_handler and _compound_handler.is_compound_query(query):
         compound_result = _compound_handler.execute(query)
         if compound_result:
@@ -802,7 +802,7 @@ def handle_query(
                 query_parser.add_raw_to_history(query, compound_result)
             return clean_output(compound_result)
 
-    # Main pipeline for answerable queries
+                                          
     quote_id = extract_quote_id(query)
 
     query_embedding = embedder.embed_single(query)
@@ -901,8 +901,8 @@ def handle_query(
             query_parser.add_raw_to_history(query, cross_search_result)
         return clean_output(cross_search_result)
 
-    # Structured safety gate: refuse instead of semantic generation when
-    # deterministic structured execution failed.
+                                                                        
+                                                
     if _is_structured_deterministic_query(query, parsed):
         refusal = _structured_failure_response(parsed)
         logger.info("Structured query failed deterministic handlers - refusing semantic fallback")
@@ -954,7 +954,7 @@ def handle_query(
 
     prompt = build_prompt(context=combined_context, question=query)
     
-    # Try LLM generation - let exceptions propagate to surface real errors
+                                                                          
     raw_answer = llm.generate(prompt)
     answer = clean_output(raw_answer)
     
@@ -1048,7 +1048,7 @@ def main():
                 with open(METADATA_PATH, "rb") as f:
                     metadata = pickle.load(f)
                 analytical_engine = AnalyticalEngine(metadata=metadata)
-                # Reset lazy singletons so they reload fresh metadata
+                                                                     
                 _partial_engine = None
                 _flattened_context_cache.clear()
                 _compound_handler = None
@@ -1059,7 +1059,7 @@ def main():
                               
             questions = split_questions(query)
             if len(questions) > 1:
-                # Multi-question: answer each, aggregate
+                                                        
                 answers = []
                 for i, sub_q in enumerate(questions, 1):
                     sub_answer = handle_query(sub_q, embedder, llm, qa_store, analytical_engine, query_parser)

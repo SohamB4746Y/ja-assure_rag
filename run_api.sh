@@ -1,16 +1,19 @@
 #!/bin/bash
+# Script: run_api.sh
+# Purpose: Automates run api.
 
-# Activate virtual environment
+
+
 source venv/bin/activate
 
-# Load .env file if it exists
+
 if [ -f .env ]; then
     set -a
     source .env
     set +a
 fi
 
-# Check if CEREBRAS_API_KEY is set
+
 if [ -z "$CEREBRAS_API_KEY" ]; then
     echo "Error: CEREBRAS_API_KEY environment variable is not set"
     echo ""
@@ -27,7 +30,7 @@ echo ""
 echo "Press CTRL+C to stop"
 echo ""
 
-# Resolve a usable Python executable across environments
+
 if [ -n "$VIRTUAL_ENV" ] && [ -x "$VIRTUAL_ENV/bin/python" ]; then
     PYTHON_CMD="$VIRTUAL_ENV/bin/python"
 elif [ -x "venv/bin/python" ]; then
@@ -41,5 +44,5 @@ else
     exit 1
 fi
 
-# Run the API server
+
 "$PYTHON_CMD" api.py

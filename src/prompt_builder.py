@@ -8,11 +8,11 @@ This module implements Pattern 5: Strict System Prompt Engineering.
 """
 from __future__ import annotations
 
-# Configuration constants
-MAX_CONTEXT_TOKENS = 9000  # Approximate tokens (chars / 4)
-MAX_CONTEXT_CHARS = MAX_CONTEXT_TOKENS * 4  # ~36000 characters
+                         
+MAX_CONTEXT_TOKENS = 9000                                  
+MAX_CONTEXT_CHARS = MAX_CONTEXT_TOKENS * 4                     
 
-# System instruction - NEVER user-influenced
+                                            
 SYSTEM_INSTRUCTION = """
 You are an intelligent insurance proposal analyst for JADE Insurance Malaysia.
 You have access to a structured proposal database containing insurance quote records from table tbl_MY.
@@ -133,7 +133,7 @@ SAFETY / GROUNDING CONSTRAINTS
   Data not available in proposal records.
 """.strip()
 
-# Refusal message for when no data is available
+                                               
 REFUSAL_MESSAGE = "Data not available in proposal records."
 
 
@@ -148,7 +148,7 @@ def build_prompt(context: str, question: str) -> str:
     Returns:
         A formatted prompt string with system instruction, context, and question.
     """
-    # Truncate context if it exceeds token budget
+                                                 
     truncated_context = truncate_context(context, MAX_CONTEXT_CHARS)
 
     prompt = f"{SYSTEM_INSTRUCTION}\n\nProposal Records:\n{truncated_context}\n\nQuestion: {question}\n\nAnswer:"
@@ -170,7 +170,7 @@ def build_prompt_with_chunks(chunks: list[dict], question: str) -> str:
     if not chunks:
         return ""
 
-    # Join chunk texts with double newlines
+                                           
     context_parts = []
     for chunk in chunks:
         if isinstance(chunk, dict) and "text" in chunk:
@@ -196,21 +196,21 @@ def truncate_context(context: str, max_chars: int) -> str:
     if len(context) <= max_chars:
         return context
 
-    # Split by double newlines (chunk boundaries)
+                                                 
     chunks = context.split("\n\n")
 
-    # Keep chunks until we exceed the limit
+                                           
     result_chunks = []
     current_length = 0
 
     for chunk in chunks:
-        chunk_length = len(chunk) + 2  # +2 for "\n\n"
+        chunk_length = len(chunk) + 2                 
         if current_length + chunk_length > max_chars:
             break
         result_chunks.append(chunk)
         current_length += chunk_length
 
-    # If we couldn't fit any complete chunk, truncate the first one
+                                                                   
     if not result_chunks and chunks:
         return chunks[0][:max_chars] + "..."
 

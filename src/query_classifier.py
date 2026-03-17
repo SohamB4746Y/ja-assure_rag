@@ -9,8 +9,8 @@ from __future__ import annotations
 import re
 from typing import Literal, Optional, List
 
-# Configuration: Signal words for each query type
-# These can be modified without changing the classification logic
+                                                 
+                                                                 
 
 AGGREGATION_SIGNALS = [
     "how many",
@@ -63,7 +63,7 @@ STRUCTURED_FIELD_SIGNALS = [
     "what type of",
 ]
 
-# Quote ID pattern for structured queries
+                                         
 QUOTE_ID_PATTERN = re.compile(r"MYJADEQT\d+", re.IGNORECASE)
 
 QueryType = Literal["predefined", "analytical", "structured", "semantic"]
@@ -86,28 +86,28 @@ def classify_query(query: str) -> QueryType:
     """
     query_lower = query.lower().strip()
 
-    # Check for aggregation signals (analytical queries)
+                                                        
     for signal in AGGREGATION_SIGNALS:
         if signal in query_lower:
             return "analytical"
 
-    # Check for comparison signals that imply aggregation
+                                                         
     for signal in COMPARISON_SIGNALS:
         if signal in query_lower:
-            # If comparison signal exists, it's analytical
+                                                          
             return "analytical"
 
-    # Check for structured query (quote ID + field question)
+                                                            
     quote_id_match = QUOTE_ID_PATTERN.search(query)
     if quote_id_match:
-        # Has quote ID - check if asking about a specific field
+                                                               
         for signal in STRUCTURED_FIELD_SIGNALS:
             if signal in query_lower:
                 return "structured"
-        # Has quote ID but no clear field signal - still structured
+                                                                   
         return "structured"
 
-    # Default to semantic retrieval
+                                   
     return "semantic"
 
 def extract_quote_id(query: str) -> Optional[str]:
@@ -133,7 +133,7 @@ def extract_field_keywords(query: str) -> List[str]:
     Returns:
         List of lowercase keywords that might match field names.
     """
-    # Remove common stop words and question words
+                                                 
     stop_words = {
         "the", "a", "an", "is", "are", "was", "were", "be", "been", "being",
         "have", "has", "had", "do", "does", "did", "will", "would", "could",
@@ -149,10 +149,10 @@ def extract_field_keywords(query: str) -> List[str]:
         "tell", "me", "give", "show", "get", "find", "please", "thanks",
     }
 
-    # Extract words
+                   
     words = re.findall(r"[a-zA-Z]+", query.lower())
 
-    # Filter out stop words and short words
+                                           
     keywords = [w for w in words if w not in stop_words and len(w) > 2]
 
     return keywords
@@ -185,10 +185,10 @@ def is_listing_query(query: str) -> bool:
     listing_signals = ["list all", "which proposals", "which records", "show all"]
     return any(signal in query_lower for signal in listing_signals)
 
-# Scope-aware query classification
-# QueryClassifier  — pure keyword engine, < 5 ms, no LLM
-# PartialAnswerEngine — data-driven handlers, reads from metadata pickle
-# QueryClassification — dataclass returned by QueryClassifier.classify()
+                                  
+                                                        
+                                                                        
+                                                                        
 import os
 import pickle
 from dataclasses import dataclass
@@ -198,14 +198,14 @@ from collections import defaultdict
 class QueryClassification:
     """Result of classifying a query for scope and answerability."""
 
-    classification: str          # ANSWERABLE | PARTIALLY_ANSWERABLE | OUT_OF_SCOPE | NONSENSICAL
+    classification: str                                                                          
     confidence: float
     out_of_scope_reason: Optional[str] = None
     partial_handler: Optional[str] = None
     available_alternative: Optional[str] = None
-    answer_is_sufficient: bool = True      # True = don't append scope noise
-    scope_gap_description: Optional[str] = None  # Specific gap note if any
-    query_intent: Optional[str] = None     # "ranking_desc", "ranking_asc", "peril_specific", etc.
+    answer_is_sufficient: bool = True                                       
+    scope_gap_description: Optional[str] = None                            
+    query_intent: Optional[str] = None                                                            
 
 class QueryClassifier:
     """
@@ -276,7 +276,7 @@ class QueryClassifier:
     }
 
     PARTIAL_ANSWER_PATTERNS = [
-        # --- Specific analytical handlers (must come before generic ones) ---
+                                                                              
         {
             "triggers": [
                 "opted for director's house coverage",
@@ -310,7 +310,7 @@ class QueryClassifier:
             "handler": "transit_security_combo_values",
             "description": "Can list proposals matching transit security combo and compute insured transit values",
         },
-        # No alarm filter
+                         
         {
             "triggers": [
                 "no alarm",
@@ -322,7 +322,7 @@ class QueryClassifier:
             "handler": "filter_no_alarm",
             "description": "Can filter proposals without alarm system",
         },
-        # Compare business type averages — must precede business_type_compound_filter
+                                                                                     
         {
             "triggers": [
                 "compare average",
@@ -336,7 +336,7 @@ class QueryClassifier:
             "handler": "compare_business_type_averages",
             "description": "Can compare average insured values between jewellers and money changers",
         },
-        # Business type + security condition filters
+                                                    
         {
             "triggers": [
                 "pawn broker",
@@ -354,7 +354,7 @@ class QueryClassifier:
             "handler": "business_type_compound_filter",
             "description": "Can filter money changer proposals with security conditions",
         },
-        # Fidelity by business type
+                                   
         {
             "triggers": [
                 "total fidelity exposure",
@@ -369,7 +369,7 @@ class QueryClassifier:
             "handler": "aggregate_fidelity_by_business_type",
             "description": "Can aggregate fidelity guarantee insurance by business type",
         },
-        # Total director coverage
+                                 
         {
             "triggers": [
                 "total director",
@@ -381,7 +381,7 @@ class QueryClassifier:
             "handler": "total_director_coverage",
             "description": "Can compute total director house coverage across all proposals",
         },
-        # Fidelity per staff ratio
+                                  
         {
             "triggers": [
                 "fidelity per staff",
@@ -394,7 +394,7 @@ class QueryClassifier:
             "handler": "fidelity_per_staff_ratio",
             "description": "Can compute fidelity guarantee amount per staff member",
         },
-        # State grouping — proposals + total insured per state (more than 1)
+                                                                            
         {
             "triggers": [
                 "states with more than one proposal",
@@ -406,7 +406,7 @@ class QueryClassifier:
             "handler": "state_grouping",
             "description": "Can group proposals and total insured by state",
         },
-        # Background check + most-frequent stock check filter
+                                                             
         {
             "triggers": [
                 "background checks on all employees",
@@ -421,7 +421,7 @@ class QueryClassifier:
             "handler": "background_check_stock_frequency",
             "description": "Can filter proposals with background checks AND most-frequent stock checks",
         },
-        # Safe grade 4 with no strong room
+                                          
         {
             "triggers": [
                 "grade 4 safe",
@@ -433,7 +433,7 @@ class QueryClassifier:
             "handler": "safe_grade_no_strong_room",
             "description": "Can find proposals with grade 4 safe and no strong room",
         },
-        # Stock out of safe threshold
+                                     
         {
             "triggers": [
                 "stock out of safe",
@@ -446,7 +446,7 @@ class QueryClassifier:
             "handler": "stock_out_of_safe_threshold",
             "description": "Can filter proposals by stock-out-of-safe value threshold",
         },
-        # Rank business types by average insured value
+                                                      
         {
             "triggers": [
                 "rank business types",
@@ -458,7 +458,7 @@ class QueryClassifier:
             "handler": "rank_business_types_by_insured_value",
             "description": "Can rank business types by average total insured value",
         },
-        # State security count
+                              
         {
             "triggers": [
                 "proposals per state",
@@ -470,7 +470,7 @@ class QueryClassifier:
             "handler": "state_security_count",
             "description": "Can count proposals with alarm+strong room per state",
         },
-        # --- Claim / location handlers (TYPE 1, 3, 9) ---
+                                                          
         {
             "triggers": [
                 "high-risk zone", "high-risk zones", "risk zone",
@@ -502,7 +502,7 @@ class QueryClassifier:
             "handler": "claim_rate",
             "description": "Can show claim occurrence rate across proposals",
         },
-        # --- Ranking / threshold handlers (TYPE 2, 8) ---
+                                                          
         {
             "triggers": [
                 "rank", "ranked", "top proposals",
@@ -523,7 +523,7 @@ class QueryClassifier:
             "handler": "filter_by_threshold",
             "description": "Can filter proposals by numeric threshold",
         },
-        # --- Industry / business distribution handlers (TYPE 6, 7) ---
+                                                                       
         {
             "triggers": [
                 "by industry", "by business type", "top industries",
@@ -545,7 +545,7 @@ class QueryClassifier:
             "handler": "business_type_distribution",
             "description": "Can show distribution by nature_of_business_label",
         },
-        # --- Security handler ---
+                                  
         {
             "triggers": [
                 "anti-theft", "security features", "security devices",
@@ -554,7 +554,7 @@ class QueryClassifier:
             "handler": "security_feature_summary",
             "description": "Can show security features per proposal",
         },
-        # --- GPS tracker handler (TYPE 5) ---
+                                              
         {
             "triggers": [
                 "gps tracker", "gps installed", "use gps", "have gps",
@@ -563,7 +563,7 @@ class QueryClassifier:
             "handler": "gps_tracker_proposals",
             "description": "Can show which proposals have GPS trackers",
         },
-        # --- Company listing handler (TYPE 4) ---
+                                                  
         {
             "triggers": [
                 "active policies", "list all companies",
@@ -574,7 +574,7 @@ class QueryClassifier:
             "handler": "list_all_businesses",
             "description": "Can list all businesses with their proposals",
         },
-        # --- Generic add-on coverage fallback ---
+                                                  
         {
             "triggers": [
                 "fidelity guarantee",
@@ -595,7 +595,7 @@ class QueryClassifier:
         "turnaround": "Underwriting turnaround time is not available in proposal records.",
     }
 
-    # Public API
+                
     def classify(self, query: str) -> QueryClassification:
         """
         Classify *query* into ANSWERABLE, PARTIALLY_ANSWERABLE,
@@ -603,10 +603,10 @@ class QueryClassifier:
         """
         q = query.lower()
 
-        # 0 — detect query intent (ranking direction, peril-specific, etc.)
+                                                                           
         query_intent = self._detect_query_intent(q)
 
-        # 1 — detect nonsensical / self-contradictory queries
+                                                             
         if self._is_nonsensical(q):
             return QueryClassification(
                 classification="NONSENSICAL",
@@ -616,7 +616,7 @@ class QueryClassifier:
                 query_intent=query_intent,
             )
 
-        # 2 — collect triggered out-of-scope domains (one per domain)
+                                                                     
         triggered_domains: List[str] = []
         for domain, keywords in self.OUT_OF_SCOPE_DOMAINS.items():
             for keyword in keywords:
@@ -624,18 +624,18 @@ class QueryClassifier:
                     triggered_domains.append(domain)
                     break
 
-        # 3 — select best matching partial-answer handler via weighted scoring.
-        # This prevents generic handlers from hijacking more specific intents.
+                                                                               
+                                                                              
         partial_handler = self._select_partial_handler(q)
 
-        # 4 — determine final classification
-        #
-        # Mandatory refusal checklist gate:
-        # if question appears answerable via checklist fields, do not refuse.
+                                            
+         
+                                           
+                                                                             
         if triggered_domains and self._passes_refusal_checklist(q):
             triggered_domains = []
 
-        # Rule A: strict out-of-scope domains after checklist gate.
+                                                                   
         if triggered_domains and not partial_handler:
             return QueryClassification(
                 classification="OUT_OF_SCOPE",
@@ -645,13 +645,13 @@ class QueryClassifier:
                 query_intent=query_intent,
             )
 
-        # Rule B: other OOS domain + partial handler → PARTIALLY_ANSWERABLE
-        #         The handler CAN answer — set answer_is_sufficient based on
-        #         whether the OOS domain is peripheral or central.
+                                                                           
+                                                                            
+                                                                  
         if triggered_domains and partial_handler:
-            # Handlers for claim_amounts + claims_by_location → the handler
-            # answers the available part; the OOS note is baked into the handler
-            # output (e.g. "fire cause data not captured").
+                                                                           
+                                                                                
+                                                           
             return QueryClassification(
                 classification="PARTIALLY_ANSWERABLE",
                 out_of_scope_reason=self._explain_scope(triggered_domains, q),
@@ -662,7 +662,7 @@ class QueryClassifier:
                 query_intent=query_intent,
             )
 
-        # Rule C: OOS domain with no handler → OUT_OF_SCOPE
+                                                           
         if triggered_domains:
             return QueryClassification(
                 classification="OUT_OF_SCOPE",
@@ -672,9 +672,9 @@ class QueryClassifier:
                 query_intent=query_intent,
             )
 
-        # Rule D: partial handler with NO OOS domain → PARTIALLY_ANSWERABLE
-        #         (the query is answerable with special handling, e.g. ranking
-        #         by sum_assured, grouping by industry)
+                                                                           
+                                                                              
+                                                       
         if partial_handler:
             return QueryClassification(
                 classification="PARTIALLY_ANSWERABLE",
@@ -698,7 +698,7 @@ class QueryClassifier:
                 return True
         return False
 
-    # Private helpers
+                     
     @staticmethod
     def _trigger_matches(trigger: str, q: str) -> bool:
         """
@@ -782,7 +782,7 @@ class QueryClassifier:
         treated as out-of-scope or partially answerable by the classifier,
         not as nonsensical.
         """
-        # Rule 1 — contradictory country pair
+                                             
         countries = [
             "malaysia", "philippines", "indonesia",
             "singapore", "thailand", "vietnam",
@@ -792,7 +792,7 @@ class QueryClassifier:
         if len(found) >= 2 and len(set(found)) >= 2:
             return True
 
-        # Rule 2 — too short to interpret
+                                         
         meaningful_words = [w for w in q.split() if len(w) > 2]
         if len(meaningful_words) < 2:
             return True
@@ -803,7 +803,7 @@ class QueryClassifier:
         """Return a query-specific explanation of why data is out of scope."""
         domain = triggered_domains[0] if triggered_domains else "unknown"
 
-        # Specific explanations keyed by (domain, keyword-in-query)
+                                                                   
         _SPECIFIC: dict = {
             ("premium", "quarter"): (
                 "Premium amounts and payment transactions are not recorded in the "
@@ -889,18 +889,18 @@ class QueryClassifier:
             ),
         }
 
-        # Find the most specific match
+                                      
         for (dom, keyword), explanation in _SPECIFIC.items():
             if dom == domain and keyword in q:
                 return explanation
 
-        # Domain-level fallbacks
+                                
         return self._OUT_OF_SCOPE_EXPLANATIONS.get(
             domain,
             "This type of data is not captured in the proposal database.",
         )
 
-    def _suggest_alternative(self, q: str) -> str:  # noqa: C901
+    def _suggest_alternative(self, q: str) -> str:              
         """Context-aware alternative suggestions."""
         if any(w in q for w in ["premium", "collected", "revenue"]):
             return (
@@ -1002,6 +1002,14 @@ class PartialAnswerEngine:
     """
 
     def __init__(self, metadata_path: str = "index/metadata.pkl") -> None:
+        """Initialize a new instance with the provided dependencies and configuration.
+        
+        Args:
+            metadata_path: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         self._path = metadata_path
         self._metadata: Optional[List[dict]] = None
         self._claim_guard_message = (
@@ -1009,9 +1017,14 @@ class PartialAnswerEngine:
             "No claim frequency comparison is possible."
         )
 
-    # Lazy metadata access
+                          
     @property
     def metadata(self) -> List[dict]:
+        """Handle metadata for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         if self._metadata is None:
             if os.path.exists(self._path):
                 with open(self._path, "rb") as f:
@@ -1020,7 +1033,7 @@ class PartialAnswerEngine:
                 self._metadata = []
         return self._metadata
 
-    # Shared helper: quote_id → business_name map
+                                                 
     @staticmethod
     def _build_business_name_map(metadata: list) -> dict:
         """
@@ -1048,15 +1061,41 @@ class PartialAnswerEngine:
                 name_map[qid] = qid
         return name_map
 
-    # Shared helper: filter for complete submissions only
+                                                         
     def _get_complete_proposals_only(self, metadata: list) -> list:
+        """Return complete proposals only for the current workflow.
+        
+        Args:
+            metadata: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         return list(metadata)
 
     def _get_incomplete_quote_ids(self, metadata: list) -> list:
+        """Return incomplete quote ids for the current workflow.
+        
+        Args:
+            metadata: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         return []
 
-    # Dispatcher
+                
     def dispatch(self, handler: str, query: str, query_intent: str = "summary") -> str:
+        """Handle dispatch for this module.
+        
+        Args:
+            handler: Input used to execute this operation.
+            query: Input used to execute this operation.
+            query_intent: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         _map = {
             "rank_by_sum_assured": lambda: self.handle_rank_by_sum_assured(),
             "filter_by_threshold": lambda: self.handle_filter_by_threshold(query),
@@ -1087,11 +1126,20 @@ class PartialAnswerEngine:
         fn = _map.get(handler)
         return fn() if fn else "Partial data handler not available."
 
-    # Shared helper: extract primary insured value from sum_assured fields
+                                                                          
     _EMPTY_VALUES = {None, "", "None", -1, "-1", 0, "0", "nan", "N/A", "n/a"}
 
     @classmethod
     def _safe_float(cls, raw) -> float:
+        """Handle safe float for this module.
+        
+        Args:
+            cls: Input used to execute this operation.
+            raw: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         if raw in cls._EMPTY_VALUES:
             return 0.0
         try:
@@ -1101,6 +1149,15 @@ class PartialAnswerEngine:
 
     @classmethod
     def _get_primary_value(cls, fields: dict) -> tuple:
+        """Return primary value for the current workflow.
+        
+        Args:
+            cls: Input used to execute this operation.
+            fields: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         v = cls._safe_float(fields.get("maximum_stock_in_premises_label"))
         if v > 0:
             return (v, "jewellery stock")
@@ -1119,6 +1176,14 @@ class PartialAnswerEngine:
 
     @staticmethod
     def _extract_state(risk_location: str) -> str:
+        """Handle extract state for this module.
+        
+        Args:
+            risk_location: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         if not risk_location:
             return "Unknown"
         parts = [p.strip() for p in risk_location.split(",") if p.strip()]
@@ -1128,8 +1193,16 @@ class PartialAnswerEngine:
             return "Unknown"
         return parts[-1].strip() or "Unknown"
 
-    # Handler: rank proposals by total insured value
+                                                    
     def handle_rank_by_sum_assured(self, top_n: int = 15) -> str:
+        """Handle handle rank by sum assured for this module.
+        
+        Args:
+            top_n: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
@@ -1158,8 +1231,16 @@ class PartialAnswerEngine:
             lines.append(f"{i}. {name} ({qid}): RM {value:,.0f} ({label})")
         return "\n".join(lines)
 
-    # Handler: filter proposals by threshold
+                                            
     def handle_filter_by_threshold(self, query: str) -> str:
+        """Handle handle filter by threshold for this module.
+        
+        Args:
+            query: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         _patterns = [
             (r"\$(\d+(?:\.\d+)?)\s*[Mm]", True),
             (r"RM\s*(\d+(?:\.\d+)?)\s*[Mm]", True),
@@ -1207,16 +1288,34 @@ class PartialAnswerEngine:
             lines.append(f"- {name} ({qid}): RM {val:,.0f} ({label})")
         return "\n".join(lines)
 
-    # Handler: claim history grouped by location
+                                                
     def handle_claims_by_location(self, query_intent: str = "summary") -> str:
+        """Handle handle claims by location for this module.
+        
+        Args:
+            query_intent: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         return self._claim_guard_message
 
-    # Handler: claim occurrence rate / ratio
+                                            
     def handle_claim_rate(self) -> str:
+        """Handle handle claim rate for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         return self._claim_guard_message
 
-    # Handler: list all businesses / proposals
+                                              
     def handle_list_all_businesses(self) -> str:
+        """Handle handle list all businesses for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
@@ -1245,6 +1344,14 @@ class PartialAnswerEngine:
         return "\n".join(lines)
 
     def handle_addon_coverage_opt_in(self, query: str) -> str:
+        """Handle handle addon coverage opt in for this module.
+        
+        Args:
+            query: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
@@ -1269,9 +1376,25 @@ class PartialAnswerEngine:
         wants_both = "both" in q or (wants_fidelity and wants_director)
 
         def _is_yes_code(v) -> bool:
+            """Handle is yes code for this module.
+            
+            Args:
+                v: Input used to execute this operation.
+            
+            Returns:
+                Result generated by this operation, when applicable.
+            """
             return str(v).strip() == "001"
 
         def _as_num(v) -> float:
+            """Handle as num for this module.
+            
+            Args:
+                v: Input used to execute this operation.
+            
+            Returns:
+                Result generated by this operation, when applicable.
+            """
             try:
                 return float(str(v).replace(",", "").strip())
             except (TypeError, ValueError):
@@ -1322,15 +1445,20 @@ class PartialAnswerEngine:
         lines.append(f"Combined Add-on Amount: RM {total_director + total_fidelity:,.0f}")
         return "\n".join(lines)
 
-    # Handler: aggregate fidelity guarantee by business type
+                                                            
     def handle_aggregate_fidelity_by_business_type(self) -> str:
+        """Handle handle aggregate fidelity by business type for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
         BTYPE_MAP = {"1": "Jewellers", "2": "Money Changers", "3": "Other", "5": "Pawn Brokers"}
 
-        # Build business-type map from business_profile
+                                                       
         btype_map: dict = {}
         for chunk in complete_metadata:
             if chunk.get("section") != "business_profile":
@@ -1342,7 +1470,7 @@ class PartialAnswerEngine:
             code = str(fields.get("nature_of_business_label", "") or "").strip()
             btype_map[qid] = BTYPE_MAP.get(code, f"Type {code}" if code else "Unknown")
 
-        # Build fidelity amount map from add_on_coverage
+                                                        
         fidelity_map: dict = {}
         for chunk in complete_metadata:
             if chunk.get("section") != "add_on_coverage":
@@ -1353,7 +1481,7 @@ class PartialAnswerEngine:
             fields = chunk.get("fields") or {}
             fidelity_map[qid] = self._safe_float(fields.get("fidelity_guarantee_insurance_label"))
 
-        # Group by business type
+                                
         groups: dict = {}
         for qid in sorted(name_map.keys()):
             bt = btype_map.get(qid, "Unknown")
@@ -1377,13 +1505,18 @@ class PartialAnswerEngine:
         lines.append(f"\nGrand Total Fidelity across all proposals: RM {grand_total:,.0f}")
         return "\n".join(lines)
 
-    # Handler: total director house coverage
+                                            
     def handle_total_director_coverage(self) -> str:
+        """Handle handle total director coverage for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Get opted flags and amounts from add_on_coverage
+                                                          
         amount_map: dict = {}
         optin_map: dict = {}
         for chunk in complete_metadata:
@@ -1414,8 +1547,13 @@ class PartialAnswerEngine:
         lines.append(f"\nTotal Director's House Coverage: RM {total:,.0f}")
         return "\n".join(lines)
 
-    # Handler: fidelity per staff ratio
+                                       
     def handle_fidelity_per_staff_ratio(self) -> str:
+        """Handle handle fidelity per staff ratio for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
@@ -1455,13 +1593,18 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # Handler: state security count (alarm + strong room per state)
+                                                                   
     def handle_state_security_count(self) -> str:
+        """Handle handle state security count for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Build alarm, strong_room, and location maps
+                                                     
         alarm_map: dict = {}
         sr_map: dict = {}
         loc_map: dict = {}
@@ -1482,7 +1625,7 @@ class PartialAnswerEngine:
                 if loc:
                     loc_map[qid] = str(loc)
 
-        # Filter: alarm=001 AND strong_room=001
+                                               
         matching = []
         for qid in sorted(name_map.keys()):
             has_alarm = alarm_map.get(qid, "") == "001"
@@ -1490,7 +1633,7 @@ class PartialAnswerEngine:
             if has_alarm and has_sr:
                 matching.append(qid)
 
-        # Group by state
+                        
         state_groups: dict = {}
         for qid in matching:
             state = self._extract_state(loc_map.get(qid, ""))
@@ -1498,7 +1641,7 @@ class PartialAnswerEngine:
                 state_groups[state] = []
             state_groups[state].append((name_map.get(qid, qid), qid))
 
-        # Also count all proposals per state for context
+                                                        
         all_states: dict = {}
         for qid in sorted(name_map.keys()):
             state = self._extract_state(loc_map.get(qid, ""))
@@ -1517,14 +1660,19 @@ class PartialAnswerEngine:
 
         return "\n".join(lines)
 
-    # Handler: filter proposals without alarm
+                                             
     def handle_filter_no_alarm(self) -> str:
+        """Handle handle filter no alarm for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
         sa_map = self._build_sa_map(complete_metadata)
 
-        # Build alarm map — "002" means no alarm system
+                                                       
         alarm_map: dict = {}
         for chunk in complete_metadata:
             qid = chunk.get("quote_id")
@@ -1534,7 +1682,7 @@ class PartialAnswerEngine:
                 fields = chunk.get("fields") or {}
                 alarm_map[qid] = str(fields.get("do_you_have_alarm_label", "") or "").strip()
 
-        # Collect ALL proposals where strong_room = "002" (No)
+                                                              
         matches = []
         for qid in sorted(name_map.keys()):
             if alarm_map.get(qid, "") == "002":
@@ -1552,8 +1700,16 @@ class PartialAnswerEngine:
         lines.append(f"{len(name_map) - len(matches)} of {len(name_map)} proposals DO have an alarm system.")
         return "\n".join(lines)
 
-    # Handler: business type + security condition compound filter
+                                                                 
     def handle_business_type_compound_filter(self, query: str) -> str:
+        """Handle handle business type compound filter for this module.
+        
+        Args:
+            query: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
@@ -1562,7 +1718,7 @@ class PartialAnswerEngine:
 
         q = query.lower()
 
-        # Detect requested business type
+                                        
         target_code = None
         target_label = None
         if "pawn broker" in q or "pawnbroker" in q or "pawn shop" in q:
@@ -1578,7 +1734,7 @@ class PartialAnswerEngine:
         if not target_code:
             return "Could not determine business type from query."
 
-        # Step 1: Filter by business type
+                                         
         btype_map: dict = {}
         for chunk in complete_metadata:
             if chunk.get("section") != "business_profile":
@@ -1596,7 +1752,7 @@ class PartialAnswerEngine:
         if not type_filtered:
             return f"No {target_label} proposals found."
 
-        # Step 2: Build section data maps for conditions
+                                                        
         alarm_map: dict = {}
         sr_map: dict = {}
         safe_map: dict = {}
@@ -1609,7 +1765,7 @@ class PartialAnswerEngine:
                 continue
             section = chunk.get("section")
             fields = chunk.get("fields") or {}
-            # safe section stores fields as a list of dicts
+                                                           
             if isinstance(fields, list):
                 fields = fields[0] if fields and isinstance(fields[0], dict) else {}
             if section == "alarm" and qid not in alarm_map:
@@ -1627,7 +1783,7 @@ class PartialAnswerEngine:
                 if loc:
                     loc_map[qid] = str(loc)
 
-        # Step 3: Parse conditions from query
+                                             
         SAFE_GRADE_MAP = {"001": "Grade 1", "002": "Grade 2", "003": "Grade 3", "004": "Grade 4"}
         conditions = []
         condition_labels = []
@@ -1646,7 +1802,7 @@ class PartialAnswerEngine:
                 accepted.add("003")
             if "grade 4" in q:
                 accepted.add("004")
-            # "grade 3 safe" means grade 3 or higher (003 and 004)
+                                                                  
             if "grade 3" in q and "grade 4" not in q:
                 accepted = {"003", "004"}
             conditions.append(("safe_grade", lambda qid, acc=accepted: safe_map.get(qid) in acc))
@@ -1662,14 +1818,14 @@ class PartialAnswerEngine:
             conditions.append(("alarm", lambda qid: alarm_map.get(qid) == "001"))
             condition_labels.append("alarm")
 
-        # Step 4: Apply conditions to type-filtered set
+                                                       
         if conditions:
             final = [qid for qid in type_filtered
                      if all(fn(qid) for _, fn in conditions)]
         else:
             final = type_filtered
 
-        # Step 5: Format output
+                               
         cond_str = " AND ".join(condition_labels) if condition_labels else "no additional conditions"
         lines = [f"{target_label} — {len(type_filtered)} total in database, "
                  f"filtered by: {cond_str}"]
@@ -1714,11 +1870,20 @@ class PartialAnswerEngine:
 
         return "\n".join(lines)
 
-    # ── Shared sum_assured helper ─────────────────────────────────────────
+                                                                            
     _MONETARY_SIGNALS = ("stock", "cash", "sum", "value", "limit", "transit")
 
     @classmethod
     def _is_monetary_sum_key(cls, key: str) -> bool:
+        """Handle is monetary sum key for this module.
+        
+        Args:
+            cls: Input used to execute this operation.
+            key: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         k = key.lower()
         if "nature_of_business" in k:
             return False
@@ -1768,8 +1933,13 @@ class PartialAnswerEngine:
                 loc[qid] = str(rl)
         return loc
 
-    # ── Handler: background checks + most-frequent stock check ───────────
+                                                                           
     def handle_background_check_stock_frequency(self) -> str:
+        """Handle handle background check stock frequency for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         STOCK_FREQ_MAP = {
             "001": "Most Frequent (daily)",
             "002": "Medium Frequency",
@@ -1779,7 +1949,7 @@ class PartialAnswerEngine:
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Build additional_details map (raw codes, not decoded)
+                                                               
         details_map: dict = {}
         for chunk in complete_metadata:
             if chunk.get("section") != "additional_details":
@@ -1793,11 +1963,11 @@ class PartialAnswerEngine:
                 "stock_freq": str(fields.get("how_often_is_the_stock_check_carried_out_label", "") or "").strip(),
             }
 
-        # Step 1: filter bg_check == "001" (Yes)
+                                                
         with_bg = [qid for qid in sorted(name_map.keys())
                    if details_map.get(qid, {}).get("bg_check") == "001"]
 
-        # Step 2: further filter stock_freq == "001" (most frequent)
+                                                                    
         matches = [qid for qid in with_bg
                    if details_map.get(qid, {}).get("stock_freq") == "001"]
 
@@ -1819,7 +1989,7 @@ class PartialAnswerEngine:
         else:
             lines.append("No proposals match both conditions.")
 
-        # Show all proposals with their values for context
+                                                          
         lines.append("\nAll proposals — background check + stock check frequency:")
         for qid in sorted(name_map.keys()):
             d = details_map.get(qid, {})
@@ -1834,8 +2004,13 @@ class PartialAnswerEngine:
 
         return "\n".join(lines)
 
-    # ── Handler: state grouping ───────────────────────────────────────────
+                                                                            
     def handle_state_grouping(self) -> str:
+        """Handle handle state grouping for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         BTYPE_MAP = {"1": "Jeweller", "2": "Money Changer", "3": "Other", "5": "Pawn Broker"}
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1869,8 +2044,13 @@ class PartialAnswerEngine:
         lines.append(f"\nSingle-proposal states ({len(groups) - len(multi)} total) not shown.")
         return "\n".join(lines)
 
-    # ── Handler: compare average insured between jewellers and money changers
+                                                                              
     def handle_compare_business_type_averages(self) -> str:
+        """Handle handle compare business type averages for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         BTYPE_MAP = {"1": "Jewellers", "2": "Money Changers", "3": "Other", "5": "Pawn Brokers"}
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1901,7 +2081,7 @@ class PartialAnswerEngine:
                 lines.append(f"  - {name} ({qid}): RM {amt:,.0f}")
             lines.append("")
 
-        # Summary comparison
+                            
         j = groups.get("Jewellers", {"total": 0.0, "count": 0})
         m = groups.get("Money Changers", {"total": 0.0, "count": 0})
         j_avg = j["total"] / j["count"] if j["count"] else 0.0
@@ -1912,8 +2092,13 @@ class PartialAnswerEngine:
         lines.append(f"{higher} carry higher average insured value per proposal.")
         return "\n".join(lines)
 
-    # ── Handler: grade 4 safe with no strong room ─────────────────────────
+                                                                            
     def handle_safe_grade_no_strong_room(self) -> str:
+        """Handle handle safe grade no strong room for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         SAFE_GRADE_MAP = {"001": "Grade 1", "002": "Grade 2", "003": "Grade 3", "004": "Grade 4"}
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -1955,7 +2140,7 @@ class PartialAnswerEngine:
             for name, qid, insured in matches:
                 lines.append(f"  - {name} ({qid}) — Total Insured: RM {insured:,.0f}")
 
-        # Full grade / strong-room breakdown for context
+                                                        
         lines.append("\nAll proposals — safe grade + strong room:")
         for qid in sorted(name_map.keys()):
             grade = safe_map.get(qid, "")
@@ -1970,8 +2155,13 @@ class PartialAnswerEngine:
 
         return "\n".join(lines)
 
-    # ── Handler: rank all business types by average total insured ─────────
+                                                                            
     def handle_rank_business_types_by_insured_value(self) -> str:
+        """Handle handle rank business types by insured value for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         BTYPE_MAP = {"1": "Jewellers", "2": "Money Changers", "3": "Other", "5": "Pawn Brokers"}
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
@@ -2007,15 +2197,23 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # ── Handler: stock out of safe above numeric threshold ────────────────
+                                                                            
     def handle_stock_out_of_safe_threshold(self, query: str) -> str:
+        """Handle handle stock out of safe threshold for this module.
+        
+        Args:
+            query: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         import re
         SAFE_GRADE_MAP = {"001": "Grade 1", "002": "Grade 2", "003": "Grade 3", "004": "Grade 4"}
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Parse RM threshold from query text
+                                            
         threshold = 0.0
         q = query.lower().replace(",", "")
         m = re.search(r"rm\s*([\d]+(?:\.\d+)?)", q)
@@ -2027,7 +2225,7 @@ class PartialAnswerEngine:
             except ValueError:
                 threshold = 0.0
 
-        # Build stock-out-of-safe map from sum_assured
+                                                      
         stock_map: dict = {}
         for chunk in complete_metadata:
             if chunk.get("section") != "sum_assured":
@@ -2040,7 +2238,7 @@ class PartialAnswerEngine:
                 fields = fields[0] if fields and isinstance(fields[0], dict) else {}
             stock_map[qid] = self._safe_float(fields.get("value_of_stock_out_of_safe_label"))
 
-        # Build safe grade map
+                              
         safe_map: dict = {}
         for chunk in complete_metadata:
             if chunk.get("section") != "safe":
@@ -2053,7 +2251,7 @@ class PartialAnswerEngine:
                 fields = fields[0] if fields and isinstance(fields[0], dict) else {}
             safe_map[qid] = str(fields.get("grade_label", "") or "").strip()
 
-        # All records sorted by stock value descending
+                                                      
         records = [
             (name_map.get(qid, qid), qid, stock_map.get(qid, 0.0), safe_map.get(qid, ""))
             for qid in sorted(name_map.keys())
@@ -2075,7 +2273,7 @@ class PartialAnswerEngine:
                 grade_str = SAFE_GRADE_MAP.get(grade, f"Code {grade}" if grade else "Unknown")
                 lines.append(f"  - {name} ({qid}): RM {stock:,.0f} out of safe | Safe: {grade_str}")
 
-        # Show zero/below-threshold records for completeness
+                                                            
         below = [(n, q, s, g) for n, q, s, g in records if s <= (threshold if threshold else 0)]
         if below and threshold > 0:
             lines.append(f"\nBelow / at threshold ({len(below)} proposals):")
@@ -2223,13 +2421,18 @@ class PartialAnswerEngine:
         lines.append(f"Total Insured Transit Value: RM {total_transit:,.0f}")
         return "\n".join(lines)
 
-    # Handler: group proposals by industry (Bug 4 fix — two-map approach)
+                                                                         
     def handle_group_by_industry(self) -> str:
+        """Handle handle group by industry for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         incomplete_qids = self._get_incomplete_quote_ids(metadata)
 
-        # Step 1: Build industry + name maps from business_profile.
+                                                                   
         name_map: dict = {}
         industry_map: dict = {}
         for chunk in complete_metadata:
@@ -2258,7 +2461,7 @@ class PartialAnswerEngine:
                 industry = "Other / Not Specified"
             industry_map[qid] = str(industry).strip()
 
-        # Step 2: Build value map from sum_assured using multi-field logic.
+                                                                           
         value_map: dict = {}
         for chunk in complete_metadata:
             if chunk.get("section") != "sum_assured":
@@ -2274,7 +2477,7 @@ class PartialAnswerEngine:
         if not industry_map:
             return "Industry data not available."
 
-        # Step 3: Group by industry using both maps.
+                                                    
         industry_groups: dict = defaultdict(
             lambda: {"count": 0, "total_value": 0.0, "businesses": []}
         )
@@ -2285,7 +2488,7 @@ class PartialAnswerEngine:
             industry_groups[ind]["total_value"] += stock
             industry_groups[ind]["businesses"].append(name_map.get(qid, qid))
 
-        # Step 4: Sort by total value descending, then count.
+                                                             
         sorted_industries = sorted(
             industry_groups.items(),
             key=lambda x: (x[1]["total_value"], x[1]["count"]),
@@ -2316,10 +2519,10 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # Handler: security feature summary (anti-theft handler fix)
-    # Maps section name → the primary Yes/No field to check in that section.
-    # alarm / cctv / armoured vehicle / strong room are the four key
-    # anti-theft indicators that each live in their own section chunk.
+                                                                
+                                                                            
+                                                                    
+                                                                      
     _SECURITY_SECTION_FIELDS: dict = {
         "alarm":              "do_you_have_alarm_label",
         "cctv":               "recording_label",
@@ -2327,7 +2530,7 @@ class PartialAnswerEngine:
         "strong_room":        "do_you_have_a_strong_room_label",
     }
 
-    # Human-readable labels for each section
+                                            
     _SECURITY_SECTION_LABELS: dict = {
         "alarm":              "Alarm",
         "cctv":               "CCTV",
@@ -2338,13 +2541,18 @@ class PartialAnswerEngine:
     _YES_VALUES = {"yes", "001", "true", "1"}
 
     def handle_security_feature_summary(self) -> str:
+        """Handle handle security feature summary for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         incomplete_qids = self._get_incomplete_quote_ids(metadata)
-        # Bug 1 fix: build name map from business_profile chunks
+                                                                
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Build security feature map: quote_id → {section: bool}
+                                                                
         security_map: dict = defaultdict(dict)
         for chunk in complete_metadata:
             section = chunk.get("section", "")
@@ -2390,15 +2598,20 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # Handler: distribution of business types (two-map fix for correct counts)
+                                                                              
     def handle_business_type_distribution(self) -> str:
+        """Handle handle business type distribution for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
         total = len(name_map)
 
-        # Build type → list of business names
+                                             
         type_businesses: dict = defaultdict(list)
         seen: set = set()
         for chunk in complete_metadata:
@@ -2440,15 +2653,23 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # Handler: claim history grouped by location (TYPE 1 + 9)
+                                                             
     def handle_claims_by_location(self, query_intent: str = "summary") -> str:
+        """Handle handle claims by location for this module.
+        
+        Args:
+            query_intent: Input used to execute this operation.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Step 1: Build location map from any chunk (risk_location is on all)
-        location_map: dict = {}  # quote_id → state
+                                                                             
+        location_map: dict = {}                    
         seen_loc: set = set()
         for chunk in complete_metadata:
             qid = chunk.get("quote_id")
@@ -2458,8 +2679,8 @@ class PartialAnswerEngine:
             loc = chunk.get("risk_location", "")
             location_map[qid] = self._extract_state(str(loc))
 
-        # Step 2: Build claim map from claim_history section
-        claim_map: dict = {}  # quote_id → decoded claim label
+                                                            
+        claim_map: dict = {}                                  
         for chunk in complete_metadata:
             if chunk.get("section") != "claim_history":
                 continue
@@ -2469,7 +2690,7 @@ class PartialAnswerEngine:
             df = chunk.get("decoded_fields") or {}
             claim_map[qid] = df.get("claim_history_label", "")
 
-        # Step 3: Group by state
+                                
         state_data: dict = defaultdict(
             lambda: {
                 "proposals": 0, "with_claims": 0,
@@ -2490,7 +2711,7 @@ class PartialAnswerEngine:
             else:
                 state_data[state]["no_data"] += 1
 
-        # Step 4: Sort based on query_intent
+                                            
         if query_intent == "ranking_asc":
             sorted_states = sorted(
                 state_data.items(),
@@ -2518,7 +2739,7 @@ class PartialAnswerEngine:
         total_claims = sum(d["with_claims"] for d in state_data.values())
         total_no_data = sum(d["no_data"] for d in state_data.values())
 
-        # Step 5: Handle peril-specific queries (fire, theft, etc.)
+                                                                   
         lines: List[str] = []
         if query_intent == "peril_specific":
             lines.append(
@@ -2568,8 +2789,13 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # Handler: claim occurrence rate / ratio (TYPE 3)
+                                                     
     def handle_claim_rate(self) -> str:
+        """Handle handle claim rate for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         incomplete_qids = self._get_incomplete_quote_ids(metadata)
@@ -2598,7 +2824,7 @@ class PartialAnswerEngine:
             else:
                 no_data.append(name)
 
-        # Also find complete proposals with NO claim_history chunk at all
+                                                                         
         complete_qids = {
             c.get("quote_id") for c in complete_metadata if c.get("quote_id")
         }
@@ -2642,14 +2868,19 @@ class PartialAnswerEngine:
         )
         return "\n".join(lines)
 
-    # Handler: list all businesses / proposals (TYPE 4)
+                                                       
     def handle_list_all_businesses(self) -> str:
+        """Handle handle list all businesses for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Build location map
+                            
         location_map: dict = {}
         industry_map: dict = {}
         seen: set = set()
@@ -2693,14 +2924,19 @@ class PartialAnswerEngine:
             )
         return "\n".join(lines)
 
-    # Handler: GPS tracker proposals (TYPE 5)
+                                             
     def handle_gps_tracker_proposals(self) -> str:
+        """Handle handle gps tracker proposals for this module.
+        
+        Returns:
+            Result generated by this operation, when applicable.
+        """
         metadata = self.metadata
         complete_metadata = self._get_complete_proposals_only(metadata)
         incomplete_qids = self._get_incomplete_quote_ids(metadata)
         name_map = self._build_business_name_map(complete_metadata)
 
-        # Build location map for display
+                                        
         loc_map: dict = {}
         seen_loc: set = set()
         for chunk in complete_metadata:
@@ -2710,10 +2946,10 @@ class PartialAnswerEngine:
             seen_loc.add(qid)
             loc = chunk.get("risk_location", "")
             parts = [p.strip() for p in str(loc).split(",") if p.strip()]
-            # Take the city (first meaningful part)
+                                                   
             loc_map[qid] = parts[0] if parts else "Unknown"
 
-        # Scan transit_and_gaurds section for GPS fields
+                                                        
         gps_vehicles_yes: list = []
         gps_vehicles_no: list = []
         gps_no_data: list = []
@@ -2743,7 +2979,7 @@ class PartialAnswerEngine:
             else:
                 gps_no_data.append((name, qid, city))
 
-        # Complete proposals without transit_and_gaurds chunk at all
+                                                                    
         for qid in all_qids - seen_transit:
             name = name_map.get(qid, qid)
             city = loc_map.get(qid, "")

@@ -10,14 +10,14 @@ import signal
 import os
 
 API_URL = "http://localhost:8000"
-STARTUP_WAIT = 60  # Max wait (seconds) for system initialization
+STARTUP_WAIT = 60                                                
 
 def test_api():
     """Test the API by starting it, making a request, then stopping it."""
     
     print("Starting API server...")
     
-    # Start the API in a subprocess
+                                   
     env = os.environ.copy()
     env["HF_HUB_OFFLINE"] = "1"
     env["TRANSFORMERS_OFFLINE"] = "1"
@@ -33,7 +33,7 @@ def test_api():
     try:
         print(f"Waiting up to {STARTUP_WAIT} seconds for initialization and health...")
 
-        # Poll health endpoint until ready
+                                          
         ready = False
         for _ in range(STARTUP_WAIT):
             try:
@@ -49,7 +49,7 @@ def test_api():
         if not ready:
             raise RuntimeError("API did not become healthy within the timeout")
         
-        # Test 2: Query endpoint
+                                
         print("\n2. Testing query endpoint...")
         query_data = {"question": "What is the business name of MYJADEQT001?"}
         response = requests.post(f"{API_URL}/query", json=query_data, timeout=120)

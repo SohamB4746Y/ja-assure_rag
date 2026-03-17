@@ -1,3 +1,8 @@
+"""Validator module.
+
+Provides the core logic for validator.
+"""
+
 def validate_sum_assured(sum_assured: dict) -> bool:
     """
     Ensures only ONE sum insured type is present per record.
